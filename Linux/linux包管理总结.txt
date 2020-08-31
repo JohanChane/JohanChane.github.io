@@ -63,11 +63,11 @@
                     s 是会尝试移除包的依赖，如果依赖包没有被其他包依赖，且该包是作为依赖而安装的会被移除。
             centos
                 yum {remove | erase}
-				remove 与 erase 一样。
-				移除包时，不会尝试移除包的依赖。但是会尝试移除依赖该包的包（注意这里是采用方案二）。
-				可在 /etc/yum.conf 中设置 remove 的行为
-					remove_leaf_only=1              # 采用方案一
-					clean_requirements_on_remove=1
+                    remove 与 erase 一样。
+                    移除包时，不会尝试移除包的依赖。但是会尝试移除依赖该包的包（注意这里是采用方案二）。
+                    可在 /etc/yum.conf 中设置 remove 的行为
+                        remove_leaf_only=1              # 采用方案一
+                        clean_requirements_on_remove=1
             debian
                 apt-get remove
                     不删除已被修改的配置文件。
