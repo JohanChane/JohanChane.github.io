@@ -206,7 +206,7 @@ link 中的空格
 
 title 是可选的。
 
-![alt text](.\tux.png "title")
+![alt text](./tux.png "title")
 
 ![](https://img.shields.io/github/stars/pandao/editor.md.svg)
 
