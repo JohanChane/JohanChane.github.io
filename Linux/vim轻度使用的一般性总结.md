@@ -172,6 +172,7 @@
 - 复制 `C-insert`
 - 粘贴 `shift+insert`
 - 剪切 `C-delete`
+- 撤消/重做 `u/C-r`
 - 跳回上次光标处：`C-o`
 
 ### 查找帮助文档
