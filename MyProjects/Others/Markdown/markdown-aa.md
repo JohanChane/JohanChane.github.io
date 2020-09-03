@@ -7,7 +7,7 @@
 
 	typora 的 markdown 教程
 
-- <https://pandao.github.io/editor.md/index.html>
+- <https://dillinger.io/>
 
 	markdown 在线编辑器
 	
