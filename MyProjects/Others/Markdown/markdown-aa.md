@@ -658,8 +658,10 @@ pie title What Voldemort doesn't have?
 ##### mermaid gantt
 
 ```mermaid
-%% mermaind 的甘特图
 gantt
+
+%% mermaind 的甘特图
+
     title A Gantt Diagram
     dateFormat  YYYY-MM-DD
     section Section
