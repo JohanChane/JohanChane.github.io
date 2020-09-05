@@ -23,7 +23,7 @@
 - Notepad++ 支持港独，什么 stand with Hongkong 之类的东西吧，好像我没你不行一样。我 vim 不知道高到哪里去，还援助非洲小孩。
 - vim 很强大，但是先入为主的原因，还是改不了在 windows 编辑的习惯。
 - notepad3 虽然不错，但是不能添加插件，所以不支持 markdown(最近学了 markdown)。
-- typora 支持 markdown, 但是有很多缺点。
+- typora 支持 markdown, 但是有小瑕疵。
 - vscode 很强大，但是已经装了很多插件，用来编辑文本和写 markdown，但启动有点慢。
 
 ***这调情应该够了，直入主题。综上原因，我需要一款能快速启动且能安装各种插件的文本编辑器，OK 上网找找， 终止找到了解决方案。***
