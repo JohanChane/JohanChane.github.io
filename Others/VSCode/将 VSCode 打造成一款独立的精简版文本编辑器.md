@@ -62,10 +62,10 @@ VSCode 有 zip 版，解压后，在解压目录添加一个 data 目录，就�
             /////////////////////// 设置换行符 //////////////////////////
             "files.eol": "\n",
 
-            /////////////////////// Others //////////////////////////////
-            "extensions.ignoreRecommendations": true,   // 关闭插件推荐
-            "update.enableWindowsBackgroundUpdates": false
-            
+            ///////////////////////// 关闭推荐 ////////////////////////////
+            "extensions.ignoreRecommendations": true,
+            "extensions.showRecommendationsOnlyOnDemand": true,
+            "update.enableWindowsBackgroundUpdates": false,
         }
 
 2. 添加右键菜单，Edit With VSCodeForText
