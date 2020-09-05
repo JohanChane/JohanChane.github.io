@@ -136,9 +136,12 @@ This text is ***really important***.
 
 At the command prompt, type `nano`.  
 
-在 Code 中输出反引号  
-``Use `code` in your Markdown file.``  
-```nano```  
+在 Code 中输出反引号
+
+``Use `code` in your Markdown file.``
+
+[//]: # (```nano``` 是不合法的语法)
+
 `` `nano` ``
 
 使 URL 无效  
