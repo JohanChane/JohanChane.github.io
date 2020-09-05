@@ -20,55 +20,55 @@
 
 ### 原因
 
-- Notepad++ 支持港独，什么 stand with Hongkong 之类的东西吧，好像我没你不行一样。我 vim 不知道高到哪里去，还援助非洲小孩。
+- Notepad++ 支持港独。决定不再使用。
 - vim 很强大，但是先入为主的原因，还是改不了在 windows 编辑的习惯。
 - notepad3 虽然不错，但是不能添加插件，所以不支持 markdown(最近学了 markdown)。
 - typora 支持 markdown, 但是有小瑕疵。
-- vscode 很强大，但是已经装了很多插件，用来编辑文本和写 markdown，但启动有点慢。
+- vscode 很强大，但是已经装了很多插件，可用来编辑文本和写 markdown，但启动有点慢。
 
-***这调情应该够了，直入主题。综上原因，我需要一款能快速启动且能安装各种插件的文本编辑器，OK 上网找找， 终止找到了解决方案。***
+***综上原因，我需要一款能快速启动且能安装各种插件的文本编辑器。***
 
 ### 方法
 
-1. 制作 Portable VSCode
+- 制作 Portable VSCode
 
-VSCode 有 zip 版，解压后，在解压目录添加一个 data 目录，就成了一个 Portable VSCode 了，之后更新保留 data 目录就行了。
+    VSCode 有 zip 版，解压后，在解压目录添加一个 data 目录，就成了一个 Portable VSCode 了，之后更新保留 data 目录就行了。
 
-比如：我将 zip 版 VSCode 解压到此目录 D:\PortableProgramFiles\VSCodeForText，再添加 D:\PortableProgramFiles\VSCodeForText\data, 最后启动。
+    比如：我将 zip 版 VSCode 解压到此目录 D:\PortableProgramFiles\VSCodeForText，再添加 D:\PortableProgramFiles\VSCodeForText\data, 最后启动。
 
-- 安装插件
+    - 安装插件
 
-    - Chinese (Simplified) Language Pack for Visual Studio Code
+        - Chinese (Simplified) Language Pack for Visual Studio Code
 
-    - Markdown Preview Enhanced
-    
-        能支持数学公式和 mermaid 等图。直接安装就能使用。如果不需要那么多功能可安装别的。不想用 markdown 就不要安装了。
+        - Markdown Preview Enhanced
+        
+            vscode 已经支持 markdown 了，如果还想支持数学公式和 mermaid 等图，则用此插件。直接安装就能使用。
 
-- 配置 VSCode
+    - 配置 VSCode
 
-    ctrl + shift + p, 搜索 'settings.json'，选择“首选项：打开设置”。
+        ctrl + shift + p, 搜索 'settings.json'，选择“首选项：打开设置”。
 
-    *这是只是参考，我是用 Unix 换行符的。*
+        *这是只是参考，我是用 Unix 换行符的。*
 
-        {
-            //////////////////////// 设置 tab ///////////////////////////
-            // refer: https://www.cnblogs.com/wangyang0210/p/10807537.html
-            "editor.detectIndentation": false,  //关闭检测第一个tab后面就tab
-            //"editor.renderControlCharacters": true, //制表符显示->
-            //"editor.renderWhitespace": "all", //空格显示...
-            "editor.tabSize": 4,//tab为四个空格
-            "editor.insertSpaces": true, //转为空格
+            {
+                //////////////////////// 设置 tab ///////////////////////////
+                // refer: https://www.cnblogs.com/wangyang0210/p/10807537.html
+                "editor.detectIndentation": false,  //关闭检测第一个tab后面就tab
+                //"editor.renderControlCharacters": true, //制表符显示->
+                //"editor.renderWhitespace": "all", //空格显示...
+                "editor.tabSize": 4,//tab为四个空格
+                "editor.insertSpaces": true, //转为空格
 
-            /////////////////////// 设置换行符 //////////////////////////
-            "files.eol": "\n",
+                /////////////////////// 设置换行符 //////////////////////////
+                "files.eol": "\n",
 
-            ///////////////////////// 关闭推荐 ////////////////////////////
-            "extensions.ignoreRecommendations": true,
-            "extensions.showRecommendationsOnlyOnDemand": true,
-            "update.enableWindowsBackgroundUpdates": false,
-        }
+                ///////////////////////// 关闭推荐 ////////////////////////////
+                "extensions.ignoreRecommendations": true,
+                "extensions.showRecommendationsOnlyOnDemand": true,
+                "update.enableWindowsBackgroundUpdates": false,
+            }
 
-2. 添加右键菜单，Edit With VSCodeForText
+- 添加右键菜单，Edit With VSCodeForText
 
     *这是按我的解压的路径来的，你要根据自己的实际路径来修改*
 
@@ -102,9 +102,9 @@ VSCode 有 zip 版，解压后，在解压目录添加一个 data 目录，就�
             [-HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithVSCodeForText]
 
 
-3. 测试 VSCodeForText
+- 测试 VSCodeForText
 
-测试的 markdown 文件可在 refer 中找。如果有错则可重装 Markdown Preview Enhanced 试试。
+    测试的 markdown 文件可在 refer 中找。如果有错则可重装 Markdown Preview Enhanced 试试。
 
 ---
 
