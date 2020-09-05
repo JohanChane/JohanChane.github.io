@@ -50,23 +50,25 @@
 
         *这是只是参考，我是用 Unix 换行符的。*
 
-            {
-                //////////////////////// 设置 tab ///////////////////////////
-                // refer: https://www.cnblogs.com/wangyang0210/p/10807537.html
-                "editor.detectIndentation": false,  //关闭检测第一个tab后面就tab
-                //"editor.renderControlCharacters": true, //制表符显示->
-                //"editor.renderWhitespace": "all", //空格显示...
-                "editor.tabSize": 4,//tab为四个空格
-                "editor.insertSpaces": true, //转为空格
+        ```json
+        {
+            //////////////////////// 设置 tab ///////////////////////////
+            // refer: https://www.cnblogs.com/wangyang0210/p/10807537.html
+            "editor.detectIndentation": false,  //关闭检测第一个tab后面就tab
+            //"editor.renderControlCharacters": true, //制表符显示->
+            //"editor.renderWhitespace": "all", //空格显示...
+            "editor.tabSize": 4,//tab为四个空格
+            "editor.insertSpaces": true, //转为空格
 
-                /////////////////////// 设置换行符 //////////////////////////
-                "files.eol": "\n",
+            /////////////////////// 设置换行符 //////////////////////////
+            "files.eol": "\n",
 
-                ///////////////////////// 关闭推荐 ////////////////////////////
-                "extensions.ignoreRecommendations": true,
-                "extensions.showRecommendationsOnlyOnDemand": true,
-                "update.enableWindowsBackgroundUpdates": false,
-            }
+            ///////////////////////// 关闭推荐 ////////////////////////////
+            "extensions.ignoreRecommendations": true,
+            "extensions.showRecommendationsOnlyOnDemand": true,
+            "update.enableWindowsBackgroundUpdates": false,
+        }
+        ```
 
 - 添加右键菜单，Edit With VSCodeForText
 
@@ -74,33 +76,36 @@
 
     - VSCodeForText 添加右键菜单
 
-            Windows Registry Editor Version 5.00
+        ```
+        Windows Registry Editor Version 5.00
 
-            ; ######################################## 在文件上右键 ########################################
-            ; EditWithVSCodeForText
-            [HKEY_CLASSES_ROOT\*\shell\EditWithVSCodeForText]
-            @="Edit with VSCodeForText"
-            "Icon"="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe"
+        ; ######################################## 在文件上右键 ########################################
+        ; EditWithVSCodeForText
+        [HKEY_CLASSES_ROOT\*\shell\EditWithVSCodeForText]
+        @="Edit with VSCodeForText"
+        "Icon"="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe"
 
-            [HKEY_CLASSES_ROOT\*\shell\EditWithVSCodeForText\command]
-            @="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe \"%1\""
+        [HKEY_CLASSES_ROOT\*\shell\EditWithVSCodeForText\command]
+        @="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe \"%1\""
 
-            ; ######################################## 在目录背景上右键 ########################################
-            ; EditWithVSCodeForText
-            [HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithVSCodeForText]
-            @="Edit with VSCodeForText"
-            "Icon"="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe"
+        ; ######################################## 在目录背景上右键 ########################################
+        ; EditWithVSCodeForText
+        [HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithVSCodeForText]
+        @="Edit with VSCodeForText"
+        "Icon"="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe"
 
-            [HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithVSCodeForText\command]
-            @="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe"
+        [HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithVSCodeForText\command]
+        @="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe"
+        ```
 
     - VSCodeForText 删除右键菜单
 
-            Windows Registry Editor Version 5.00
+        ```
+        Windows Registry Editor Version 5.00
 
-            [-HKEY_CLASSES_ROOT\*\shell\EditWithVSCodeForText]
-            [-HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithVSCodeForText]
-
+        [-HKEY_CLASSES_ROOT\*\shell\EditWithVSCodeForText]
+        [-HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithVSCodeForText]
+        ```
 
 - 测试 VSCodeForText
 
