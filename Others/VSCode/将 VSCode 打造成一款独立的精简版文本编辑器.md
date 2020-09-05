@@ -48,7 +48,7 @@ VSCode 有 zip 版，解压后，在解压目录添加一个 data 目录，就�
 
     ctrl + shift + p, 搜索 'settings.json'，选择“首选项：打开设置”。
 
-        *这是只是参考，我是用 Unix 换行符的。*
+    *这是只是参考，我是用 Unix 换行符的。*
 
         {
             //////////////////////// 设置 tab ///////////////////////////
@@ -68,7 +68,7 @@ VSCode 有 zip 版，解压后，在解压目录添加一个 data 目录，就�
             
         }
 
-1. 添加右键菜单，Edit With VSCodeForText
+2. 添加右键菜单，Edit With VSCodeForText
 
     *这是按我的解压的路径来的，你要根据自己的实际路径来修改*
 
@@ -98,25 +98,11 @@ VSCode 有 zip 版，解压后，在解压目录添加一个 data 目录，就�
 
             Windows Registry Editor Version 5.00
 
-            ; ######################################## 在文件上右键 ########################################
-            ; EditWithVSCodeForText
             [-HKEY_CLASSES_ROOT\*\shell\EditWithVSCodeForText]
-            @="Edit with VSCodeForText"
-            "Icon"="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe"
-
-            [-HKEY_CLASSES_ROOT\*\shell\EditWithVSCodeForText\command]
-            @="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe \"%1\""
-
-            ; ######################################## 在目录背景上右键 ########################################
-            ; EditWithVSCodeForText
             [-HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithVSCodeForText]
-            @="Edit with VSCodeForText"
-            "Icon"="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe"
 
-            [-HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithVSCodeForText\command]
-            @="D:\\PortableProgramFiles\\VSCodeForText\\Code.exe"
 
-1. 测试 VSCodeForText
+3. 测试 VSCodeForText
 
 测试的 markdown 文件可在 refer 中找。如果有错则可重装 Markdown Preview Enhanced 试试。
 
