@@ -10,6 +10,7 @@
 
 ### recommend
 
+- vim 目录
 - markdown-aa
 
     markdown 教程
