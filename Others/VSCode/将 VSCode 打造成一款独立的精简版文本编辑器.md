@@ -52,18 +52,23 @@
 
         ```json
         {
-            //////////////////////// 设置 tab ///////////////////////////
-            // refer: https://www.cnblogs.com/wangyang0210/p/10807537.html
-            "editor.detectIndentation": false,  //关闭检测第一个tab后面就tab
-            //"editor.renderControlCharacters": true, //制表符显示->
-            //"editor.renderWhitespace": "all", //空格显示...
-            "editor.tabSize": 4,//tab为四个空格
-            "editor.insertSpaces": true, //转为空格
+            ///////////////////////// tab 与 indent 设置 ///////////////////////////
+            "editor.tabSize": 4,                // 设置 tab 显示空格数
+            "editor.useTabStops": true,         // 根据 tabSize 来插入与删除空格
+            "editor.insertSpaces": true,        // 按 Tab 时插入空格, 而不是 tab。（如果不想这样可关闭此选项，按 S-tab 来代替）
+            "editor.detectIndentation": false,  // 不根据文件内容检测 tabSize 和 insertSpaces
 
-            /////////////////////// 设置换行符 //////////////////////////
+            // 针对特定的语言的 tab 设置
+            "language-specific" : [
+                { "language": "makefile",
+                    "editor.insertSpaces": false
+                }
+            ],
+
+            ///////////////////////// 设置换行符 ///////////////////////////
             "files.eol": "\n",
 
-            ///////////////////////// 关闭推荐 ////////////////////////////
+            /////////////////////////// 关闭推荐 ///////////////////////////
             "extensions.ignoreRecommendations": true,
             "extensions.showRecommendationsOnlyOnDemand": true,
             "update.enableWindowsBackgroundUpdates": false,
