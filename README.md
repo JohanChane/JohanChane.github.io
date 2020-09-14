@@ -11,6 +11,7 @@
 ### recommend
 
 - vim 目录
+- vim 的轻度使用总结
 - markdown-aa
 
     markdown 教程
