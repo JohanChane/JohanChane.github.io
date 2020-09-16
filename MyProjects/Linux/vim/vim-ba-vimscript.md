@@ -359,6 +359,8 @@ vim script 有很多知识点是类似的。
 
 `set runtimepath?`
 
+runtime
+
 ### autoload
 
 `help autolaod`

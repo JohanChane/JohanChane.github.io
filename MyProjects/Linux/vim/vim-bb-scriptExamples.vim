@@ -318,19 +318,19 @@ endfunction
 call FunctionForCurlyBN()
 
 " ### user command
-function FunctionForUserComm()
+function FunctionForUserCmd()
     echo "user command:"
     " var 表示补全 user variables
-    com! -nargs=1 -complete=var MyComm echo <args>
+    com! -nargs=1 -complete=var MyCmd echo <args>
 endfunction
 
-call FunctionForUserComm()
+call FunctionForUserCmd()
 
-call FunctionForUserComm()
+call FunctionForUserCmd()
 
-" 列出 `MyComm` 开头的用户命令
-com MyComm
+" 列出 `MyCmd` 开头的用户命令
+com MyCmd
 
 " 测试
-" :MyComm <C-d>/tab     " 会补全变量
-" :MyComm 'Hello MyComm'
+" :MyCmd <C-d>/tab     " 会补全变量
+" :MyCmd 'Hello MyCmd'

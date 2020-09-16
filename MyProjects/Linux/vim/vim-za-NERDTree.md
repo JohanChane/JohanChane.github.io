@@ -32,7 +32,7 @@ map <C-n> :NERDTreeToggle<CR>       " 打开或关闭 NERDTree
 
     - tree root（文件系统正在打开的路径，与当前工作目录不同）
 
-        CD(返回到 tree root), C, u, R
+        CD(change root node to PWD), C, u, R
 
 - Bookmark
 

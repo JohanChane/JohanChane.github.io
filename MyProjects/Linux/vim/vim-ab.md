@@ -19,10 +19,12 @@
 
     一"块"文本
 
-- Ex command
+- Ex command, mode
 
     `help :`
         Command-line mode is used to enter Ex commands (":")
+
+    `Q, visual, vim -e`
 
 - vim "组件"
 
@@ -101,15 +103,29 @@
     help forced-motion
         visual-block 是可以编辑的。应用场景，注释。
 
-### vim 基础命令与函数
+### vim 基础命令，函数，操作
 
-    set, let, echo, echom, message, call
+    set, let, echo, echom, call
     put
     exe
     execute()
     filter
     
 
+#### 查看消息
+
+    message
+        不包括 echo 的输出
+    echom
+        输出一个正确的消息到 message
+    echoe
+        输出一个错误的消息到 message
+        
+    echo errmsg
+        查看最后一个错误消息
+    g<
+        查看最后一页输出。包含 echo 输出和 message 的消息。
+    
 #### 命令行的特殊字符
 
     help cmdline-special
@@ -156,23 +172,23 @@
 
 #### 执行外部命令
 
-        help :!<str>       # 重点    # 不处理 <str>，直接放在 shell: cmd.exe /c (<str>)  运行。
-        `:!start`, `:! start` 的区别   # 重点
-            `:!start` 运行的不是 shell 的 start，而 vim 内置的一个程序与 windows start 有区别，而 `:! start` 是运行 shell 的 start。
+    help :!<str>       # 重点    # 不处理 <str>，直接放在 shell: cmd.exe /c (<str>)  运行。
+    `:!start`, `:! start` 的区别   # 重点
+        `:!start` 运行的不是 shell 的 start，而 vim 内置的一个程序与 windows start 有区别，而 `:! start` 是运行 shell 的 start。
+    
+    help :rang!
         
-        :help :rang!
-        
-
 #### 执行多个命令
-        :help :bar
-        <command> | <command>           # 类似于 shell 的 (;)
-        <command> && <command>
+
+    help :bar
+    <command> | <command>           # 类似于 shell 的 (;)
+    <command> && <command>
 
 ### vim "组件"
 
 *一般是一个 buf 对应一个 file，多个 windows*
 
-buffers, windows, tab pages, reg, jumps, changes, marks, 位置信息表, tags
+buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and location-list, tags
 
     buffers
         :ls, :b<n|N>, :b <N>, :sb <N>, :sba, :e <file>, enew, bdel
@@ -187,9 +203,10 @@ buffers, windows, tab pages, reg, jumps, changes, marks, 位置信息表, tags
             退出所有 windows。
 
     tab pages
+        `help tabpage`
         一个 tab page 可有多个 windows。比如：vsplist 后 tab page 会添加一个窗口。
         默认只有一个 tab page, 可用 tab 新建一个 tab page。
-        :tabs
+        tabs, tabclose
 
     regs
         :reg, "<reg>yj, "<reg>p, C-r<reg>
@@ -216,78 +233,86 @@ buffers, windows, tab pages, reg, jumps, changes, marks, 位置信息表, tags
         `m[0-9]` 不能直接设置，是 viminfo 设置的。比如：`m0` 是上次最后 vim 时光标所在位置。
         :marks, m[a-zA-A], `<mark>
 
-    位置信息表（一般存放编译错误信息和 tags）
-        全局位置信息表
-            :cwindow, copen, cn, cp
-        局部位置信息表
-            每个 window 有各自的 lwindow。
+    quickfix-list and location-list（一般存放编译错误信息和 tags）
+        `help quickfix`
+        quickfix-list
+            cwindow, copen, cn, cp
+        location-list (也称为 window-local quickfix list)
+            每个 window 有各自的 location-list。
             :lwindow, lopen, ln, lp
+
+        它们是如何生成的？
+            vimgrep, grep, helpgrep, make 会生成 quickfix list。而 lvimgrep, lgrep, lhelpgrep, lmake 会生成 location-list。
+            ts /<reg> 会生成 quickfix list。
     tags
         :ts, :tn, :tp, C-], C-t
 
-#### 寄存器
-        :help {register}
 
-        "": 最近复制或删除的内容
-        "0: 最近复制的内容
-        "1~9: 最近删除的内容。"2: 比 `"1` 更早点删除的内容。依此推到 "9。
-        ...
-        system clipboard of Linux: "+
-        system clipboard of Windows: "+ 或 "*
-        a-z/A-Z
-        
-        ". 上次插入模式下输入的内容。
+#### 寄存器
+
+    help registers
+
+    "": 最近复制或删除的内容
+    "0: 最近复制的内容
+    "1~9: 最近删除的内容。"2: 比 `"1` 更早点删除的内容。依此推到 "9。
+    ...
+    system clipboard of Linux: "+
+    system clipboard of Windows: "+ 或 "*
+    a-z/A-Z
+    
+    ". 上次插入模式下输入的内容。
 
 #### 宏 (recoding)
 
-        录制一系操作到寄存器。
+    录制一系操作到寄存器。
 
-        :help recording
-            创建宏
-                开始录制
-                    q<reg>
-                结束录制
-                    q
-                    
-            使用宏
-                @<reg>
+    help recording
+        创建宏
+            开始录制
+                q<reg>
+            结束录制
+                q
+                
+        使用宏
+            @<reg>
 
-            查看宏
-                :reg
+        查看宏
+            :reg
 
 #### 窗口与 tab
 
-        :help ctrl-w
-            C-w + Left, Right ...: 不同窗口之间移动
-   
-        windows
-            :split      # 水平分割
-            :vsplit     # 垂直分割
-        
-            C-w =
-            C-w - 
-            C-w |
-            C-w p
-        tab
-            tab <cmd>
-            C-w T           # 没法将 tab 转为窗口，只能关闭再打开
-            gt
-            gT
+    help ctrl-w
+        C-w + Left, Right ...: 不同窗口之间移动
+
+    windows
+        :split      # 水平分割
+        :vsplit     # 垂直分割
+    
+        C-w =
+        C-w - 
+        C-w |
+        C-w p
+    tab
+        tab <cmd>
+        C-w T           # 没法将 tab 转为窗口，只能关闭再打开
+        gt
+        gT
 
 #### 按键映射
 
-        help map-commands
-            :map, nmap, xmap, cmap, omap, imap
-            :noremap, nnoremap, xnoremap, cnoremap, onoremap, inoremap      # nore: 表示非递归
-        
-        <Leader>
-            会被 mapleader 的内容所代替。`help mapleader`。
+    help map-commands
+        :map, nmap, xmap, cmap, omap, imap
+        :noremap, nnoremap, xnoremap, cnoremap, onoremap, inoremap      # nore: 表示非递归
+    
+    <Leader>
+        会被 mapleader 的内容所代替。`help mapleader`。
 
-            for example:
-                " :nmap b :echo "Foo"<cr>                    " <CR> 是按下回车
-                " :nmap a b
-                " :nnoremap a b
-                " nnoremap <leader>h :helpgrep<space>
+        for example:
+            " :nmap b :echo "Foo"<cr>                    " <CR> 是按下回车
+            " :nmap a b                                  " a 表示 :echo "Foo"<cr>
+            " :nnoremap a b
+            " nnoremap <leader>h :helpgrep<space>
+
     filetype
         help file-type
 
@@ -304,32 +329,72 @@ buffers, windows, tab pages, reg, jumps, changes, marks, 位置信息表, tags
             再次检测文件类型。filetype on, filetype plugin, indent on 都是在打开文件时会执行的。而如果用户打开空文件，输入文本，假如输入的是 #!/bin/bash，然后输入命令 :filetype detect 则可以再次检测文件类型了，这时会识别文件为 sh 类型。会使用 detection:ON。
 
 #### autocmd
-        help autocommand
 
-        au[tocmd] [group] {event} {pat} [++once] [++nested] {cmd}
-            event 可列出事件
-            pat 用于匹配文件
-            cmd 事件触发的命令
+    help autocommand
 
-        列出自动命令
-        执行自动命令
-            :doau 
+    au[tocmd] [group] {event} {pat} [++once] [++nested] {cmd}
+        event 可列出事件
+        pat 用于匹配文件
+        cmd 事件触发的命令
 
-        for example:
-            autocmd FileType text set textwith=0
+    列出自动命令
+    执行自动命令
+        :doau 
+
+    for example:
+        autocmd FileType text set textwith=0
+
+### grep
+
+`help grep`
+
+vim 有两种搜索方式，internal grep(vimgrep) 和 external grep(grep)。
+
+    内部 grep 的好处是能在所有系统上使用，和能使用强大的 vim search patterns。坏处是比外部 grep 慢，因为文件都要读入内存。
+    vimgrep, grep 会生成 quickfix list, 而 lvimgrep, lgrep 会生成 location list。
+
+#### internal grep
+
+    格式
+        vim[grep][!] /{pattern}/[g][j] {file} ...
+            g: 如果没有 g, 则添加每行第一次匹配（match）。如果有 g, 则每行的所有匹配。
+            j: jump。表示跳到第一次匹配的位置，否则只是更新 quickfix list。
+            !: With the [!] any changes in the current buffer are abandoned.
+        <count>vim ...
+            <count>: 匹配的最大次数。
+
+        lvimgrep 也 grepvim 是一样的格式，lvimgrep 只是添加匹配到 location list.
+
+        vimgrepadd, lvimgrepadd 也与 vimgrep 有一样的格式，不同的是 <vimgrep>add 添加 list 到 current list, 而 <vimgrep> 生成新的 list。
+
+
+    for example:
+        :vimgrep /stdio\.h/ /usr/include/*.h
+
+#### external grep
+
+与 linux grep 有相同的接口，即用法一样。grep 不是系统提供的，而是 vim 提供的。比如：windown gvim 的 grep 是用 findstr 查找的。
+
+    格式
+        grep [arguments]
+        lgrep
+        grepadd, lgrepadd
+
+    for example:
+        :grep -ir 'stdio\.h' /usr/include/*.h
 
 ### vim 的文件
 
-        备份文件
-            set backup
-        交换文件: swap file
-            set directory
-        撤消文件
-            set undofile
-            set undodir
-        viminfo 文件: 记录历史命令，最近打开的文件，...
-            help viminfo
-            set viminfo
+    备份文件
+        set backup
+    交换文件: swap file
+        set directory
+    撤消文件
+        set undofile
+        set undodir
+    viminfo 文件: 记录历史命令，最近打开的文件，...
+        help viminfo
+        set viminfo
 
 ### vim 快捷键
 
@@ -372,11 +437,11 @@ buffers, windows, tab pages, reg, jumps, changes, marks, 位置信息表, tags
 ### vim 技巧
 
     搜索
-        搜索不区别大小写
-            :help ignorecase
+        搜索不区别大小写。`help \c`
+            help ignorecase
                 /<pattern>\c
-        全词匹配
-            :help \\<
+        全词匹配。`help \\<`
+            help \\<
                 \<<word>\>
 
     搜索历史命令
@@ -408,7 +473,8 @@ buffers, windows, tab pages, reg, jumps, changes, marks, 位置信息表, tags
             <N>%
         
     打开最近文件
-        oldfiles/browse oldfiles
+        oldfiles            # 查看最近打开的文件
+        browse oldfiles     # 查看并打开最后打开的文件
 
     浏览文件系统
         # 除了 `:Next, :X`，大写开头是用户命令
@@ -433,3 +499,7 @@ buffers, windows, tab pages, reg, jumps, changes, marks, 位置信息表, tags
         m[A-Z] 记录好位置，因为 changes 只针对 buf, jumps 只针对 window，用 `C-o, g;` 则没有那么方便。
         `g;, C-o` 要多用
         如果一个文件过长，则用 m[a-z] 记录好位置。
+
+    比较两行是否相同
+        <range>sort [i] u
+            如果只剩下一行则两行相同，否则不同。
