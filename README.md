@@ -1,26 +1,30 @@
 # Johan Chane's Blog
 
-### txt 的内容排版规则
+*链接就不维护了，根据目录结构与文件名就可以相应的资源了*
 
-缩进为标题，再缩进为标题内容或小标题。
+## MyProjects
 
-### 搜索文件
+### Linux
 
-    go to file -> <输入文件名>
+- Shell
+- Makefile
+- gdb
+- git
+- vim
 
-### recommend
+### Python
 
-- vim 目录
-- vim 的轻度使用总结
-- markdown-aa
+### Others
 
-    markdown 教程
+- Markdown
+- Dos
+- PowerShell
 
-- bash 快捷方式
+## Others
 
-- linux 包管理总结
-
-- 五笔打字
+### Linux
+### VSCode
+### 五笔打字
 
 ---
 
