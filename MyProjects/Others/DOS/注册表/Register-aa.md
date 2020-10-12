@@ -1,10 +1,12 @@
-# windows 添加右键菜单
+# windows 注册表
 
 ### refer
 
 - <https://blog.csdn.net/meng_suiga/article/details/79485855>
-
+    
     注册表参数
+
+## 添加右键菜单
 
 ### 添加右键菜单的方法
 
@@ -20,10 +22,16 @@
 	    
 #### 注册表参数
 
-|参数|解释|
-|----|-----|
-|%1, %L | 操作的文件|
-|%V | 文件路径|
+| Parameter | Evaluates to                               |
+| --        | --                                         |
+| %1        | Long fully qualified path of file          |
+| %D        | Long fully qualified path of file          |
+| %H        | 0                                          |
+| %I        | :number:number                             |
+| %L        | Long fully qualified path of file          |
+| %S        | 1                                          |
+| %V        | Long fully qualified path of file          |
+| %W        | Long fully qualified path of parent folder |
 
 ### 相应的 shell
 
@@ -47,8 +55,14 @@
 
 ### 例子
 
+#### Open Cmd Here
+
 *按住 shift + 右键，在当前目录下打开 DOS*
 
+
+- 添加右键菜单
+
+    ```
     Windows Registry Editor Version 5.00
 
     [HKEY_CLASSES_ROOT\Directory\shell\OpenCmdHere]
@@ -82,11 +96,26 @@
 
     [HKEY_CLASSES_ROOT\LibraryFolder\background\shell\OpenCmdHere\command]
     @="cmd /k cd %v"
+    ```
+
+- 删除右键菜单
+
+    ```
+    Windows Registry Editor Version 5.00
+
+    [-HKEY_CLASSES_ROOT\Directory\shell\OpenCmdHere]
+    [-HKEY_CLASSES_ROOT\Directory\Background\shell\OpenCmdHere]
+    [-HKEY_CLASSES_ROOT\Drive\shell\OpenCmdHere]
+    [-HKEY_CLASSES_ROOT\LibraryFolder\background\shell\OpenCmdHere]
+    ```
+
+#### Eidt with Vim
 
 *用 vim 编辑文件*
 
-*添加右键菜单*
+- 添加右键菜单
 
+    ```
     Windows Registry Editor Version 5.00
 
     ; ######################################## 在文件上右键 ########################################
@@ -106,11 +135,13 @@
 
     [HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithGVim\command]
     @="D:\\PortableProgramFiles\\Vim\\gvim.exe"
+    ```
 
-*删除右键菜单*
+- 删除右键菜单
 
+    ```
     Windows Registry Editor Version 5.00
 
     [-HKEY_CLASSES_ROOT\*\shell\EditWithGVim]
     [-HKEY_CLASSES_ROOT\Directory\Background\shell\EditWithGVim]
-
+    ```

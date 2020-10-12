@@ -503,3 +503,7 @@ vim 有两种搜索方式，internal grep(vimgrep) 和 external grep(grep)。
     比较两行是否相同
         <range>sort [i] u
             如果只剩下一行则两行相同，否则不同。
+
+	拼接文件
+		:r <file>
+		:w>> [file]			# `help :w_a`

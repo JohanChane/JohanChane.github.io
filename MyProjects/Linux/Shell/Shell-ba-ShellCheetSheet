@@ -1,0 +1,299 @@
+#!/bin/bash
+
+### Refers
+# https://unix.stackexchange.com/questions/40786/how-to-do-integer-float-calculations-in-bash-or-other-languages-frameworks
+
+err() {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+function debug() {
+    if [[ $1 -ne 0 ]]; then
+        set -x
+    else
+        set +x
+    fi
+}
+
+globalVar1='value1'
+
+function funcForVarScope() {
+    echo "funcForVarScope"
+
+    globalVar2='value2'
+    declare -g globalVar3='value3'
+    local localVar1='localVar1'
+    declare localVar2='localVar2'
+}
+
+funcForVarScope
+
+
+function funcForDataType() {
+    echo "funcForDataType"
+
+    ### 整数
+    local -i num1=10
+    local -i num2=-10
+    echo $(( num1 + num2 ))
+
+    ### float
+    local num3='10.5'
+    local num4='10.4'
+    echo "scale=4; $num3 - $num4" | bc
+    
+    # echo $(( num3 - num4 ))       # 有些 bash 可以
+
+    awk "BEGIN {print "$num3" - "$num4"}"
+
+
+    # let "num3 - num4"               # 不可以
+    
+    let "num5=10" "num6=100" "sum=num5 + num6"       # let 中的 num 不能是浮点数。声明的变量都是全局变量
+    echo $sum
+
+    ### indexed array（下标可以是不连续的）
+    declare -ai indexedArray1=(1 2 3)
+    # 相当于 declare -ai indexedArray1=([0]=1 [1]=2 [2]=3)
+    indexedArray1[10]=4                    # 添加一个元素，数组长度为 4
+    echo ${indexedArray1[10]}
+
+    echo $indexedArray1
+    echo ${indexedArray1[0]}             # 要加花括号
+
+    
+    #  打印数组
+    for i in "${!indexedArray1[@]}"; do
+        printf '${indexedArray1[%s]}=%s\t' "$i" "${indexedArray1[$i]}"
+        # echo -ne "\${indexedArray1[$i]}=${indexedArray1[$i]}\t"
+    done
+    echo ""
+
+    for i in "${indexedArray1[@]}"; do
+        echo -ne "$i\t"
+    done
+    echo ""
+
+    ### associative arrays
+    declare -A assocArray1=([keya]=1 [keyb]='abc')
+    
+    echo ${assocArray1[keyb]}
+    echo ${assocArray1['keyb']}
+
+    #  打印数组
+    for i in "${!assocArray1[@]}"; do
+        printf '${assocArray1[%s]}=%s\t' "$i" "${assocArray1[$i]}"
+    done
+    echo ""
+
+    for i in "${assocArray1[@]}"; do
+        echo -ne "$i\t"
+    done
+    echo ""
+}
+
+funcForDataType
+# echo $sum
+
+function funcForBranchControl() {
+    echo "funcForBranchControl"
+
+    if test 1 -eq 1 -a 0 -eq 0; then
+        echo test: true
+    fi
+
+    if [ 1 -eq 1 -a 0 -eq 0 ]; then
+        echo []: true
+    fi
+
+    if [[ 1 -eq 1 && 0 -eq 0 ]]; then
+        echo [[]]: true
+    fi
+
+    # !(!0 && !0) && !(0) = 1
+    if ! [[ ! (0 -ne 1) || ! (0 -ne 1) ]] && ! [[ 0 -eq 1 ]];then
+        echo !: true
+    else
+        echo !: false
+    fi
+
+
+    expr1='aa'
+    case "$expr1" in
+        'aa')
+            echo 'aa'
+            ;;
+        'bb')
+            echo 'bb'
+            ;;
+        *)
+            echo 'default'
+            ;;
+    esac
+}
+
+funcForBranchControl
+
+function funcForLoop() {
+    echo "funcForLoop"
+
+    # list 元素要用空格，tab, 换行符隔开,而不是用 $IFS。具体解析查看 [$IFS 作用的地方](https://mywiki.wooledge.org/IFS)。
+    for i in 'aa' 'bb' 'cc'; do
+        echo -ne "$i\t"
+    done
+    echo ""
+
+    OLDIFS=$IFS
+    IFS=$','                            
+    list='aa,bb,cc'
+    # for i in 'aa','bb','cc'; do       # 不可以这么写
+    # for i in 'aa,bb,cc'; do           # 不可以这么写
+    for i in $list; do                  # 解析后的 list 的元素应该是用空格或 tab 或换行符隔开的，而不是 list 变量的内容
+        echo -ne "$i\t"
+    done
+    echo ""
+
+    IFS=$OLDIFS
+
+    for ((i=0; i<10;i++)); do
+        echo -ne "$i\t"
+    done
+    echo ""
+
+    i=0
+    while [[ $i -lt 10 ]]; do
+        echo -ne "$i\t"
+        let "i++"
+    done
+    echo ""
+
+    # until 与 while 的区别：until 与 while 相反，until 是条件不成立则进入循环，成立则退出循环。
+    i=0
+    until [[ $i -ge 10 ]]; do
+        echo -ne "$i\t"
+        let "i++"
+    done
+    echo ""
+
+    select choice in 'aa' 'bb' 'cc'; do
+        case $choice in
+            'aa')
+                echo aa
+                ;;
+            'bb')
+                echo bb
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+funcForLoop
+
+function funcForCmp() {
+    echo "funcForCmp"
+
+    local num=$1
+    local str=$2
+    local file=$3
+
+    if [[ $num -eq 0 ]];then
+        echo equal to 0
+    elif [[ $num -lt 0 ]]; then
+        echo less than 0
+    else
+        echo greater than 0
+    fi
+
+    if [[ -n $str ]]; then
+        echo string len is not zero
+    fi
+    if [[ -z $str ]]; then
+        echo string len is zero
+    fi 
+
+    if [[ $str == 'abc' ]]; then
+        echo equal to abc
+    fi
+    if [[ $str != 'abc' ]]; then
+        echo not equal to abc
+    fi
+
+    # if [[ $str =~ "^a.*" ]]; then     # 不能加引号
+    if [[ $str =~ ^a.* ]]; then
+        echo match ^a.*
+    else 
+        echo no match ^a.*
+    fi
+
+    if [[ -f $file ]]; then
+        echo the file exists and is a regular file
+    elif [[ -d $file ]]; then
+        echo the file exists and is a directory
+    elif [[ -e $file ]]; then
+        echo the file exists
+    else
+        :
+    fi
+
+}
+
+funcForCmp 0 'abc' .
+
+
+funcForFunc() {
+    echo "funcForFunc"
+
+    # parameters
+    echo parameters: $1 $2
+    echo parameters: $@
+
+    echo 'subsitution of the func'
+    
+    return 0
+}
+
+funcForFunc 'aa' 'bb'
+
+# function substitution
+ret=$(funcForFunc 'aa' 'bb')
+echo $ret
+echo $?
+
+function funcForQuote() {
+    echo "funcForQuote"
+
+    # echo '\''
+    # echo 'str1''str2'
+    echo 'str1'\''str2'
+    echo "'"
+
+    echo '"'
+    echo "\""
+}
+
+funcForQuote
+
+function funcForVarSubstr() {
+    echo "funcForVarSubstr"
+
+    local var1='ABCDE'
+    echo ${var1:1:-1}
+    echo ${var1:0:-2}
+    echo ${var1:0:1}
+    echo ${var1: -1:1}      # 注意空格
+
+    local var2='aa/bb/cc'
+    echo ${var2#*/}
+    echo ${var2##*/}
+    echo ${var2%/*}
+    echo ${var2%%/*}
+
+    echo ${var2/\//_}
+    echo ${var2//\//_}
+}
+
+funcForVarSubstr
+

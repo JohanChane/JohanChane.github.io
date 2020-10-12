@@ -1,0 +1,37 @@
+.PHONY: all prepare
+
+# 列出相关文件，包含目录，但是不会查找子目录
+FILES_WILDCARD := $(wildcard ./*)
+# -name 后要加双引号
+SRC_FILES := $(shell find . -name "*.cpp")
+OBJ_FILES := $(SRC_FILES:%.cpp=%.o)
+
+FILES_FIND := $(shell find .)
+
+prepare:
+    # shell 的 if 语句要在一行
+    if [[ ! -e includea ]]; then \
+        mkdir includea; \
+    fi
+
+    if [[ ! -e includeb ]]; then \
+        mkdir includeb; \
+    fi
+
+    touch ./includea/heada.h
+    touch ./includeb/headb.h
+
+    touch testa.cpp
+    touch testb.cpp
+
+all: $(OBJ_FILES)
+    echo $(SRC_FILES)
+    echo $(OBJ_FILES)
+    echo $(FILES_WILDCARD)
+    echo $(FILES_FIND)
+
+%.o: %.cpp
+    echo $@
+    echo $^
+    echo $*
+    echo #######################

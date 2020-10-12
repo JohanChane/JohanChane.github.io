@@ -139,6 +139,7 @@ At the command prompt, type `nano`.
 在 Code 中输出反引号
 
 ``Use `code` in your Markdown file.``
+```Use `code` in your Markdown file.```
 
 [//]: # (```nano``` 是不合法的语法)
 

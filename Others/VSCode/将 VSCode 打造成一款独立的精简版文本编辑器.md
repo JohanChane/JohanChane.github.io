@@ -52,26 +52,34 @@
 
         ```json
         {
-            ///////////////////////// tab 与 indent 设置 ///////////////////////////
+            // ### tab 与 indent 设置
             "editor.tabSize": 4,                // 设置 tab 显示空格数
             "editor.useTabStops": true,         // 根据 tabSize 来插入与删除空格
             "editor.insertSpaces": true,        // 按 Tab 时插入空格, 而不是 tab。（如果不想这样可关闭此选项，按 S-tab 来代替）
             "editor.detectIndentation": false,  // 不根据文件内容检测 tabSize 和 insertSpaces
-
-            // 针对特定的语言的 tab 设置
-            "language-specific" : [
-                { "language": "makefile",
-                    "editor.insertSpaces": false
-                }
-            ],
-
-            ///////////////////////// 设置换行符 ///////////////////////////
+            
+            // ### 设置换行符
             "files.eol": "\n",
 
-            /////////////////////////// 关闭推荐 ///////////////////////////
+            // ### [language specific settings](https://code.visualstudio.com/docs/getstarted/settings)
+            // 可利用状态栏搜索语言的名称
+            "[makefile]": {
+                // 使用 makefile 文件能输入 tab
+                "editor.insertSpaces": false
+            },
+            "[bat]": {
+                // 使 batch 脚本不会因为中文乱码
+                "files.eol": "\r\n"
+            },
+            
+            // ### 关闭推荐
             "extensions.ignoreRecommendations": true,
             "extensions.showRecommendationsOnlyOnDemand": true,
             "update.enableWindowsBackgroundUpdates": false,
+
+            // ### 设置 window title
+            // 为了区分原来的 VScode
+            "window.title": "${dirty}${activeEditorShort}${separator}${rootName}${separator}${appName} For Text"
         }
         ```
 
