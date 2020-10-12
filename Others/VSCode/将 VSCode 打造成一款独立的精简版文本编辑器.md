@@ -58,6 +58,8 @@
             "editor.insertSpaces": true,        // 按 Tab 时插入空格, 而不是 tab。（如果不想这样可关闭此选项，按 S-tab 来代替）
             "editor.detectIndentation": false,  // 不根据文件内容检测 tabSize 和 insertSpaces
             
+            // ### 设置编码
+            "files.encoding": "utf8",
             // ### 设置换行符
             "files.eol": "\n",
 
@@ -69,17 +71,20 @@
             },
             "[bat]": {
                 // 使 batch 脚本不会因为中文乱码
+                "files.encoding": "gbk",
                 "files.eol": "\r\n"
             },
-            
+
+            // ### 设置 window title
+            // 为了区分原来的 VScode
+            "window.title": "${dirty}${activeEditorShort}${separator}${rootName}${separator}${appName} For Text",
+            "editor.fontSize": 15,
+
             // ### 关闭推荐
             "extensions.ignoreRecommendations": true,
             "extensions.showRecommendationsOnlyOnDemand": true,
             "update.enableWindowsBackgroundUpdates": false,
-
-            // ### 设置 window title
-            // 为了区分原来的 VScode
-            "window.title": "${dirty}${activeEditorShort}${separator}${rootName}${separator}${appName} For Text"
+            "update.mode": "manual"
         }
         ```
 
