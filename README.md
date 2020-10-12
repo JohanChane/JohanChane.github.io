@@ -1,6 +1,6 @@
 # Johan Chane's Blog
 
-*链接就不维护了，根据目录结构与文件名就可以相应的资源了*
+*链接就不维护了，根据目录结构与文件名就可以相应的资源了。或者用 github 的 `go to file` 功能。*
 
 ## MyProjects
 
