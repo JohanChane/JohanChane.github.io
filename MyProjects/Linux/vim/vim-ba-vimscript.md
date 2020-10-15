@@ -123,6 +123,7 @@ vim script 有很多知识点是类似的。
             "
 
     - 无特殊意义
+    
             单绰号
             还有一些变量的特殊字符。比如：&, $, ...
 
@@ -275,6 +276,7 @@ vim script 有很多知识点是类似的。
                 :function RangeFunc() range
                     echo a:firstline .. ', ' .. a:lastline 
                 :endfunction
+                " 文件的行数必须有 8 行
                 :4,8call RangeFunc()
     - abort
 

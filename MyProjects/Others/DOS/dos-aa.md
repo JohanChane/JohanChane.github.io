@@ -737,7 +737,7 @@ for example
         exit /b 0
 
         :funcForFunction
-            echo funcForFunction:
+            echo ### funcForFunction
             
             echo %*
             echo %0, %1, %2
@@ -748,7 +748,7 @@ for example
 
 
         :funcForFuncLocal
-            echo funcForFuncLocal:
+            echo ### funcForFuncLocal
             
             set "var=10"
             setlocal

@@ -18,7 +18,7 @@ function debug() {
 globalVar1='value1'
 
 function funcForVarScope() {
-    echo "funcForVarScope"
+    echo "### funcForVarScope"
 
     globalVar2='value2'
     declare -g globalVar3='value3'
@@ -30,7 +30,7 @@ funcForVarScope
 
 
 function funcForDataType() {
-    echo "funcForDataType"
+    echo "### funcForDataType"
 
     ### 整数
     local -i num1=10
@@ -96,7 +96,7 @@ funcForDataType
 # echo $sum
 
 function funcForBranchControl() {
-    echo "funcForBranchControl"
+    echo "### funcForBranchControl"
 
     if test 1 -eq 1 -a 0 -eq 0; then
         echo test: true
@@ -135,7 +135,7 @@ function funcForBranchControl() {
 funcForBranchControl
 
 function funcForLoop() {
-    echo "funcForLoop"
+    echo "### funcForLoop"
 
     # list 元素要用空格，tab, 换行符隔开,而不是用 $IFS。具体解析查看 [$IFS 作用的地方](https://mywiki.wooledge.org/IFS)。
     for i in 'aa' 'bb' 'cc'; do
@@ -193,7 +193,7 @@ function funcForLoop() {
 funcForLoop
 
 function funcForCmp() {
-    echo "funcForCmp"
+    echo "### funcForCmp"
 
     local num=$1
     local str=$2
@@ -244,7 +244,7 @@ funcForCmp 0 'abc' .
 
 
 funcForFunc() {
-    echo "funcForFunc"
+    echo "### funcForFunc"
 
     # parameters
     echo parameters: $1 $2
@@ -263,7 +263,7 @@ echo $ret
 echo $?
 
 function funcForQuote() {
-    echo "funcForQuote"
+    echo "### funcForQuote"
 
     # echo '\''
     # echo 'str1''str2'
@@ -277,7 +277,7 @@ function funcForQuote() {
 funcForQuote
 
 function funcForVarSubstr() {
-    echo "funcForVarSubstr"
+    echo "### funcForVarSubstr"
 
     local var1='ABCDE'
     echo ${var1:1:-1}

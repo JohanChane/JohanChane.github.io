@@ -73,7 +73,7 @@ exit /b 0
 :: ####################################################################################
 
 :funcForEscape
-    echo funcForEscape:
+    echo ### funcForEscape
     
     :: ### `^` 在 echo 中是特殊字符
     echo ^^ ^>
@@ -110,7 +110,7 @@ exit /b 0
 goto :eof
 
 :funcForDelimite
-    echo funcForDelimite:
+    echo ### funcForDelimite
 
     for %%v in (aa,bb) do echo %%v
     for %%v in (aa;bb) do echo %%v
@@ -121,13 +121,13 @@ goto :eof
 goto :eof
 
 :funcForQuote
-    echo funcForQuote:
+    echo ### funcForQuote
 
     if "str"=="str" echo true
 goto :eof
 
 :funcForVar
-    echo funcForVar:
+    echo ### funcForVar
 
     set "var=ABC"
     echo %var%
@@ -141,7 +141,7 @@ goto :eof
 
 
 :funcForVar
-    echo funcForVar:
+    echo ### funcForVar
 
     set "var=ABC"
     echo %var%
@@ -155,7 +155,7 @@ goto :eof
 
 
 :funcForParamExpansion
-    echo funcForParamExpansion:
+    echo ### funcForParamExpansion
 
     echo f %~f1
     echo d %~d1
@@ -171,7 +171,7 @@ goto :eof
 
 :: for `%~$PATH:1`
 :funcForParamExpansion1
-    echo funcForParamExpansion1:
+    echo ### funcForParamExpansion1
 
     echo %PATH%
     echo %~1
@@ -180,7 +180,7 @@ goto :eof
 goto :eof
 
 :funcForParamExpansion
-    echo funcForParamExpansion:
+    echo ### funcForParamExpansion
 
     echo f %~f1
     echo d %~d1
@@ -196,7 +196,7 @@ goto :eof
 
 
 :funcForDelayedExpansion
-    echo funcForDelayedExpansion:
+    echo ### funcForDelayedExpansion
 
     set "_var="
     Set "_var=first"
@@ -216,7 +216,7 @@ goto :eof
 goto :eof
 
 :funForVarSubstr
-    echo funForVarSubstr:
+    echo ### funForVarSubstr
 
     set "var=ABCDE"
     echo %var:~1%
@@ -228,7 +228,7 @@ goto :eof
 goto :eof
 
 :funForVarReplace
-    echo funForVarReplace:
+    echo ### funForVarReplace
 
     set "var=ABCDE"
     echo %var:ABC=abc%
@@ -244,7 +244,7 @@ goto :eof
 
 
 :funcForCondExec
-    echo funcForCondExec:
+    echo ### funcForCondExec
 
     echo aa & echo bb
     echo aa && echo bb
@@ -254,7 +254,7 @@ goto :eof
 
 
 :funcForWildcards
-    echo funcForWildcards:
+    echo ### funcForWildcards
 
     :: 列出当前路径的文件(不包含目录)
     for  %%v in (.\*) do (echo %%v)
@@ -270,7 +270,7 @@ goto :eof
 
 
 :funcForBranchCtrl
-    echo funcForBranchCtrl:
+    echo ### funcForBranchCtrl
 
     if 0 equ 1 (
         type nul
@@ -306,7 +306,7 @@ goto :eof
 
 
 :funcForLoopCtrl
-    echo funcForLoopCtrl:
+    echo ### funcForLoopCtrl
 
     for %%v in (aa bb) do echo %%v
     :: 会输出引号
@@ -336,7 +336,7 @@ goto :eof
 
 
 :funcForFunction
-    echo funcForFunction:
+    echo ### funcForFunction
     
     echo %*
     echo %0, %1, %2
@@ -347,7 +347,7 @@ goto :eof
 
 
 :funcForFuncLocal
-    echo funcForFuncLocal:
+    echo ### funcForFuncLocal
     
     set "var=10"
     setlocal
