@@ -30,6 +30,9 @@
 
     <https://stackoverflow.com/questions/161813/how-to-resolve-merge-conflicts-in-git>
 			
+- git cheet sheet
+
+    <https://training.github.com/downloads/zh_CN/github-git-cheat-sheet/>
 
 ### 基本概念
 

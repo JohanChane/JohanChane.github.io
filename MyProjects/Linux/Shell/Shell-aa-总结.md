@@ -341,13 +341,17 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
         ~-: $OLDPWD
         
 
-#### shell 对通匹符的扩展
+#### shell 对通配符的扩展
 
     filename expansion
         ‘*’, ‘?’, and ‘[’
 
-只要通匹符能匹配到文件则将其转换所匹配的文件名。如果没有匹配的文件名则不转换。在引号中无效。
+只要通配符能匹配到文件则将其转换所匹配的文件名。如果没有匹配的文件名则不转换。在引号中无效。
     
+[`**`](https://stackoverflow.com/questions/28176590/what-do-double-asterisk-wildcards-mean)
+
+    有些 shell 支持 `**`, 表示匹配多个目录。比如：bash 则要用 `shopt -s globstar` 开启这个功能。
+
     对目录：
         dir/*/subdir            # dir, subdir 之间隔着一层目录
         dir/**/subdir           # 隔着多层目录

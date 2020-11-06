@@ -403,7 +403,11 @@ for example
     command; commands
 
     # ### PowerShell 不支持 `&&,||`，可用此代替
-    # *`-and, -or` 输出逻辑运算结果*
+    # #### `&&, ||`
+    echo aa; if ($?) {echo bb}
+    echo aa; if (! $?) {echo bb}
+
+    # #### `-and, -or` 输出逻辑运算结果
     $(echo aa | Out-Host;$?) -and $(echo bb | Out-Host;$?)
     $(echo aa | Out-Host;$?) -or $(echo bb | Out-Host;$?)
 
@@ -1105,9 +1109,13 @@ for example
 
 #### replace
 
+    # ### `-replace <regex>, <replacement>`
     "abcdef" -replace "def","xyz"
     # 大小不敏感
     "abcdef" -replace "dEf","xyz"
+
+    # ### `.Replace(<literalString>, <replacement>)`
+    '\dir\file'.Replace('\dir', '')
 
 #### path
 

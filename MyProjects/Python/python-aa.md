@@ -1,3 +1,5 @@
+### Content
+
 # Python
 
 *Python version: Python3.8*
@@ -23,6 +25,114 @@
 - <https://docs.python.org/zh-cn/3/library/functions.html>
 
     python 的内置函数
+
+### Content
+
+<!-- vim-markdown-toc GFM -->
+
+* [基本概念](#基本概念)
+    * [一切都是对象。](#一切都是对象)
+    * [变量名与对象](#变量名与对象)
+        * [对象的 id](#对象的-id)
+    * [对象含有对象是如何存储的](#对象含有对象是如何存储的)
+    * [Ohters](#ohters)
+        * [语法变化](#语法变化)
+* [Basic](#basic)
+    * [Get help](#get-help)
+        * [查看 builtin 函数或类型的定义](#查看-builtin-函数或类型的定义)
+    * [查看信息（用于反馈）](#查看信息用于反馈)
+    * [调试程序](#调试程序)
+    * [Output](#output)
+    * [[print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)](https://docs.python.org/zh-cn/3/library/functions.html#print)](#printobjects-sep--endn-filesysstdout-flushfalsehttpsdocspythonorgzh-cn3libraryfunctionshtmlprint)
+    * [输出格式](#输出格式)
+    * [字面值](#字面值)
+        * [字符串字面值拼接](#字符串字面值拼接)
+    * [转义字符](#转义字符)
+        * [转义换行符](#转义换行符)
+    * [内置数据类型](#内置数据类型)
+        * [常用的内置容器类型](#常用的内置容器类型)
+        * [可变对象与不可变对象](#可变对象与不可变对象)
+        * [hashable](#hashable)
+        * [数字类型](#数字类型)
+            * [类型转换](#类型转换)
+        * [序列类型](#序列类型)
+            * [列表解析（list comprehension）](#列表解析list-comprehension)
+        * [集合类型](#集合类型)
+        * [映射类型](#映射类型)
+            * [字典](#字典)
+    * [垃圾回收机制](#垃圾回收机制)
+        * [驻留（interning）](#驻留interning)
+    * [Branch Control](#branch-control)
+        * [比较](#比较)
+            * [运算符](#运算符)
+    * [Loop Control](#loop-control)
+    * [function](#function)
+        * [argument](#argument)
+            * [positional-only or keyword-only arguments](#positional-only-or-keyword-only-arguments)
+        * [return](#return)
+        * [传参方式](#传参方式)
+            * [浅层 (shallow) 和深层 (deep) 复制操作](#浅层-shallow-和深层-deep-复制操作)
+    * [内嵌函数与闭包](#内嵌函数与闭包)
+    * [lambda](#lambda)
+    * [异常](#异常)
+* [class](#class)
+    * [super()](#super)
+    * [类的属性与方法](#类的属性与方法)
+        * [类的属性](#类的属性)
+        * [类的方法](#类的方法)
+    * [类的访问属性](#类的访问属性)
+        * [name mangling](#name-mangling)
+    * [类的继承](#类的继承)
+        * [类的多态](#类的多态)
+        * [单继承](#单继承)
+        * [多重继承](#多重继承)
+            * [子类同名覆盖父类的问题](#子类同名覆盖父类的问题)
+    * [抽象基类 abc](#抽象基类-abc)
+* [装饰器（decorator）](#装饰器decorator)
+    * [添加一个自定义的 decorator](#添加一个自定义的-decorator)
+    * [Others](#others)
+* [`__*__` 标识符](#____-标识符)
+    * [特殊属性](#特殊属性)
+    * [class.__mro__, class.mro(), class.__subclass__(), super()](#class__mro__-classmro-class__subclass__-super)
+    * [Magic Method(重点)](#magic-method重点)
+        * [基本定制](#基本定制)
+            * [`__new__(), __init__()`](#__new__-__init__)
+            * [`__repr__(), __str__()`](#__repr__-__str__)
+            * [`__lt__()`](#__lt__)
+        * [自定义属性访问](#自定义属性访问)
+            * [property 与 getatt, getattribute, setattr, delattr](#property-与-getatt-getattribute-setattr-delattr)
+        * [实现描述器](#实现描述器)
+        * [模拟数字类型](#模拟数字类型)
+        * [模拟容器类型](#模拟容器类型)
+            * [`迭代器, __iter__(), __next__()`](#迭代器-__iter__-__next__)
+            * [生成器](#生成器)
+    * [包与模块](#包与模块)
+        * [python 的搜索路径](#python-的搜索路径)
+        * [from, import, as](#from-import-as)
+* [Python 与 C/C++ 相互调用](#python-与-cc-相互调用)
+    * [Python 调用 C/C++](#python-调用-cc)
+        * [用 C/C++ 扩展 Python](#用-cc-扩展-python)
+            * [用 C/C++ 扩展 Python 的函数](#用-cc-扩展-python-的函数)
+            * [用 C/C++ 扩展 Python 的类型](#用-cc-扩展-python-的类型)
+    * [C/C++调用 Python](#cc调用-python)
+* [常用](#常用)
+    * [sys](#sys)
+    * [IO](#io)
+        * [stdandard input output](#stdandard-input-output)
+        * [文件读写](#文件读写)
+            * [读写 json 文件](#读写-json-文件)
+* [用 Python 代替操作系统的 shell](#用-python-代替操作系统的-shell)
+    * [原因](#原因)
+    * [Python 与操作系统交互的工具](#python-与操作系统交互的工具)
+        * [执行 Shell 命令](#执行-shell-命令)
+    * [os.path](#ospath)
+* [Others](#others-1)
+    * [PEPs (Python Enhancement Proposals)](#peps-python-enhancement-proposals)
+    * [python 的实现](#python-的实现)
+    * [urllib](#urllib)
+    * [Tkinter(GUI)](#tkintergui)
+
+<!-- vim-markdown-toc -->
 
 ## 基本概念
 
@@ -697,6 +807,17 @@ for example
         print(keywordOnlyParam)
 
     funcForFuncParam(1, {1, 2}, {1: 2, 3: 4}, y = 10, key1 = 'var1', key2 = 'var2')
+
+    # ### 当参数既可以是 position-only 或 keyword-only 时，可用 `/`，表示它前面的参数都是 position-only 的。
+    def funcForFuncParam(a, b, /, c):
+        pass
+    funcForFuncParam(1, 2, 3)
+
+    funcForFuncParam(1, 2, c = 3)
+    # 错误的
+    # funcForFuncParam(1, b = 2, c = 3)
+    # 错误的
+    # funcForFuncParam(a = 1, b = 2, c = 3)
 
 #### return
 
@@ -1605,7 +1726,9 @@ for example
     for animal in animals:
         print(animal)
 
-##### <a name="iterNextExample"></a>迭代器，__iter__(), __next__()
+##### `迭代器, __iter__(), __next__()`
+
+<a name="iterNextExample"></a> 
 
 - [`iter()`](https://docs.python.org/zh-cn/3/library/functions.html?highlight=iter#iter)
 
@@ -1796,168 +1919,7 @@ for example
     from package1.subpackage1.module1 import func1
     func1()
 
-## 常用
-
-### [sys](https://docs.python.org/zh-cn/3/library/sys.html#module-sys)
-
-`sys.path`
-
-> 模块搜索路径
-
-`sys.stdin, sys.stdout, sys.stderr`
-
-> 解释器用于标准输入、标准输出和标准错误的文件对象
-
-for example
-
-    import sys
-
-    print(sys.path)
-    print(sys.argv)
-    print(sys.modules)
-
-### [IO](https://docs.python.org/zh-cn/3/library/io.html?highlight=seek#module-io)
-
-处理流的核心工具
-
-#### [stdandard input output](https://docs.python.org/zh-cn/3/library/sys.html?highlight=sys%20stdin#sys.stdin)
-
-    input(), print()
-
-标准 IO 流
-
-    sys.stdin
-    sys.stdout
-    sys.stderr
-
-
-for example
-
-    s = input('please input something: ')
-    print(s)
-
-for example
-
-    import sys
-
-    for line in sys.stdin:
-        if 'q' == line.rstrip():
-            break
-        # f 前缀表示 format
-        print(f'Input : {line}')
-        sys.stdout.write(line)
-        sys.stderr.write(line)
-
-#### [文件读写](https://www.programiz.com/python-programming/file-operation)
-
-    open(), close()
-    read(), readline(), readlines()
-    write(), writelines()
-    tell(), seek()
-
-for example: 打开文件的方式
-
-    # ### 打开文件的两种方式
-    try:
-        f = open("testfile", mode='r', encoding='utf-8')
-        # perform file operations
-    finally:
-        f.close()
-
-    # 会自动调用 close()
-    with open("testfile", mode='r', encoding = 'utf-8') as f:
-        # perform file operations
-
-for example
-
-    import io
-    import os
-
-    try:
-        f = open("testfile", mode='w', encoding='utf-8')
-        f.write('ABC\nDEF')
-        lines = ['\nUVW\n', 'XYZ']
-        f.writelines(lines)
-
-        f = open("testfile", mode='r', encoding='utf-8')
-        print(f'read():\n{f.read()}')
-
-        f.seek(0, io.SEEK_SET)
-        print(f'read(2):\n{f.read(2)}')
-
-        f.seek(0, io.SEEK_SET)
-        # 读入换行符
-        print(f'readline():\n{f.readline()}')
-
-        f.seek(0, io.SEEK_SET)
-        print(f'readline(2):\n{f.readline(2)}')
-
-        f.seek(0, io.SEEK_SET)
-        print(f'readlines():\n{f.readlines()}')
-
-        f.seek(0, io.SEEK_SET)
-        # n 不包含换行符
-        print(f'readlines(8):\n{f.readlines(8)}')
-
-        os.remove('testfile')
-
-    finally:
-        f.close()
-
-##### 读写 json 文件
-
-for example
-
-    import json
-
-    data = {
-        'name' : 'ACME',
-        'shares' : 100,
-        'price' : 542.23
-    }
-
-    with open('data.json', 'w') as f:
-        json.dump(data, f)
-
-    with open('data.json', 'r') as f:
-        data = json.load(f)
-
-    print(type(data))
-    print(data)
-
-### [OS 模块](https://docs.python.org/zh-cn/3/library/os.html)
-
-多种操作系统接口。
-
-#### 执行命令
-
-os.system(command)
-在子 shell 中执行命令（字符串）。这是调用标准 C 函数 system() 来实现的，因此限制条件与该函数相同。对 sys.stdin 等的更改不会反映在执行命令的环境中。command 产生的任何输出将被发送到解释器标准输出流。
-
-subprocess 模块提供了更强大的工具来生成新进程并跟踪执行结果，使用该模块比使用本函数更好。
-
-#### [获取命令的输出](https://stackoverflow.com/questions/4760215/running-shell-command-and-capturing-the-output)
-
-for example
-
-    import subprocess
-    result = subprocess.run(['ls', '-l'], stdout=subprocess.PIPE)
-    print(result.stdout.decode('utf-8'))
-
-#### [os.path](https://docs.python.org/zh-cn/3/library/os.path.html)
-
-常用路径操作
-
-for example
-
-    import os
-    
-    print( os.path.basename('/root/runoob.txt') )   # 返回文件名
-    print( os.path.dirname('/root/runoob.txt') )    # 返回目录路径
-    print( os.path.split('/root/runoob.txt') )      # 分割文件名与路径
-    print( os.path.join('root','test','runoob.txt') )  # 将目录和文件名合成一个路径
-
-### Python 与 C/C++ 相互调用
+## Python 与 C/C++ 相互调用
 
 Refer
 
@@ -1987,7 +1949,7 @@ PyObject 与 C/C++ 之间类型转换
 
         PyObject* Py_BuildValue(const char *format, ...)
 
-#### Python 调用 C/C++
+### Python 调用 C/C++
 
 for example: ctype
 
@@ -2034,9 +1996,9 @@ for example: ctype
     libpycallcpp = loadLibrary("./libpycallcpp.so")
     print("sum = {}".format(libpycallcpp.add(1, 2)))
 
-##### 用 C/C++ 扩展 Python
+#### 用 C/C++ 扩展 Python
 
-###### 用 C/C++ 扩展 Python 的函数
+##### 用 C/C++ 扩展 Python 的函数
 
 用 C/C++ 实现一个函数，然后在 Python 中调用这个函数。
 
@@ -2144,7 +2106,7 @@ for example
 
     print("sum = {}".format(cext.add(1, 2)))
 
-###### [用 C/C++ 扩展 Python 的类型](https://docs.python.org/zh-cn/3/extending/newtypes_tutorial.html)
+##### [用 C/C++ 扩展 Python 的类型](https://docs.python.org/zh-cn/3/extending/newtypes_tutorial.html)
 
 用 C/C++ 实现一个 Python 类型。
 
@@ -2388,7 +2350,7 @@ for example
     print(mycustom2.last)
     print(mycustom2.name())
 
-#### C/C++调用 Python
+### C/C++调用 Python
 
 for exmple: 通过 Python C/C++ API 调用 C/C++ 函数
 
@@ -2479,6 +2441,283 @@ for exmple: 通过 Python C/C++ API 调用 C/C++ 函数
         ccallpy();
         return 0;
     }
+
+
+
+
+
+
+## 常用
+
+### [sys](https://docs.python.org/zh-cn/3/library/sys.html#module-sys)
+
+`sys.path`
+
+> 模块搜索路径
+
+`sys.stdin, sys.stdout, sys.stderr`
+
+> 解释器用于标准输入、标准输出和标准错误的文件对象
+
+for example
+
+    import sys
+
+    print(sys.path)
+    print(sys.argv)
+    print(sys.modules)
+
+### [IO](https://docs.python.org/zh-cn/3/library/io.html?highlight=seek#module-io)
+
+处理流的核心工具
+
+#### [stdandard input output](https://docs.python.org/zh-cn/3/library/sys.html?highlight=sys%20stdin#sys.stdin)
+
+    input(), print()
+
+标准 IO 流
+
+    sys.stdin
+    sys.stdout
+    sys.stderr
+
+
+for example
+
+    s = input('please input something: ')
+    print(s)
+
+for example
+
+    import sys
+
+    for line in sys.stdin:
+        if 'q' == line.rstrip():
+            break
+        # f 前缀表示 format
+        print(f'Input : {line}')
+        sys.stdout.write(line)
+        sys.stderr.write(line)
+
+#### [文件读写](https://www.programiz.com/python-programming/file-operation)
+
+    open(), close()
+    read(), readline(), readlines()
+    write(), writelines()
+    tell(), seek()
+
+for example: 打开文件的方式
+
+    # ### 打开文件的两种方式
+    try:
+        f = open("testfile", mode='r', encoding='utf-8')
+        # perform file operations
+    finally:
+        f.close()
+
+    # 会自动调用 close()
+    with open("testfile", mode='r', encoding = 'utf-8') as f:
+        # perform file operations
+
+for example
+
+    import io
+    import os
+
+    try:
+        f = open("testfile", mode='w', encoding='utf-8')
+        f.write('ABC\nDEF')
+        lines = ['\nUVW\n', 'XYZ']
+        f.writelines(lines)
+
+        f = open("testfile", mode='r', encoding='utf-8')
+        print(f'read():\n{f.read()}')
+
+        f.seek(0, io.SEEK_SET)
+        print(f'read(2):\n{f.read(2)}')
+
+        f.seek(0, io.SEEK_SET)
+        # 读入换行符
+        print(f'readline():\n{f.readline()}')
+
+        f.seek(0, io.SEEK_SET)
+        print(f'readline(2):\n{f.readline(2)}')
+
+        f.seek(0, io.SEEK_SET)
+        print(f'readlines():\n{f.readlines()}')
+
+        f.seek(0, io.SEEK_SET)
+        # n 不包含换行符
+        print(f'readlines(8):\n{f.readlines(8)}')
+
+        os.remove('testfile')
+
+    finally:
+        f.close()
+
+##### 读写 json 文件
+
+for example
+
+    import json
+
+    data = {
+        'name' : 'ACME',
+        'shares' : 100,
+        'price' : 542.23
+    }
+
+    with open('data.json', 'w') as f:
+        json.dump(data, f)
+
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    print(type(data))
+    print(data)
+
+## [用 Python 代替操作系统的 shell](https://github.com/ninjaaron/replacing-bash-scripting-with-python/blob/master/README.rst)
+
+*个人例子代码的系统平台默认是 linux。*
+
+### 原因
+
+问题：每个操作系统都有各自的 Shell，而这个 Shell 脚本语言不能做到完全统一，且存在一些特殊字符等比较难理解的语法。还有它们一般不是面向对象的。
+
+> Python 是面向对象的脚本语法，语法比较统一且容易理解。它内部有很多与操作系统交互的工具，所以用 Python 代替 Shell 是一个不错的选择。
+
+### Python 与操作系统交互的工具
+
+[OS 模块](https://docs.python.org/zh-cn/3/library/os.html)
+sys
+shutil
+pathlib
+
+> 多种操作系统接口。比如：os.chdir(path) os.getcwd() os.listdir()。
+
+#### 执行 Shell 命令
+
+那么什么时候执行 Shell 命令？
+
+> 虽然 Python 已有很多与操作系统交互的工具，但是有 Shell 的程序的功能是 Python 没有，虽然可以用 python 实现这个功能，但是比较麻烦，所以还是直接调用 Shell 命令或运行这个命令的可执行程序会比较省时间。但会是降低可移植性。所以尽量先用 Python 自带的功能。
+
+
+- [os.system](https://docs.python.org/zh-cn/3/library/os.html?highlight=system#os.system)
+
+    在子 shell 中执行命令（字符串）。这是调用标准 C 函数 system() 来实现的，因此限制条件与该函数相同。对 sys.stdin 等的更改不会反映在执行命令的环境中。command 产生的任何输出将被发送到解释器标准输出流。
+
+    for example
+
+        import subprocess, os, sys
+        exitCode = os.system('echo abc')
+        print(exitCode)
+        print(type(exitCode))
+        
+- [subprocess](https://docs.python.org/zh-cn/3/library/subprocess.html?highlight=subproces#module-subprocess)
+
+    模块提供了更强大的工具来生成新进程并跟踪执行结果，使用该模块比使用本函数更好。Popen 是更底层的接口。
+
+    shell 参数意义
+
+        当为 True 时，表示是命令（必须是一个字符串）是在 subshell 中执行的，而为 False 时，表示运行一个程序，第一个参数必须是一个可执行程序。且这个是没有经过 Shell 解析的。还有命令必须是一个列表。
+
+        for example 
+
+            import subprocess
+            # 命令在 subshell 中执行, $HOME 会被 `expand`
+            subprocess.run('echo $HOME', shell = True)
+            # echo 有一个可执行程序, 因为命令没有经过 Shell 解析，所以 `$HOME` 不会被 expand
+            subprocess.run(['echo', '$HOME'])
+            # 因为 type 是 shell builtin 所以第一参数不是可执行程序，所以出错。
+            # subprocess.run(['type', 'ls'])
+
+        设置 linux 或 windows 的 shell 程序
+
+            windows
+                os.environ["COMSPEC"] = 'cmd'
+                os.environ["COMSPEC"] = 'powershell'
+            linux
+                默认为 sh.
+                # subprocess.run 只能是 sh，除非在 arg 中指定用 bash。
+                subprocess.Popen(cmd, shell=True, executable='/bin/bash')
+
+    作为 stdin, stdout, stderr 实参的 subprocess.DEVNULL，subprocess.PIPE，subprocess.STDOUT
+
+        subprocess.DEVNULL
+
+            int 类型，值为 -3。表示使用特殊文件 os.devnull。
+
+        subprocess.PIPE
+
+            int 类型，值为 -1。表示打开标准流的管道。用于获取程序的输出或向程序输入。
+
+        subprocess.STDOUT
+
+            int 类型，值为 -2。表示标准错误与标准输出使用同一句柄。不能作为 stdin, stdout 的实参。这是要注意的是，返回值 stderr 类型为 None，而不是 `b''`。
+
+        for example
+
+            import subprocess
+
+            # ### PIPE
+            # 打开标准输出、错误输出流管道。
+            result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.PIPE, stdout = subprocess.PIPE, shell = True)
+            # `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`
+            print(result)
+
+            # #### stdin 与 PIPE
+            from subprocess import Popen, PIPE, STDOUT
+            p = Popen(['grep', 'f'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
+            grep_stdout = p.communicate(input=b'one\ntwo\nthree\nfour\nfive\nsix\n')[0]
+            print(grep_stdout.decode())
+            # -> four
+            # -> five
+            # ->
+
+            # ### STDOUT
+            result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.STDOUT, stdout = subprocess.PIPE, shell = True)
+            # `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`。返回值 stderr 类型为 None
+            print(result)
+
+    返回值
+
+        类型是 `<class 'subprocess.CompletedProcess'>`
+
+        stdout
+
+            从子进程捕获到的标准输出. 
+
+        stderr
+
+            捕获到的子进程的标准错误. 
+
+        for example
+
+            import subprocess
+            result = subprocess.run('echo -e \'aa\nbb\'', stdout=subprocess.PIPE, shell = True)
+            # 类型是 `<class 'subprocess.CompletedProcess'>`
+            print(result)
+            # 类型是 `<class 'bytes'>`
+            print(type(result.stdout))
+
+            print(result.stdout.decode('utf-8'))
+            # `<class 'str'>`
+            print(type(result.stdout.decode('utf-8')))
+
+            print(result.stdout.split(b'\n'))
+        
+### [os.path](https://docs.python.org/zh-cn/3/library/os.path.html)
+
+常用路径操作
+
+for example
+
+    import os
+    
+    print( os.path.basename('/root/runoob.txt') )   # 返回文件名
+    print( os.path.dirname('/root/runoob.txt') )    # 返回目录路径
+    print( os.path.split('/root/runoob.txt') )      # 分割文件名与路径
+    print( os.path.join('root','test','runoob.txt') )  # 将目录和文件名合成一个路径
 
 ## Others
 
