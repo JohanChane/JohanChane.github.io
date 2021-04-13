@@ -93,7 +93,7 @@
     `Set-PSReadlineKeyHandler -Key Tab -Function Complete`
 
     # 生成 Profile.ps1
-    `echo 'Set-PSReadlineKeyHandler -Key Tab -Function Complete' >> "$Env:USERPROFILE\Documents\PowerShell\Profile.ps1"`
+    `echo 'Set-PSReadlineKeyHandler -Key Tab -Function Complete' >> "$Env:USERPROFILE\Documents\WindowsPowerShell\Profile.ps1"`
 
 ### profile file
 
@@ -465,6 +465,9 @@ for example
 
         # 以管理员身份运行
         Start-Process -FilePath "powershell" -Verb RunAs
+        
+        # 注册表
+        @="powershell -windowstyle \"hidden\" -Command \"Start-Process \"D:\\PortableProgramFiles\\Alacritty\\Alacritty.exe\" -ArgumentList \"--working-directory\", \"%V\" -Verb \"runas\"\""
 
         
 调用一组命令

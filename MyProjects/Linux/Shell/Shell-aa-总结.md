@@ -4,9 +4,13 @@ Shell 总结
 
 全部列出细节是不可能的，太多了，只列出个人认为重要或容易忘记的。
 
-### Refers
+### References
 
 - <https://www.gnu.org/software/bash/manual/html_node/index.html>
+- <https://www.tldp.org/LDP/abs/html/special-chars.html>
+
+    bash 的所有特殊字符
+
 - <https://github.com/LeCoupa/awesome-cheatsheets/blob/master/languages/bash.sh>
 
 - <https://unix.stackexchange.com/questions/129072/whats-the-difference-between-and>
@@ -104,7 +108,7 @@ for example:
 ### 分支控制
 
 
-### `test, [ ] , [[ ]]`
+### [`test, [ ] , [[ ]]`](https://unix.stackexchange.com/questions/306111/what-is-the-difference-between-the-bash-operators-vs-vs-vs)
 
 [`[ ], [[ ]] 是有区别的`](https://unix.stackexchange.com/questions/306111/what-is-the-difference-between-the-bash-operators-vs-vs-vs)
 
@@ -155,7 +159,6 @@ for example:
     while, do, done
     until, do, done
     select, do, done
-
 
 ### Shell Parameters
 

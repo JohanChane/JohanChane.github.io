@@ -60,7 +60,9 @@ map <C-n> :NERDTreeToggle<CR>       " 打开或关闭 NERDTree
     
 - directory node
 
-    o, p, P, O, X
+    o
+    O, X
+    p, P
 
 - filesysteme
 

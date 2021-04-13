@@ -1,78 +1,111 @@
 # markdown tutorial
 
-### refer:
+## References
 
-- <https://www.markdownguide.org/cheat-sheet/>
-- <http://support.typora.io/Markdown-Reference/>
+-   markdown 教程
 
-	typora 的 markdown 教程
+    -   <https://daringfireball.net/projects/markdown/>
 
-- <https://dillinger.io/>
+        Markdown 的创建者编写的原始指南
 
-	markdown 在线编辑器
+    -   <https://markdown.com.cn/>
+    -   <https://www.markdownguide.org/>
+
+        -   <https://www.markdownguide.org/cheat-sheet/>
+
+    -   <http://support.typora.io/Markdown-Reference/>
+
+        typora 的 markdown 教程
+
+    -   <https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax>
+        
+        GFM 语法
+
+    -   <https://github.github.com/gfm/>
+
+        GFM 规格
+
+-   markdown 在线编辑器
+
+    -   <https://stackedit.io/>
+        
+        支持所有功能
 	
-- <https://stackoverflow.com/questions/5319754/cross-reference-named-anchor-in-markdown/7335259#7335259>
-
-	jump to anchor
-	
-- <https://mermaid-js.github.io/mermaid/#/>
+-   <https://mermaid-js.github.io/mermaid/#/>
 
 	mermaid 教程
 
-### 说明
+## 基本概念
 
-*使用 typora 打开此文件*
+### markdown 的工作原理
 
-## Basic Syntax
+![](https://d33wubrfki0l68.cloudfront.net/75cdd78aba218a9abbfe91d2ba2cf540a7502d8c/553fa/assets/images/process.png)
+
+> markdown 的所有特点几乎都可以等价于 html 的某个特点。所以可以以 html 理解 markdown。 同时 markdown 还可使用 html tags。
+
+### markdown flavors（方言）
+
+*markdown 有基本语法与扩展语法。有些方言并不支持扩展语法，还有可能不同于基本语法。*
+
+GFM: GitHub Flavored Markdown
 
 ### markdown 的作用
 
 比 html 更加方便地排版文本。
 
-### markdown 与 html
+## Basic Syntax
 
-markdown 的所有特点几乎都可以等价于 html 的某个特点。所以可以以 html 理解 markdown。 同时 markdown 还可使用 html tags。
+### paragraph and newline
 
-一些软件或平台会添加一些标准没有的功能，所以要为了更好的兼容性，还是以标准为主。且有些软件不完全支持 Externed Syntax。
+first paragraph
 
-- 换行：有些软件不用后面后面加两个空格也可以实现换行。比如：typora，当然可以是设置的。
-- Definition List: 比如：typora 不支持。
-- URLs and Email Addresses: 放在 \<\> 中区别于纯文本。但是一些软件会额外检测并处理，所以在一些软件中可用不用添加 \<\>。
-
-### 换行与段落
-
-- 换行：在文本未添加两个空格。应用场景：不希望文本过长。空白行是无法换行的，如果想实现空白行换行可用 <br />。
-- 段落：空出一个或多个空白行。注意：段落会自动换行。应用场景：不希望同一段落，这样就是不同的 html tags 了。段落之间没有空白符，如果想段落间有空白行则可用 <br />。
-
-#### for example: 
-
-AAA
-<br />
-BBB
+second paragraph
 
 
+first line  
+second line
 
-CCC
-<br /><br />
-DDD
+
+first line<br />
+second line
 
 ### 转义字符 \\
 
-\\	backslash  
-\`	backtick (see also escaping backticks in code)  
-\*	asterisk  
-\_	underscore  
-\{\}	curly braces  
-\[ \]	brackets  
-\( \)	parentheses   
-\#	pound sign  
-\+	plus sign  
-\-	minus sign (hyphen)  
-\.	dot   
-\!	exclamation mark  
-\|	pipe (see also escaping pipe in tables)
+[参考](https://daringfireball.net/projects/markdown/syntax#backslash)
+
+```
+\   backslash
+`   backtick
+*   asterisk
+_   underscore
+{}  curly braces
+[]  square brackets
+()  parentheses
+#   hash mark
++   plus sign
+-   minus sign (hyphen)
+.   dot
+!   exclamation mark
+```
+
+***转义字符在 blockquote 中有效，codeblock 中无效***
 
 ### Heading
+
+[refer](https://daringfireball.net/projects/markdown/syntax#header)
+
+Markdown supports two styles of headers, Setext and atx.
+
+```markdown
+<!-- Setext-style -->
+
+Heading level 1
+===============
+
+Heading level 2
+----------------
+
+<!-- Atx-style -->
 
 # Heading level 1
 
@@ -85,38 +118,45 @@ DDD
 ##### Heading level 5
 
 ###### Heading level
-
+```
 ### List
-
-#### 有序列表
 
 list content 比 list 多缩进四个空格或一个 tab。list content 显示效果会自动缩进。
 
+列表可以嵌套。
+
+#### 有序列表
+
 1. First item
-
-1. Second item
-
-1. Third item
 
     list content
 
-1. Fourth item
+1. Second item
 
 #### 无序列表
 
 - First item
-- Second item
-- Third item
-  
+
     list content
-    
-- Fourth item
 
-### Emphasis（加粗或变斜）
+- Second item
 
-I just love **bold text**.
-Italicized text is the *cat's meow*.
-This text is ***really important***.
+#### 兼容 GFM 方言
+
+[refer](https://daringfireball.net/projects/markdown/syntax#list)
+
+1.  First item
+    -   First item
+
+        list content
+
+            list content
+
+        ```
+        list content
+        ```
+
+10. Second item
 
 ### Blockquote
 
@@ -126,9 +166,20 @@ This text is ***really important***.
 > Dorothy followed her through many of the beautiful rooms in her castle.
 
 > Dorothy followed her through many of the beautiful rooms in her castle.
-> 
+>
 >
 > Dorothy followed her through many of the beautiful rooms in her castle.
+
+> Dorothy followed her through many of the beautiful rooms in her castle.
+>
+>>
+>> Dorothy followed her through many of the beautiful rooms in her castle.
+
+<!-- 更好 -->
+> Dorothy followed her through many of the beautiful rooms in her castle.
+>
+> >
+> > Dorothy followed her through many of the beautiful rooms in her castle.
 
 ### Code
 
@@ -136,19 +187,19 @@ This text is ***really important***.
 
 At the command prompt, type `nano`.  
 
-在 Code 中输出反引号
+#### 在 Code 中输出反引号
 
 ``Use `code` in your Markdown file.``
-```Use `code` in your Markdown file.```
 
-[//]: # (```nano``` 是不合法的语法)
+`` `code` ``
 
-`` `nano` ``
+#### Others
 
 使 URL 无效  
+
 `http://www.example.com`
 
-#### Code Block
+### Code Block
 
 缩进四个空格或一个 tab 即可。
 
@@ -157,15 +208,9 @@ At the command prompt, type `nano`.
         </head>
     </html>
 
-### 水平分隔线
-
-注意：在单独在一个段落中。
-
----
-
 ### Link
 
-title 是可选的。
+*title 是可选的。*
 
 My favorite search engine is [Duck Duck Go](https://duckduckgo.com).  
 My favorite search engine is [Duck Duck Go](https://duckduckgo.com "title").
@@ -173,44 +218,42 @@ My favorite search engine is [Duck Duck Go](https://duckduckgo.com "title").
 link 中的空格  
 [link](https://www.example.com/my%20great%20page)  
 
+#### 锚点链接
+
+[hobbit-hole][1]  
+[hobbit-hole][id]  
+
+[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle
+[1]: <https://en.wikipedia.org/wiki/Hobbit#Lifestyle> "Hobbit lifestyles"
+[id]: <https://en.wikipedia.org/wiki/Hobbit#Lifestyle> "Hobbit lifestyles"
+
+#### 页内跳转
+
+[jump to anchor](https://stackoverflow.com/questions/5319754/cross-reference-named-anchor-in-markdown/7335259#7335259)
+	
+###### <a name="anchorName"></a> headName
+###### headName
+
+
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br />
+
+[jump to head](#headname)
+
+[jump to anchor](#anchorName)
+
 #### URLs and Email Addresses
 
 软件对待 \<\> 之中的文本为 URL OR Email Address 而不是纯文本。
 
 <https://www.markdownguide.org>  
 <fake@example.com>
-
-#### 锚点链接
-
-[hobbit-hole][1]  
-
-[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle
-[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"
-[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"
-[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"
-[1]: <https://en.wikipedia.org/wiki/Hobbit#Lifestyle> "Hobbit lifestyles"
-[1]: <https://en.wikipedia.org/wiki/Hobbit#Lifestyle> "Hobbit lifestyles"
-[1]: <https://en.wikipedia.org/wiki/Hobbit#Lifestyle> "Hobbit lifestyles"
-
-
-#### 页内跳转
-
-###### headName
-
-<a name="anchorName">anchor</a>  
-
-<br /><br /><br /><br /><br />
-<br /><br /><br /><br /><br />
-<br /><br /><br /><br /><br />
-<br /><br /><br /><br /><br />
-<br /><br /><br /><br /><br />
-<br /><br /><br /><br /><br />
-<br /><br /><br /><br /><br />
-<br /><br /><br /><br /><br />
-
-[jump to head](#headName)
-
-[jump to anchor](#anchorName)
 
 ### 插入图片
 
@@ -220,25 +263,36 @@ title 是可选的。
 
 ![](https://img.shields.io/github/stars/pandao/editor.md.svg)
 
+### Emphasis（加粗或变斜）
+
+I just love **bold text**.
+Italicized text is the *cat's meow*.
+This text is ***really important***.
+
+### 水平分隔线
+
+注意：在单独在一个段落中。
+
+---
+
 ## Extended Syntax
 
 ### 表格
 
-| Syntax | Description |
+| Syntax      | Description |
 | ----------- | ----------- |
-| Header | Title |
-| Paragraph | Text |
+| Header      | Title       |
+| Paragraph   | Text        |
 
-表格宽度可调，但是 typora 显示结果没有达到预期效果。  
-| Syntax    | Description |
-| ---- | -------------------------- |
-| Header    | Title       |
-| Paragraph | Text        |
+| Syntax    | Description                |
+| ----      | -------------------------- |
+| Header    | Title                      |
+| Paragraph | Text                       |
 
-| Syntax      | Description | Test Text     |
-| :---        |    :----:   |          ---: |
-| Header      | Title       | Here's this   |
-| Paragraph   | Text        | And more      |
+| Syntax    | Description | Test Text   |
+| :---      | :----:      | ---:        |
+| Header    | Title       | Here's this |
+| Paragraph | Text        | And more    |
 
 | Function name | Description                    |
 | ------------- | ------------------------------ |
@@ -283,7 +337,9 @@ Here's a simple footnote,[^1] and here's a longer one.[^bignote]
 
 可为标题添加 ID。可用于 CSS 渲染。
 
+```
 ### My Great Heading {#custom-id}
+```
 
 ### Definition Lists
 
@@ -307,97 +363,12 @@ Second Term
 
 ### Emoji
 
+***`:` 暂时无法转义。***
+
 Gone camping! :tent: Be back soon.  
 That is so funny! :joy:
 
-## 多个 Elments 结合使用
-
-### List 的结合
-
-#### 有序列表的嵌套
-
-1. First item
-1. Second item
-1. Third item
-    1. Indented item
-    	1. Indented item
-    	1. Indented item
-    1. Indented item
-1. Fourth item
-
-#### 无序列表嵌套
-
-- First item
-- Second item
-- Third item
-    - Indented item
-        - Indented item
-            - Indented item
-    - Indented item
-- Fourth item
-
-#### 有序列表与无序列表的嵌套
-
-1. First item
-1. Second item
-1. Third item
-    - Indented item
-    - Indented item
-1. Fourth item
-
-#### list 下的添加 Elements，Blockquotes，Code Blocks，Images
-
-注意：Code Blocks 要多缩进四个空格或两个 tab 才能成为列表的内容。
-
-- This is the first list item.
-    - Indented item
-		
-    	list content
-    	
-		>list content
-
-    		code block as list content
-    	
-    	![Tux, the Linux mascot](./tux.png)
-    
-- Here's the second list item.
-- And here's the third list item.
-
-not list content
-
-
-### Blockquote 的结合
-
-> Dorothy followed her through many of the beautiful rooms in her castle.
->
->> The Witch bade her clean the pots and kettles and sweep the floor and keep the fire fed with wood.
-
-#### Blockquote 下使用标题，List,  粗体，斜休
-
-> #### The quarterly results look great!
->
-> - Revenue was off the chart.
-> - Profits were higher than ever.
->
->  *Everything* is going according to **plan**.
-
-### Emphasis（加粗或变斜）的结合
-
-I love supporting the **[EFF](https://eff.org)**.
-This is the *[Markdown Guide](https://www.markdownguide.org)*.
-See the section on [`code`](#code).
-
-### 图片的结合
-
-[![An old rock in the desert](./tux.png "Shiprock, New Mexico by Beau Rogers")](https://www.baidu.com)
-
-### markdown 中使用 html tags
-
-This **word** is bold. This <em>word</em> is italic.
-
-<h1 align="center">Head 1</h1>
-
-### 数学公式
+## 数学公式
 
 markdown 支持完整 LaTex 数学公式语法
 
@@ -409,11 +380,11 @@ $$
 \end{vmatrix}
 $$
 
-### 绘图
+## 绘图
 
-#### mermaid (支持很多图，不能一一列举)
+### mermaid (支持很多图，不能一一列举)
 
-##### mermaid graph
+#### mermaid graph
 
 ```mermaid
 %% mermaid 的 graph
@@ -479,7 +450,7 @@ graph TD
     C -->|no| A
 ```
 
-##### mermaid sequenceDiagram
+#### mermaid sequenceDiagram
 
 ```mermaid
 %% mermaid 的时序图
@@ -582,7 +553,7 @@ classDiagram
     classO .. classP : Link(Dashed)
 ```
 
-##### mermaid stateDiagram
+#### mermaid stateDiagram
 ```mermaid
 stateDiagram-v2
     [*] --> First: A transition
@@ -646,7 +617,7 @@ stateDiagram-v2
     }
 ```
 
-##### mermaid pie
+#### mermaid pie
 
 ```mermaid
 %% mermaid 的饼图
@@ -656,7 +627,7 @@ pie title What Voldemort doesn't have?
     "NOSE" : 45
 ```
 
-##### mermaid gantt
+#### mermaid gantt
 
 ```mermaid
 gantt
@@ -673,7 +644,7 @@ gantt
     another task      : 24d
 ```
 
-#### 绘制流程图 Flowchart
+### 绘制流程图 Flowchart
 
 ```flow
 st=>start: 用户登陆
@@ -686,7 +657,7 @@ cond(yes)->e
 cond(no)->op
 ```
 
-#### 绘制序列图 Sequence Diagram
+### 绘制序列图 Sequence Diagram
 
 ```sequence
     Alice ->> Bob: Hello Bob, how are you?

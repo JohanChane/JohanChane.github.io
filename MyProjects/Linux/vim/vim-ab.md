@@ -52,11 +52,7 @@
 
 #### motion
 
-有以下这些 motions
-
-- Left-right motions		
-- Up-down motions
-- Word motions			
+有以下这些 motions - Left-right motions		Up-down motions Word motions			
 - Text object motions		
 - Text object selection. *不能单独使用，要结合 opertor 与 visual mode 使用*
 - Marks
@@ -165,7 +161,7 @@
                 put =execute(\"echo 'AA' \| echo 'BB'\")
 
     过虑命令的结果
-        filter /<path> <cmd>
+        filter /<pattern>/ <cmd>
             for example:
                 filter /v:version/ let
 
@@ -176,7 +172,7 @@
         `:!start` 运行的不是 shell 的 start，而 vim 内置的一个程序与 windows start 有区别，而 `:! start` 是运行 shell 的 start。
     
     help :rang!
-        
+
 #### 执行多个命令
 
     help :bar
@@ -244,7 +240,7 @@ buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and locat
             vimgrep, grep, helpgrep, make 会生成 quickfix list。而 lvimgrep, lgrep, lhelpgrep, lmake 会生成 location-list。
             ts /<reg> 会生成 quickfix list。
     tags
-        :ts, :tn, :tp, C-], C-t
+        :ts, :tn, :tp, C-](C-w-]), C-t
 
 
 #### 寄存器
@@ -291,6 +287,15 @@ buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and locat
         C-w - 
         C-w |
         C-w p
+
+        调整高度
+            将当前窗口增加/减少n行
+            Ctrl + w, n, +/-
+
+        调整宽度
+            将当前窗口增加/减少n列
+            Ctrl + w, n, >/<
+
     tab
         tab <cmd>
         C-w T           # 没法将 tab 转为窗口，只能关闭再打开
@@ -342,6 +347,49 @@ buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and locat
 
     for example:
         autocmd FileType text set textwith=0
+
+#### com
+
+自定义用户命令
+
+一个命令可接收range（行号），count, register, `!`, 参数。 `help <line1>`。还有命令可设置补全。
+
+for example
+
+```vim
+:1,2s/A/a/gc
+:3Next
+:q!
+:echo "aa"
+```
+
+在函数中，获取传入命令的东西（比如参数之类）
+
+    <line1>, <line2>, <range>
+    <count>
+
+    <bang>
+        与 `!` 相关
+
+    <reg>
+    <args>
+        还有 <q-args>, <f-args>。它们分别类似于 bash 的 `"$@", "$*"`。
+        比如：
+            <q-args>: "arg1 arg2"
+            <f-args>: "arg1" "arg2"
+
+attr
+
+    -nargs
+        参数个数
+    -complete
+        用什么补全命令
+
+for example
+
+    :com! -nargs=* -complete=command MyRedir :tabnew|put =execute('<args>')
+    :MyRedir set all
+    :q!
 
 ### grep
 
@@ -476,10 +524,9 @@ windows 的换行符为 `CRLF`（`CR` 即 `^M`）。，而 unix 的换行符为 
 
 `set listchars=eol:$` 表示将换行符显示为 `$`。那么如何查看换行符的区别呢？
 
-> 可重新以 fileformat=unix 的形式打开文件（`:e ++ff=unix`），而 `CR` 会显示为 `^M`, `LF` 显示为 `$`。
-
-转换 buffer 的换行符。比如：`set ff=dos`。
-
+> 可重新以 fileformat=unix 的形式打开 dos format 文件（`:e ++ff=unix`），而 `CR` 会显示为可见字体 `^M`。因为 `CR` 并不等于 `^M`，所以不要保存。以 :e ++ff=dos` 重新打开文件，再 `:e ++ff=unix` 即可将 windows 换行转为 unix 换行符。
+> 
+> 如果已经保存则用 `:%s/r\//gc` 删除 `^M` 即可。
 
 ##### 替换换行符
 
@@ -504,10 +551,10 @@ for example
 
 因为 vim 以某种编码打开文件时，如果是不认识的字符，则会转换为问号，如果用 `set fileencoding=<encoding>`，则会转换 buffer 的编码,所以只是转换问号的编码而不是转换不认识字符的编码。那么该如何解决呢？
 
-> 以某种编码重新打开文件即可。比如：`:e ++enc=gbk`。然后再将 buffer 写入文件即可。还有，可以某种编码转换 buffer 再写入文件。比如：`w ++enc=utf-8`。一般是重新打开文件无乱码后，直接写入文件即可。
+> 以某种编码重新打开文件即可。比如：`:e ++enc=gbk(help :e)`。然后再将 buffer 写入文件即可。还有，可以某种编码转换 buffer 再写入文件。比如：`w ++enc=utf-8`。一般是重新打开文件无乱码后，直接写入文件即可。
 
 for example 
-    
+
     # 打开一个 gbk 的文件乱码，则这样解决
     :e ++enc=gbk
     :w
@@ -601,3 +648,6 @@ for example
     拼接文件
         :r <file>
         :w>> [file]			# `help :w_a`
+
+    删除交换文件
+        如果没有 Delete it 选项，则是因为有其他 vim 进程打开了这个文件。杀死它即可。

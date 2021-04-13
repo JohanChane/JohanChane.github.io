@@ -1,5 +1,3 @@
-### Content
-
 # Python
 
 *Python version: Python3.8*
@@ -138,19 +136,21 @@
 
 ### 一切都是对象。
 
-    for example
+for example
 
-        i = 10
-        type(i)
-        type(string)
-        def func():
-            pass
+```python
+i = 10
+print(type(i))
+print(type(str))
+def func():
+    pass
 
-        type(func)
-        id(func)
+print(type(func))
+print(id(func))
 
-        func = 100
-        func
+func = 100
+func
+```
 
 *避免混淆，类对象说的是类，而根据类实例化的对象称为实例。*
 
@@ -158,12 +158,14 @@
 
 变量名没有数据类型的概念（java 的变量名有数据类型的概念），只是一个引用对象的标签。但是对象是有数据类型的。
 
-    for example
-        list1 = [1, 2]
-        list1 = 100;
-        list1.append(3)		# AttributeError: 'int' object has no attribute 'append'
-        type(list1)         # 显示 list1 变量引用的对象的类型。
+for example
 
+```python
+list1 = [1, 2]
+list1 = 100;
+list1.append(3)		       # AttributeError: 'int' object has no attribute 'append'
+print(type(list1))         # 显示 list1 变量引用的对象的类型。
+```
 
 #### [对象的 id](https://docs.python.org/zh-cn/3/reference/datamodel.html#objects-values-and-types)
 
@@ -193,13 +195,15 @@
 
 花括号不用写，用 `:` 代替。花括号的内容不能为空，可放置 dummpy command (pass)。
 
-    def func():
-        pass
-    class  MyClass():
-        pass
+```python
+def func():
+    pass
+class  MyClass():
+    pass
 
-    if True :
-    else:
+if True :
+else:
+```
 
 ## Basic
 
@@ -253,20 +257,22 @@
 
 for example
 
-    print(isinstance(True, bool))
-    # bool 是 int 的子类
-    print(isinstance(True, int))
-    print(isinstance(True, object))
+```python
+print(isinstance(True, bool))
+# bool 是 int 的子类
+print(isinstance(True, int))
+print(isinstance(True, object))
 
-    print(issubclass(bool, int))
+print(issubclass(bool, int))
 
-    # 类会被视作其自身的子类
-    # True
-    print(issubclass(str, str))
+# 类会被视作其自身的子类
+# True
+print(issubclass(str, str))
 
-    print(issubclass(str, object))
-    # output: false
-    print(issubclass(object, str))
+print(issubclass(str, object))
+# output: false
+print(issubclass(object, str))
+```
 
 
 ### 调试程序
@@ -277,31 +283,35 @@ for example
 
 在 python interactive 模式与脚本运行的模式下输出的区别
 
-    for example
+for example
 
-        # ### interactive 模式下
-        # 输出 `ABC`
-        'ABC'
-        # 输出 `ABC\nDEF` 注意，没有输出换行符
-        'ABC\nDEF'
-        # 输出两行
-        print('ABC\nDEF')
+```python
+# ### interactive 模式下
+# 输出 `ABC`
+'ABC'
+# 输出 `ABC\nDEF` 注意，没有输出换行符
+'ABC\nDEF'
+# 输出两行
+print('ABC\nDEF')
 
-        # ### 脚本模式下
-        # 没有输出
-        'ABC'
-        # 输出字符串
-        print('ABC')
+# ### 脚本模式下
+# 没有输出
+'ABC'
+# 输出字符串
+print('ABC')
+```
 
 ### [print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)](https://docs.python.org/zh-cn/3/library/functions.html#print)
 
 for example
 
-    list1 = ['ABC', 'DEF']
-    for i in list1:
-        print(i, end=' ')
+```python
+list1 = ['ABC', 'DEF']
+for i in list1:
+    print(i, end=' ')
 
-    print('')
+print('')
+```
 
 ### [输出格式](https://docs.python.org/zh-cn/3/tutorial/inputoutput.html?highlight=seek#input-and-output)
 
@@ -311,25 +321,27 @@ for example
 
 for example
 
-    # ### `f/F` 前缀与 `{<expression>}`
-    print(f'__name__ = {__name__}')
+```python
+# ### `f/F` 前缀与 `{<expression>}`
+print(f'__name__ = {__name__}')
 
-    def func():
-        return 'ABC'
-    print(f'ret: {func()}')
+def func():
+    return 'ABC'
+print(f'ret: {func()}')
 
-    import math
-    print(f'The value of pi is approximately {math.pi:.3f}.')
+import math
+print(f'The value of pi is approximately {math.pi:.3f}.')
 
-    table = {'Sjoerd': 4127, 'Jack': 4098, 'Dcab': 7678}
-    for name, phone in table.items():
-        print(f'{name:10} ==> {phone:10d}')
+table = {'Sjoerd': 4127, 'Jack': 4098, 'Dcab': 7678}
+for name, phone in table.items():
+    print(f'{name:10} ==> {phone:10d}')
 
-    # ### str.format()
-    print('We are the {} who say "{}!"'.format('knights', 'Ni'))
-    print('{0} and {1}'.format('spam', 'eggs'))
-    print('{1} and {0}'.format('spam', 'eggs'))
-    print('The story of {0}, {1}, and {other}.'.format('Bill', 'Manfred', other='Georg'))
+# ### str.format()
+print('We are the {} who say "{}!"'.format('knights', 'Ni'))
+print('{0} and {1}'.format('spam', 'eggs'))
+print('{1} and {0}'.format('spam', 'eggs'))
+print('The story of {0}, {1}, and {other}.'.format('Bill', 'Manfred', other='Georg'))
+```
 
 旧的字符串格式化方法
 
@@ -337,8 +349,10 @@ for example
 
 for example
 
-    import math
-    print('The value of pi is approximately %5.3f.' % math.pi)
+```python
+import math
+print('The value of pi is approximately %5.3f.' % math.pi)
+```
 
 ### [字面值](https://docs.python.org/zh-cn/3.8/reference/lexical_analysis.html#literals)
 
@@ -469,51 +483,57 @@ python 常用的内置容器类型：tuple, list, set, dict。它们是可以迭
 
 for example
 
-    tuple1 = (1, 2)
-    print(hash(tuple1))
+```python
+tuple1 = (1, 2)
+print(hash(tuple1))
 
-    set1 = {1, 2}
-    # TypeError: unhashable type: 'set'
-    # print(hash(set1))
+set1 = {1, 2}
+# TypeError: unhashable type: 'set'
+# print(hash(set1))
 
-    frozenset1 = frozenset('ABC')
-    print(hash(frozenset1))
+frozenset1 = frozenset('ABC')
+print(hash(frozenset1))
+```
     
 #### 数字类型
 
 for example
 
-    # 输出 `0.5` 这里要注意。
-    1/2
-    i = 1000000000000000000000000000000000000000000000000000
-    # 虽然 `i` 很大，但 `i` 的类型是 <class 'int'>
-    type(i)
+```python
+# 输出 `0.5` 这里要注意。
+1/2
+i = 1000000000000000000000000000000000000000000000000000
+# 虽然 `i` 很大，但 `i` 的类型是 <class 'int'>
+print(type(i))
 
-    i = 10
-    # ### float
-    f = 0.1
-    # e 记法
-    f = 1e10
-    f = 1e-10
+i = 10
+# ### float
+f = 0.1
+# e 记法
+f = 1e10
+f = 1e-10
 
-    # ### complex
-    cplx =4.7+0.666j            # 定义一个虚数
-    print(cplx)                 # 输出这个虚数
-    print(cplx.real)            # 输出实部
-    print(cplx.imag)            # 输出虚部
-    print(cplx.conjugate())     # 输出该复数的共轭复数
+# ### complex
+cplx =4.7+0.666j            # 定义一个虚数
+print(cplx)                 # 输出这个虚数
+print(cplx.real)            # 输出实部
+print(cplx.imag)            # 输出虚部
+print(cplx.conjugate())     # 输出该复数的共轭复数
+```
 
 ##### 类型转换
 
 for example
 
-    f = 1.5
-    i = int(f)
-    print(i)
-    str = str(f)
-    print(str)
-    f = float(str)
-    print(f)
+```python
+f = 1.5
+i = int(f)
+print(i)
+str = str(f)
+print(str)
+f = float(str)
+print(f)
+```
 
 #### 序列类型
 
@@ -538,22 +558,24 @@ for example
 
 for example
 
-    str = 'ABC'
+```python
+str = 'ABC'
 
-    tuple1 = (1, 2)
-    tuple3 = 1, 2
-    # 错误的做法。tuple2 类型是 int
-    # tuple2 = (1)
-    tuple2 = (1,)
-    tuple4 = 1,
-    tuple5 = ()
+tuple1 = (1, 2)
+tuple3 = 1, 2
+# 错误的做法。tuple2 类型是 int
+# tuple2 = (1)
+tuple2 = (1,)
+tuple4 = 1,
+tuple5 = ()
 
-    # 不可修改
-    # tuple1[0]=1
+# 不可修改
+# tuple1[0]=1
 
-    list1 = [1, 2]
-    list2 = [1]
-    list3 = []
+list1 = [1, 2]
+list2 = [1]
+list3 = []
+```
 
 ##### 列表解析（list comprehension）
 
@@ -570,9 +592,11 @@ for example
 
 for example
 
-    list1 = [2*i for i in range(1, 100, 10)]
-    # [0, 20, 40, 60, 80, 100, 120, 140, 160, 180]
-    print(list1)
+```python
+list1 = [2*i for i in range(1, 100, 10)]
+# [0, 20, 40, 60, 80, 100, 120, 140, 160, 180]
+print(list1)
+```
 
 #### 集合类型
 
@@ -580,47 +604,49 @@ set = {<不可变对象>...}
 
 for example
 
-    set2 = {1, 2}
-    # 添加元素
-    set2.add(3)
-    print(set2)
-    # TypeError: 'int' object is not iterable
-    # set2.update(4)
-    set2.update([4])
+```python
+set2 = {1, 2}
+# 添加元素
+set2.add(3)
+print(set2)
+# TypeError: 'int' object is not iterable
+# set2.update(4)
+set2.update([4])
 
-    # 删除元素
-    set2.remove(4)
-    set2.discard(3)
-    set2.pop()
-    print(set2)
+# 删除元素
+set2.remove(4)
+set2.discard(3)
+set2.pop()
+print(set2)
 
-    # 集合的基本操作
-    set3 = {1, 2, 3}
-    set4 = {3, 4, 5}
-    # TypeError: unsupported operand type(s) for +: 'set' and 'set'
-    # print(set3 + set4)
-    # 集合减
-    print(set3 - set4)
-    # 并集
-    print(set3 | set4)
-    # 交集
-    print(set3 & set4)
-    # 不同时包含于 set3 和 set4 的元素
-    print(set3 ^ set4)
-    # TypeError: unsupported operand type(s) for *: 'set' and 'set'
-    # print(set3 * set4)
-    # TypeError: unsupported operand type(s) for /: 'set' and 'set'
-    # print(set3 / set4)
-    
-    set1 = {(1, 2), frozenset('AB')}
+# 集合的基本操作
+set3 = {1, 2, 3}
+set4 = {3, 4, 5}
+# TypeError: unsupported operand type(s) for +: 'set' and 'set'
+# print(set3 + set4)
+# 集合减
+print(set3 - set4)
+# 并集
+print(set3 | set4)
+# 交集
+print(set3 & set4)
+# 不同时包含于 set3 和 set4 的元素
+print(set3 ^ set4)
+# TypeError: unsupported operand type(s) for *: 'set' and 'set'
+# print(set3 * set4)
+# TypeError: unsupported operand type(s) for /: 'set' and 'set'
+# print(set3 / set4)
 
-    # frozenset({'B', 'A', 'C'})
-    fset1 = frozenset('ABC')
-    fset1 = frozenset((1, 2))
-    fset1 = frozenset([1, 2])
-    fset1 = frozenset({1, 2})
-    # frozenset({1, 3})
-    fset1 = frozenset({1: 2, 3: 4})
+set1 = {(1, 2), frozenset('AB')}
+
+# frozenset({'B', 'A', 'C'})
+fset1 = frozenset('ABC')
+fset1 = frozenset((1, 2))
+fset1 = frozenset([1, 2])
+fset1 = frozenset({1, 2})
+# frozenset({1, 3})
+fset1 = frozenset({1: 2, 3: 4})
+```
 
 #### 映射类型
 
@@ -631,14 +657,16 @@ for example
 
 for example
 
-    dict1 = {0.1: 1, 0.1+0.1j: 2, (1,2): 3, (1, (1, 2)): 4}
+```python
+dict1 = {0.1: 1, 0.1+0.1j: 2, (1,2): 3, (1, (1, 2)): 4}
 
-    dict1[0.1]
-    dict1[0.1+0.1j]
-    dict1[(1,2)]
+dict1[0.1]
+dict1[0.1+0.1j]
+dict1[(1,2)]
 
-    # 出错，key 不是 hashable
-    # dict2 = {(1, [1, 2])}
+# 出错，key 不是 hashable
+# dict2 = {(1, [1, 2])}
+```
 
 ### 垃圾回收机制
 
@@ -647,22 +675,24 @@ for example
 对象引用计数为零时，del 手动回收时，对象会被回收。
 对象引用成环时，对象会被回收。
 
-    for example
+for example
 
-        i = 100
-        # `100` 这个对象会被回收
-        i = 10
-        del i
+```python
+i = 100
+# `100` 这个对象会被回收
+i = 10
+del i
 
-        # ### 引用成环
+# ### 引用成环
 
-        a = [10, 20]
-        b = [a, 30]
-        a.append(b)
-        
-        # `[10, 20, b], [a, 30]` 对象会被回收
-        a = 100
-        b = 100
+a = [10, 20]
+b = [a, 30]
+a.append(b)
+
+# `[10, 20, b], [a, 30]` 对象会被回收
+a = 100
+b = 100
+```
 
 #### 驻留（interning）
 
@@ -672,20 +702,22 @@ CPython 还会在小的整数上 使用这个优化措施，防止重复创建�
 
 for example
 
-		i1 = 0
-		i2 = 0
-		print(id(i1))
-		print(id(i2))
+```python
+i1 = 0
+i2 = 0
+print(id(i1))
+print(id(i2))
 
-		s1 = "ABC"
-		s2 = "ABC"
-		print(id(s1))
-		print(id(s2))
+s1 = "ABC"
+s2 = "ABC"
+print(id(s1))
+print(id(s2))
 
-		t1 = (1, 2)
-		t2 = (1, 2)		# tuple 也是不可改变的，有些解释器会新建对象，而有些不会。
-		print(id(t1))
-		print(id(t2))	
+t1 = (1, 2)
+t2 = (1, 2)		# tuple 也是不可改变的，有些解释器会新建对象，而有些不会。
+print(id(t1))
+print(id(t2))	
+```
 
 ### Branch Control
 
@@ -732,18 +764,20 @@ for example
 
 for example
 
-    gVar = 100
+```python
+gVar = 100
 
-    def func():
-        'func doc'      # 不会输出
-        localVar = 10
-        # 使用全局变量
-        global gVar
-        gVar = 1000
+def func():
+    'func doc'      # 不会输出
+    localVar = 10
+    # 使用全局变量
+    global gVar
+    gVar = 1000
 
-    func()
-    print(gVar)
-    print(func.__doc__)
+func()
+print(gVar)
+print(func.__doc__)
+```
 
 #### argument
 
@@ -753,22 +787,26 @@ for example
 
 for example
 
-    # def funcForFuncDefaultParam(param1 = 10, param2)
-    #   pass
+```python
+# def funcForFuncDefaultParam(param1 = 10, param2)
+#   pass
+```
 
 *不支持参数个数不同的“重载”。如果支持这个功能，很容易导致混乱。*
 
 for example
 
-    def func(a):
-        print('func_a')
+```python
+def func(a):
+    print('func_a')
 
-    # 因为函数同名，所以会覆盖上面的 `func`。
-    def func(a, b):
-        print('func_a_b')
-    
-    # func(1)
-    func(1, 2)
+# 因为函数同名，所以会覆盖上面的 `func`。
+def func(a, b):
+    print('func_a_b')
+
+# func(1)
+func(1, 2)
+```
 
 ##### [positional-only or keyword-only arguments](https://docs.python.org/3/tutorial/controlflow.html#positional-or-keyword-arguments)
 
@@ -778,55 +816,59 @@ for example
 
 for example
 
-    # ### positional-only argments
-    # x 可接收位置实参或关键字实参
-    # posOnlyParam 只能一个或多个位置实参。且它后面的形参不能接收位置实参了。
-    # y 只能接收关键字实参
-    def funcForFuncDictParam(x, *posOnlyParam, y):
-        print(x)
-        print(posOnlyParam)
-        print(y)
+```python
+# ### positional-only argments
+# x 可接收位置实参或关键字实参
+# posOnlyParam 只能一个或多个位置实参。且它后面的形参不能接收位置实参了。
+# y 只能接收关键字实参
+def funcForFuncDictParam(x, *posOnlyParam, y):
+    print(x)
+    print(posOnlyParam)
+    print(y)
 
-    funcForFuncDictParam(1, (1, 2), [1, 2], {1, 2}, {1: 2, 3: 4}, y = 'yVar')
+funcForFuncDictParam(1, (1, 2), [1, 2], {1, 2}, {1: 2, 3: 4}, y = 'yVar')
 
-    # ###  keyword-only argument
-    # dictParam 只能接收关键字实参，且只能是最后一个形参。
-    def funcForFuncDictParam(x, **keywordOnlyParam):
-        print(x)
-        print(keywordOnlyParam)
+# ###  keyword-only argument
+# keywordOnlyParam 只能接收关键字实参，且只能是最后一个形参。
+def funcForFuncDictParam(x, **keywordOnlyParam):
+    print(x)
+    print(keywordOnlyParam)
 
-    funcForFuncDictParam(1, key1 = 'var1', key2 = 'var2')
+funcForFuncDictParam(1, key1 = 'var1', key2 = 'var2')
 
-    # ### position-only 与 keyword-only 参数共用
-    # x 可接收位置实参或关键字实参
-    # y 只能接收关键字实参
-    def funcForFuncParam(x, *posOnlyParam, y, **keywordOnlyParam):
-        print(x)
-        print(posOnlyParam)
-        print(y)
-        print(keywordOnlyParam)
+# ### position-only 与 keyword-only 参数共用
+# x 可接收位置实参或关键字实参
+# y 只能接收关键字实参
+def funcForFuncParam(x, *posOnlyParam, y, **keywordOnlyParam):
+    print(x)
+    print(posOnlyParam)
+    print(y)
+    print(keywordOnlyParam)
 
-    funcForFuncParam(1, {1, 2}, {1: 2, 3: 4}, y = 10, key1 = 'var1', key2 = 'var2')
+funcForFuncParam(1, {1, 2}, {1: 2, 3: 4}, y = 10, key1 = 'var1', key2 = 'var2')
 
-    # ### 当参数既可以是 position-only 或 keyword-only 时，可用 `/`，表示它前面的参数都是 position-only 的。
-    def funcForFuncParam(a, b, /, c):
-        pass
-    funcForFuncParam(1, 2, 3)
+# ### 当参数既可以是 position-only 或 keyword-only 时，可用 `/`，表示它前面的参数都是 position-only 的。
+def funcForFuncParam(a, b, /, c):
+    pass
+funcForFuncParam(1, 2, 3)
 
-    funcForFuncParam(1, 2, c = 3)
-    # 错误的
-    # funcForFuncParam(1, b = 2, c = 3)
-    # 错误的
-    # funcForFuncParam(a = 1, b = 2, c = 3)
+funcForFuncParam(1, 2, c = 3)
+# 错误的
+# funcForFuncParam(1, b = 2, c = 3)
+# 错误的
+# funcForFuncParam(a = 1, b = 2, c = 3)
+```
 
 #### return
 
-    def funcForFuncRet():
-        return 'abc'
+```python
+def funcForFuncRet():
+    return 'abc'
 
-    ret = funcForFuncRet()
-    print(ret)
-    print(funcForFuncRet())
+ret = funcForFuncRet()
+print(ret)
+print(funcForFuncRet())
+```
 
 #### 传参方式
 
@@ -843,11 +885,13 @@ for example
 
 for example
 
-    def funcForWayOfPassParam(param1, param2, param3):
-        pass
+```python
+def funcForWayOfPassParam(param1, param2, param3):
+    pass
 
-    funcForWayOfPassParam(list1.copy(), set1.copy(), dict1.copy())
-    funcForWayOfPassParam(list1[:], set1[:], dict1.copy())
+funcForWayOfPassParam(list1.copy(), set1.copy(), dict1.copy())
+funcForWayOfPassParam(list1[:], set1[:], dict1.copy())
+```
 
 ##### [浅层 (shallow) 和深层 (deep) 复制操作](https://docs.python.org/zh-cn/3/library/copy.html)
 
@@ -869,44 +913,46 @@ for example
 
 for example
 
-    # ### 内嵌函数
-    def outerFunc():
-        print('outerFunc')
-        # 内嵌函数
-        def innerFunc():
-            print('innerFunc')
-        
-        innerFunc()
+```python
+# ### 内嵌函数
+def outerFunc():
+    print('outerFunc')
+    # 内嵌函数
+    def innerFunc():
+        print('innerFunc')
+    
+    innerFunc()
 
-    outerFunc()
+outerFunc()
 
-    # ### 闭包
-    def outerFunc():
-        x = 5
-        # 内嵌函数
-        def closure():
-            # 当对被引用的变量赋值时，则可能是修改外部变量，或新建局变量。默认会认为你在新建一个局部变量，所以 x 是一个局部变量。
-            # 但是因为 x 还没有创建，所以出现 `UnboundLocalError: local variable 'x' referenced before assignment`
-            x += 1   
-            print(x)
-        return closure
+# ### 闭包
+def outerFunc():
+    x = 5
+    # 内嵌函数
+    def closure():
+        # 当对被引用的变量赋值时，则可能是修改外部变量，或新建局变量。默认会认为你在新建一个局部变量，所以 x 是一个局部变量。
+        # 但是因为 x 还没有创建，所以出现 `UnboundLocalError: local variable 'x' referenced before assignment`
+        x += 1   
+        print(x)
+    return closure
 
-    closure = outerFunc()
-    closure()
+closure = outerFunc()
+closure()
 
-    # #### 解决方案
-    def outerFunc():
-        x = 5
-        # 内嵌函数
-        def closure():
-            # 指明 x 不是局部变量
-            nonlocal x
-            x += 1
-            print(x)
-        return closure()
+# #### 解决方案
+def outerFunc():
+    x = 5
+    # 内嵌函数
+    def closure():
+        # 指明 x 不是局部变量
+        nonlocal x
+        x += 1
+        print(x)
+    return closure()
 
-    closure = outerFunc()
-    closure()
+closure = outerFunc()
+closure()
+```
 
 ### lambda
 
@@ -917,11 +963,13 @@ for example
 
 for example
 
-    def func(a, b):
-        return a + b
+```python
+def func(a, b):
+    return a + b
 
-    lmbd = lambda a, b: a + b
-    print(lmbd(10, 20))
+lmbd = lambda a, b: a + b
+print(lmbd(10, 20))
+```
 
 ### [异常](https://docs.python.org/zh-cn/3/tutorial/errors.html)
 
@@ -931,48 +979,50 @@ for example
 
 for example
 
-    # ### 异常
-    try:
-        1/0
-    except ZeroDivisionError:
-        print('ZeroDivisionError')
+```python
+# ### 异常
+try:
+    1/0
+except ZeroDivisionError:
+    print('ZeroDivisionError')
 
-    finally:
-        print('finally')
+finally:
+    print('finally')
 
+try:
+    1/0
+except ZeroDivisionError as err:
+    print(err)
+
+finally:
+    print('finally')
+
+# ### 语法异常
+try:
+    ABC
+except NameError as err:
+    print(err)
+
+# ### 处理异常时出现异常，则没有捕获第二个异常
+try:
+    ABC
+except NameError as err:
+    print(err)
+    # 再抛出异常
+    1/0
+except ZeroDivisionError as err:
+    print(err)
+
+# 解决方案
+try:
+    ABC
+except NameError as err:
+    print(err)
     try:
         1/0
     except ZeroDivisionError as err:
         print(err)
-
-    finally:
-        print('finally')
-
-    # ### 语法异常
-    try:
-        ABC
-    except NameError as err:
-        print(err)
-
-    # ### 处理异常时出现异常，则没有捕获第二个异常
-    try:
-        ABC
-    except NameError as err:
-        print(err)
-        # 再抛出异常
-        1/0
-    except ZeroDivisionError as err:
-        print(err)
-    
-    # 解决方案
-    try:
-        ABC
-    except NameError as err:
-        print(err)
-        try:
-            1/0
-        except ZeroDivisionError as err:
-            print(err)
+```
 
 ## class
 
@@ -1002,27 +1052,29 @@ self, cls
 
 for example
 
-    class Base1(object):
-        def foo(self):
-            print('Base1')
+```python
+class Base1(object):
+    def foo(self):
+        print('Base1')
 
-    class Base2(object):
-        def foo(self):
-            print('Base2')
+class Base2(object):
+    def foo(self):
+        print('Base2')
 
-    class MyClass(Base1, Base2):
-        def foo(self):
-            print('MyClass')
+class MyClass(Base1, Base2):
+    def foo(self):
+        print('MyClass')
 
-    myClass = MyClass()
-    
-    # 根据 myClass 实例返回 MyClass 父类实例
-    superOfObj = super(MyClass, myClass)
-    # 根据 MyClass 类对象返回 MyClass 父类的类对象
-    superOfClass = super(MyClass, MyClass)
-    superOfObj.foo()
-    # 因为 superOfClass 是一个类对象，也可说 superOfClass 是未绑定的，所以要传一个实例。
-    superOfClass.foo(myClass)
+myClass = MyClass()
+
+# 根据 myClass 实例返回 MyClass 父类实例
+superOfObj = super(MyClass, myClass)
+# 根据 MyClass 类对象返回 MyClass 父类的类对象
+superOfClass = super(MyClass, MyClass)
+superOfObj.foo()
+# 因为 superOfClass 是一个类对象，也可说 superOfClass 是未绑定的，所以要传一个实例。
+superOfClass.foo(myClass)
+```
 
 ### 类的属性与方法
 
@@ -1034,15 +1086,17 @@ for example
 
 for example
 
-    class ClassForClassProperties():
-        classProperty = 10
-        def __init__(self):
-            self.instanceProperty = 100
+```python
+class ClassForClassProperties():
+    classProperty = 10
+    def __init__(self):
+        self.instanceProperty = 100
 
-    classForClassProperties = ClassForClassProperties()
-    print(classForClassProperties.instanceProperty)
-    print(ClassForClassProperties.classProperty)
-    print(classForClassProperties.classProperty)
+classForClassProperties = ClassForClassProperties()
+print(classForClassProperties.instanceProperty)
+print(ClassForClassProperties.classProperty)
+print(classForClassProperties.classProperty)
+```
 
 #### 类的方法
 
@@ -1065,50 +1119,54 @@ for example
 
 for example
 
-    class MyClass():
-        # default method
-        def defaultMethod(self):
-            pass
+```python
+class MyClass():
+    # default method
+    def defaultMethod(self):
+        pass
 
-        @classmethod
-        def classMethod(cls):
-            print(cls)
+    @classmethod
+    def classMethod(cls):
+        print(cls)
+
+    @staticmethod
+    def staticMethod():
+        pass
     
-        @staticmethod
-        def staticMethod():
-            pass
-        
-    myClass = MyClass()
-    myClass.defaultMethod()
-    MyClass.defaultMethod(myClass)
+myClass = MyClass()
+myClass.defaultMethod()
+MyClass.defaultMethod(myClass)
 
-    MyClass.classMethod()
-    myClass.classMethod()
+MyClass.classMethod()
+myClass.classMethod()
 
-    MyClass.staticMethod()
-    myClass.staticMethod()
+MyClass.staticMethod()
+myClass.staticMethod()
+```
 
 ### 类的访问属性
 
 for example
 
-    class MyClass():
-        def __init__(self):
-            self.__privateProperty = 10
-            self.publicProperty = 'ABC'
-        def __privateMethod(self):
-            print('__privateMethod')
-        def publicMethod(self):
-            print('publicMethod')
+```python
+class MyClass():
+    def __init__(self):
+        self.__privateProperty = 10
+        self.publicProperty = 'ABC'
+    def __privateMethod(self):
+        print('__privateMethod')
+    def publicMethod(self):
+        print('publicMethod')
 
-    myClass = MyClass()
-    # AttributeError: 'MyClass' object has no attribute '__privateProperty'
-    # print(myClass.__privateProperty)
-    print(myClass.publicProperty)
+myClass = MyClass()
+# AttributeError: 'MyClass' object has no attribute '__privateProperty'
+# print(myClass.__privateProperty)
+print(myClass.publicProperty)
 
-    # AttributeError: 'MyClass' object has no attribute '__privateMethod'
-    # myClass.__privateMethod()
-    myClass.publicMethod()
+# AttributeError: 'MyClass' object has no attribute '__privateMethod'
+# myClass.__privateMethod()
+myClass.publicMethod()
+```
 
 #### name mangling
 
@@ -1116,14 +1174,16 @@ for example
 
 for example
 
-    class MyClass():
-        __privateProperty = 10
-        
-    myClass = MyClass()
-    # AttributeError: 'MyClass' object has no attribute '__privateProperty'
-    # myClass.__privateProperty
-    dir(myClass)
-    print(myClass._MyClass__privateProperty)
+```python
+class MyClass():
+    __privateProperty = 10
+    
+myClass = MyClass()
+# AttributeError: 'MyClass' object has no attribute '__privateProperty'
+# myClass.__privateProperty
+dir(myClass)
+print(myClass._MyClass__privateProperty)
+```
 
 ### 类的继承
 
@@ -1133,107 +1193,115 @@ for example
 
 for example
 
-    class Base():
-        def method(self):
-            print('Base method()')
+```python
+class Base():
+    def method(self):
+        print('Base method()')
 
-    class MyClass(Base):
-        def method(self):
-            print('MyClass method()')
+class MyClass(Base):
+    def method(self):
+        print('MyClass method()')
 
-    base = Base()
-    base.method()
-    base = MyClass()
-    base.method()
+base = Base()
+base.method()
+base = MyClass()
+base.method()
+```
 
 #### 单继承
 
 for example
 
-    class Base():
-        def __init__(self):
-            print('Base')
+```python
+class Base():
+    def __init__(self):
+        print('Base')
 
-    class MyClass(Base):
-        def __init__(self):
-            # Base.__init__(self)
-            super().__init__()
+class MyClass(Base):
+    def __init__(self):
+        # Base.__init__(self)
+        super().__init__()
 
-    myClass = MyClass()
+myClass = MyClass()
 
-    # ### 调用父类的构造函数
-    class Base():
-        def __init__(self):
-            print('Base')
+# ### 调用父类的构造函数
+class Base():
+    def __init__(self):
+        print('Base')
 
-    class MyClass(Base):
-        pass
+class MyClass(Base):
+    pass
 
-    # 因为继承了 Base.__init__() 所以 MyClass 的 __init__() 是就是 Base.__init__()，所以会调用 Base.__init__()。
-    myClass = MyClass()
+# 因为继承了 Base.__init__() 所以 MyClass 的 __init__() 是就是 Base.__init__()，所以会调用 Base.__init__()。
+myClass = MyClass()
 
-    # ### 调用父类的构造函数
-    class Base():
-        def __init__(self):
-            print('Base')
+# ### 调用父类的构造函数
+class Base():
+    def __init__(self):
+        print('Base')
 
-    class MyClass(Base):
-        def __init__(self):
-            print('MyClass')
+class MyClass(Base):
+    def __init__(self):
+        print('MyClass')
 
-    # 因为 MyClass.__init__() 覆盖了 Base.__init__()，所以只会调用 MyClass.__init__()
-    myClass = MyClass()
+# 因为 MyClass.__init__() 覆盖了 Base.__init__()，所以只会调用 MyClass.__init__()
+myClass = MyClass()
+```
 
 #### 多重继承
 
 for example
 
-    class Base1():
-        def __init__(self):
-            print('Base1')
+```python
+class Base1():
+    def __init__(self):
+        print('Base1')
 
-    class Base2():
-        def __init__(self):
-            print('Base2')
+class Base2():
+    def __init__(self):
+        print('Base2')
 
-    class MyClass(Base1, Base2):
-        def __init__(self):
-            # 无法用 super 调用父类的构造函数了
-            Base1.__init__(self)
-            Base2.__init__(self)
+class MyClass(Base1, Base2):
+    def __init__(self):
+        # 无法用 super 调用父类的构造函数了
+        Base1.__init__(self)
+        Base2.__init__(self)
 
-    myClass = MyClass()
+myClass = MyClass()
+```
 
 ##### 子类同名覆盖父类的问题
 
 for example:
 
-    class Base():
-        def __init__(self):
-            self.x = 100
+```python
+class Base():
+    def __init__(self):
+        self.x = 100
 
-        def method(self):
-            print('Base.method()')
+    def method(self):
+        print('Base.method()')
 
-    class MyClass(Base):
-        def __init__(self):
-            super().__init__()
+class MyClass(Base):
+    def __init__(self):
+        super().__init__()
 
-            # 无法通过 super() 调用父类的属性
-            # AttributeError: 'super' object has no attribute 'x'
-            # print(super().x)
-            print(self.x)
-            # 这里是赋值而不是创建 x
-            self.x = 1000
+        # 无法通过 super() 调用父类的属性
+        # AttributeError: 'super' object has no attribute 'x'
+        # print(super().x)
+        print(self.x)
+        # 这里是赋值而不是创建 x
+        self.x = 1000
 
-            # 可通过 super() 调用父类的 method()
-            super().method()
-            self.method()
+        # 可通过 super() 调用父类的 method()
+        super().method()
+        self.method()
 
-        def method(self):
-            print('MyClass.method()')
+    def method(self):
+        print('MyClass.method()')
 
-    myClass = MyClass()
+myClass = MyClass()
+```
 
 ### [抽象基类 abc](https://docs.python.org/zh-cn/3/library/abc.html#module-abc)
 
@@ -1266,35 +1334,37 @@ for example:
 
 for example
 
-    from abc import ABC, abstractmethod
+```python
+from abc import ABC, abstractmethod
 
-    class MyAbstractClass(ABC):
-        @abstractmethod
-        def myAbstractMethod(self):
-            pass
-        @classmethod
-        @abstractmethod
-        def myAbstractClassmethod(cls):
-            pass
-        @staticmethod
-        @abstractmethod
-        def myAbstractStaticmethod():
-            pass
+class MyAbstractClass(ABC):
+    @abstractmethod
+    def myAbstractMethod(self):
+        pass
+    @classmethod
+    @abstractmethod
+    def myAbstractClassmethod(cls):
+        pass
+    @staticmethod
+    @abstractmethod
+    def myAbstractStaticmethod():
+        pass
 
-    class MyClass(MyAbstractClass):
-        def myAbstractMethod(self):
-            pass
-        @classmethod
-        def myAbstractClassmethod(cls):
-            pass
-        @staticmethod
-        def myAbstractStaticmethod():
-            pass
+class MyClass(MyAbstractClass):
+    def myAbstractMethod(self):
+        pass
+    @classmethod
+    def myAbstractClassmethod(cls):
+        pass
+    @staticmethod
+    def myAbstractStaticmethod():
+        pass
 
-    myClass = MyClass()
-    myClass.myAbstractMethod()
-    MyClass.myAbstractClassmethod()
-    MyClass.myAbstractStaticmethod()
+myClass = MyClass()
+myClass.myAbstractMethod()
+MyClass.myAbstractClassmethod()
+MyClass.myAbstractStaticmethod()
+```
 
 ## 装饰器（decorator）
 
@@ -1306,119 +1376,123 @@ for example
 
 for example
 
-    def null_decorator(func):
-        print('null_decorator')
-        return func
+```python
+def null_decorator(func):
+    print('null_decorator')
+    return func
 
-    def greet():
-        print('Hello!')
+def greet():
+    print('Hello!')
 
-    greet = null_decorator(greet)
+greet = null_decorator(greet)
 
-    # output: `Hello!`
-    greet()
+# output: `Hello!`
+greet()
 
-    # 调用 null_decorator()
-    @null_decorator
-    def greet1():
-        print('Hello!')
+# 调用 null_decorator()
+@null_decorator
+def greet1():
+    print('Hello!')
 
-    # 调用 null_decorator 返回的 func(), 实际是调用 greet1()
-    # output: `Hello!`
-    greet1()
+# 调用 null_decorator 返回的 func(), 实际是调用 greet1()
+# output: `Hello!`
+greet1()
+```
 
 
 for example
 
-    class Property(object):
-        def __init__(self, fget=None, fset=None, fdel=None, doc=None):
-            print('__init__()', type(self), id(self))
-            print(fget == None, fset == None, fdel == None)
+```python
+class Property(object):
+    def __init__(self, fget=None, fset=None, fdel=None, doc=None):
+        print('__init__()', type(self), id(self))
+        print(fget == None, fset == None, fdel == None)
 
-            self.fget = fget
-            self.fset = fset
-            self.fdel = fdel
-            if doc is None and fget is not None:
-                doc = fget.__doc__
-            self.__doc__ = doc
+        self.fget = fget
+        self.fset = fset
+        self.fdel = fdel
+        if doc is None and fget is not None:
+            doc = fget.__doc__
+        self.__doc__ = doc
 
-        # 定义 decorator 的访问行为
-        def __get__(self, obj, objtype=None):
-            print('Property.__get__()', type(self), id(self))
+    # 定义 decorator 的访问行为
+    def __get__(self, obj, objtype=None):
+        print('Property.__get__()', type(self), id(self))
 
-            if obj is None:
-                return self
-            if self.fget is None:
-                raise AttributeError("unreadable attribute")
-            return self.fget(obj)
+        if obj is None:
+            return self
+        if self.fget is None:
+            raise AttributeError("unreadable attribute")
+        return self.fget(obj)
 
-        # 定义 decorator 的设置行为
-        def __set__(self, obj, value):
-            print('Property.__set__()', type(self), id(self))
+    # 定义 decorator 的设置行为
+    def __set__(self, obj, value):
+        print('Property.__set__()', type(self), id(self))
 
-            if self.fset is None:
-                raise AttributeError("can't set attribute")
-            self.fset(obj, value)
+        if self.fset is None:
+            raise AttributeError("can't set attribute")
+        self.fset(obj, value)
 
-        def __delete__(self, obj):
-            print('Property.__delete__()', type(self), id(self))
+    def __delete__(self, obj):
+        print('Property.__delete__()', type(self), id(self))
 
-            if self.fdel is None:
-                raise AttributeError("can't delete attribute")
-            self.fdel(obj)
+        if self.fdel is None:
+            raise AttributeError("can't delete attribute")
+        self.fdel(obj)
 
-        # 设置 decorator getter
-        def getter(self, fget):
-            print('Property.getter()', type(self), id(self))
+    # 设置 decorator getter
+    def getter(self, fget):
+        print('Property.getter()', type(self), id(self))
 
-            return type(self)(fget, self.fset, self.fdel, self.__doc__)
+        return type(self)(fget, self.fset, self.fdel, self.__doc__)
 
-        # 设置 decorator deleter
-        def setter(self, fset):
-            print('Property.setter()', type(self), id(self))
+    # 设置 decorator deleter
+    def setter(self, fset):
+        print('Property.setter()', type(self), id(self))
 
-            return type(self)(self.fget, fset, self.fdel, self.__doc__)
+        return type(self)(self.fget, fset, self.fdel, self.__doc__)
 
-        def deleter(self, fdel):
-            print('Property.deleter()', type(self), id(self))
+    def deleter(self, fdel):
+        print('Property.deleter()', type(self), id(self))
 
-            return type(self)(self.fget, self.fset, fdel, self.__doc__)
+        return type(self)(self.fget, self.fset, fdel, self.__doc__)
 
-    class MyClass():
-        def __init__(self, size = 10):
-            self._size = size
+class MyClass():
+    def __init__(self, size = 10):
+        self._size = size
 
-        # 等同于 size = Property(fget=size)
-        @Property
-        def size(self):
-            print('size.getter')
-            print('get size property')
-            return self._size
+    # 等同于 size = Property(fget=size)
+    @Property
+    def size(self):
+        print('size.getter')
+        print('get size property')
+        return self._size
 
-        # 调用 size.setter()
-        @size.setter
-        def size(self, value):
-            print('size.setter')
-            print('set size property')
-            self._size = value
+    # 调用 size.setter()
+    @size.setter
+    def size(self, value):
+        print('size.setter')
+        print('set size property')
+        self._size = value
 
-        # 调用 size.delete() ?
-        @size.deleter
-        def size(self):
-            print('size.deleter')
-            print('del size property')
-            del self._size
+    # 调用 size.delete() ?
+    @size.deleter
+    def size(self):
+        print('size.deleter')
+        print('del size property')
+        del self._size
 
-    myClass = MyClass()
-    print('get size in main:')
-    # 调用 size.__get__()
-    myClass.size
-    print('set size in main:')
-    # 调用 size.__set__()
-    myClass.size = 100
-    print('del size in main:')
-    # 调用 size.__delete__()
-    del myClass.size
+myClass = MyClass()
+print('get size in main:')
+# 调用 size.__get__()
+myClass.size
+print('set size in main:')
+# 调用 size.__set__()
+myClass.size = 100
+print('del size in main:')
+# 调用 size.__delete__()
+del myClass.size
+```
 
 ### Others
 
@@ -1432,33 +1506,34 @@ for example
 
 for example
 
-    # ### [property](https://docs.python.org/zh-cn/3/library/functions.html#property)
-    class MyClass():
-        def __init__(self, size = 10):
-            self._size = size
+```python
+# ### [property](https://docs.python.org/zh-cn/3/library/functions.html#property)
+class MyClass():
+    def __init__(self, size = 10):
+        self._size = size
 
-        # 等同于 size = property(fget=size)
-        @property
-        def size(self):
-            print('get size property')
-            return self._size
-        
-        # 等同于 size = property(fget=size)。所以，size 不是方法而是 property。
-        @size.setter
-        def size(self, value):
-            print('set size property')
-            self._size = value
+    # 等同于 size = property(fget=size)
+    @property
+    def size(self):
+        print('get size property')
+        return self._size
+    
+    # 等同于 size = property(fget=size)。所以，size 不是方法而是 property。
+    @size.setter
+    def size(self, value):
+        print('set size property')
+        self._size = value
 
-        @size.deleter
-        def size(self):
-            print('deleter')
-            del self._size
+    @size.deleter
+    def size(self):
+        print('deleter')
+        del self._size
 
-    myClass = MyClass()
-    myClass.size
-    myClass.size = 100
-    del myClass.size
-
+myClass = MyClass()
+myClass.size
+myClass.size = 100
+del myClass.size
+```
     
 ## [`__*__` 标识符](https://docs.python.org/zh-cn/3/reference/lexical_analysis.html#identifiers)
 
@@ -1485,25 +1560,27 @@ for example
 
 for example
 
-    dir()
-    # 输出 `__main__`
+```python
+dir()
+# 输出 `__main__`
+print(__name__)
+
+# ### mymodule.py
+def printName():
     print(__name__)
 
-    # ### mymodule.py
-    def printName():
-        print(__name__)
-    
-    printName()
+printName()
 
-    # 输出 `__main__`
-    python mymodule.py
-    
-    # ### test.py
-    import mymodule
-    mymodule.printName()
+# 输出 `__main__`
+python mymodule.py
 
-    # 输出 `__mymodule__`
-    python test.py
+# ### test.py
+import mymodule
+mymodule.printName()
+
+# 输出 `__mymodule__`
+python test.py
+```
 
 ### [class.__mro__, class.mro(), class.__subclass__(), super()](https://docs.python.org/zh-cn/3/library/stdtypes.html#class.__mro__)
 
@@ -1512,27 +1589,29 @@ for example
 
 for example
 
-    class Base1(object):
-        def foo(self):
-            print('Base1')
+```python
+class Base1(object):
+    def foo(self):
+        print('Base1')
 
-    class Base2(object):
-        def foo(self):
-            print('Base2')
+class Base2(object):
+    def foo(self):
+        print('Base2')
 
-    class MyClass(Base1, Base2):
-        def foo(self):
-            print('MyClass')
+class MyClass(Base1, Base2):
+    def foo(self):
+        print('MyClass')
 
-    myClass = MyClass()
-    print(MyClass.__mro__)
-    print(MyClass.mro())
-    # 对象没有 __mro__
-    # AttributeError: 'MyClass' object has no attribute '__mro__'
-    # print(myClass.__mro__)
+myClass = MyClass()
+print(MyClass.__mro__)
+print(MyClass.mro())
+# 对象没有 __mro__
+# AttributeError: 'MyClass' object has no attribute '__mro__'
+# print(myClass.__mro__)
 
-    # 打印 Base1 的子类对象
-    print(Base1.__subclasses__())
+# 打印 Base1 的子类对象
+print(Base1.__subclasses__())
+```
 
 ### [Magic Method(重点)](https://docs.python.org/zh-cn/3/reference/datamodel.html?highlight=__new__#special-method-names)
 
@@ -1575,46 +1654,51 @@ for example
 
 for example
 
-    class MyClass(object):
-        def __new__(cls):
-            print('create a MyClass instance')
-            # 相当于 return object.__new__(cls)
-            return super(MyClass, cls).__new__(cls)
+```python
+class MyClass(object):
+    def __new__(cls):
+        print('create a MyClass instance')
+        # 相当于 return object.__new__(cls)
+        return super(MyClass, cls).__new__(cls)
 
-        def __init__(self):
-            print('__init__()')
+    def __init__(self):
+        print('__init__()')
 
-    myClass = MyClass()
-    print(type(myClass))
-    print(MyClass.__mro__)
+myClass = MyClass()
+print(type(myClass))
+print(MyClass.__mro__)
+```
 
 ##### `__repr__(), __str__()`
 
 for example
 
-    class MyClass():
-        def __repr__(self):
-            return '__repr__()'
-        def __str__(self):
-            return '_str__()'
+```python
+class MyClass():
+    def __repr__(self):
+        return '__repr__()'
+    def __str__(self):
+        return '_str__()'
 
-    myClass = MyClass()
-    print(repr(myClass))
-    print(str(myClass))
-
+myClass = MyClass()
+print(repr(myClass))
+print(str(myClass))
+```
 
 ##### `__lt__()`
 
 for example
 
-    class MyClass():
-        number = 0
+```python
+class MyClass():
+    number = 0
 
-        def __lt__(self, obj):
-            return self.number < self.number
+    def __lt__(self, obj):
+        return self.number < self.number
 
-    myClass = MyClass()
-    print(myClass < myClass)
+myClass = MyClass()
+print(myClass < myClass)
+```
 
 #### 自定义属性访问
 
@@ -1630,43 +1714,45 @@ for example
 
 for example
 
-    class MyClass():
-        def __init__(self, size = 10):
-            self.size = size
-        def getSize(self):
-            return self.size
-        def setSize(self, value):
-            self.size = value
-        def delSize(self):
-            del self.size
-        # 添加属性 `x`
-        x = property(getSize, setSize, delSize)
+```python
+class MyClass():
+    def __init__(self, size = 10):
+        self.size = size
+    def getSize(self):
+        return self.size
+    def setSize(self, value):
+        self.size = value
+    def delSize(self):
+        del self.size
+    # 添加属性 `x`
+    x = property(getSize, setSize, delSize)
 
-    myClass = MyClass()
-    print(myClass.x)
-    myClass.x = 100
-    del myClass.x
-    
-    class MyClass():
-        # 定义当用户试图获取一个不存在的属性时的行为
-        def __getattr__(self, name):
-            print('getattr')
-        # 定义属性被访问时的行为
-        def __getattribute__(self, name):
-            print('getattribute')
-            return super().__getattribute__(name)
-        def __setattr__(self, name, value):
-            print('setattr')
-            super().__setattr__(name, value)
-        def __delattr__(self, name):
-            print('delattr')
-            super().__delattr__(name)
+myClass = MyClass()
+print(myClass.x)
+myClass.x = 100
+del myClass.x
 
-    myClass = MyClass()
-    # 输出 `getattribute, setattr`
-    print(myClass.x)
-    myClass.x = 1
-    del myClass.x
+class MyClass():
+    # 定义当用户试图获取一个不存在的属性时的行为
+    def __getattr__(self, name):
+        print('getattr')
+    # 定义属性被访问时的行为
+    def __getattribute__(self, name):
+        print('getattribute')
+        return super().__getattribute__(name)
+    def __setattr__(self, name, value):
+        print('setattr')
+        super().__setattr__(name, value)
+    def __delattr__(self, name):
+        print('delattr')
+        super().__delattr__(name)
+
+myClass = MyClass()
+# 输出 `getattribute, setattr`
+print(myClass.x)
+myClass.x = 1
+del myClass.x
+```
 
 #### 实现描述器
 
@@ -1676,7 +1762,9 @@ for example
 
 for example
 
+```python
     [example](# customizeDecoratorExample)
+```
     
 #### 模拟数字类型
 
@@ -1690,17 +1778,19 @@ for example
 
 for example
 
-    class Computation():
-        def __init__(self,value):
-            self.value = value
-        def __add__(self,other):
-            return self.value + other
-        def __sub__(self,other):
-            return self.value - other
-        
-        c = Computation(5)
-        print(c + 5)
-        print(c - 3)
+```python
+class Computation():
+    def __init__(self,value):
+        self.value = value
+    def __add__(self,other):
+        return self.value + other
+    def __sub__(self,other):
+        return self.value - other
+    
+    c = Computation(5)
+    print(c + 5)
+    print(c - 3)
+```
 
 #### 模拟容器类型
 
@@ -1715,16 +1805,18 @@ for example
 
 for example
 
-    class Animal():
-        def __init__(self, animalList):
-            self.animalName = animalList
-        def __getitem__(self, index):
-            return self.animalName[index]
+```python
+class Animal():
+    def __init__(self, animalList):
+        self.animalName = animalList
+    def __getitem__(self, index):
+        return self.animalName[index]
 
-    animals = Animal(["dog","cat","fish"])
-    # 如果没有 `__getitem__()` 时，TypeError: 'Animal' object is not iterable
-    for animal in animals:
-        print(animal)
+animals = Animal(["dog","cat","fish"])
+# 如果没有 `__getitem__()` 时，TypeError: 'Animal' object is not iterable
+for animal in animals:
+    print(animal)
+```
 
 ##### `迭代器, __iter__(), __next__()`
 
@@ -1740,40 +1832,41 @@ for example
 
 for example
 
-    # ### iter(), next()
-    list1 = [1, 2]
-    # it 的类型是 <class 'list_iterator'>
-    it = iter(list1)
-    print(type(it))
-    print(next(it))
-    print(next(it))
+```python
+# ### iter(), next()
+list1 = [1, 2]
+# it 的类型是 <class 'list_iterator'>
+it = iter(list1)
+print(type(it))
+print(next(it))
+print(next(it))
 
-    list1 = [1, 2]
-    it = iter(list1)
-    for i in it:
-    print(i, end=' ')
+list1 = [1, 2]
+it = iter(list1)
+for i in it:
+print(i, end=' ')
 
-    # ### __iter__(), __next__()
-    class MyClass():
-        def __iter__(self):
-            self.a = 1
-            return self
-        def __next__(self):
-            x = self.a
-            self.a += 1
-            return x
+# ### __iter__(), __next__()
+class MyClass():
+    def __iter__(self):
+        self.a = 1
+        return self
+    def __next__(self):
+        x = self.a
+        self.a += 1
+        return x
 
-    myClass = MyClass()
-    iterOfMyClass = iter(myClass)
+myClass = MyClass()
+iterOfMyClass = iter(myClass)
 
-    # iterOfMyClass 与 myClass 类型相同
-    print(type(myClass))
-    print(type(iterOfMyClass))
-    print(dir(myClass))
+# iterOfMyClass 与 myClass 类型相同
+print(type(myClass))
+print(type(iterOfMyClass))
+print(dir(myClass))
 
-    print(next(iterOfMyClass))
-    print(next(iterOfMyClass))
-
+print(next(iterOfMyClass))
+print(next(iterOfMyClass))
+```
 
 ##### [生成器](https://docs.python.org/zh-cn/3/tutorial/classes.html#iterators)
 
@@ -1785,42 +1878,44 @@ for example
 
 for example
 
-    def myGenerator(n):
-        a = 1
-        while True:
-            # 结束条件
-            if n > 2:
-                return
-            yield a
-            a += 1
-            n += 1
-
-    g = myGenerator(0)
-    print(next(g))
-    print(next(g))
-    print(next(g))
-    print(next(g))
-
-    # ### 生成器函数 - 斐波那契
-    import sys
-
-    def fibonacci(n):
-        a, b, counter = 0, 1, 0
-        while True:
-            if (counter > n):
-                return
-            yield a
-            a, b = b, a + b
-            counter += 1
-
-    # f 是一个迭代器，由生成器返回生成
-    f = fibonacci(10)
-
+```python
+def myGenerator(n):
+    a = 1
     while True:
-        try:
-            print (next(f), end=" ")
-        except StopIteration:
-            sys.exit()
+        # 结束条件
+        if n > 2:
+            return
+        yield a
+        a += 1
+        n += 1
+
+g = myGenerator(0)
+print(next(g))
+print(next(g))
+print(next(g))
+print(next(g))
+
+# ### 生成器函数 - 斐波那契
+import sys
+
+def fibonacci(n):
+    a, b, counter = 0, 1, 0
+    while True:
+        if (counter > n):
+            return
+        yield a
+        a, b = b, a + b
+        counter += 1
+
+# f 是一个迭代器，由生成器返回生成
+f = fibonacci(10)
+
+while True:
+    try:
+        print (next(f), end=" ")
+    except StopIteration:
+        sys.exit()
+```
 
 ### 包与模块
 
@@ -1880,44 +1975,46 @@ for example
 
 for example
 
-    # ### import syntax
-    import package1.subpackage1.module1
-    package1.subpackage1.module1.func1()
-    # 错误
-    # func1()
-    
-    import package1.subpackage1.module1 as mymodule1
-    mymodule1.func1()
-    # 不能用 import 部分访问了
-    # NameError: name 'package1' is not defined
-    # package1.subpackage1.module1.func1()
+```python
+# ### import syntax
+import package1.subpackage1.module1
+package1.subpackage1.module1.func1()
+# 错误
+# func1()
 
-    # #### 尝试给包名加个前缀
-    # SyntaxError: invalid syntax. 因为标识符不能有点。
-    # import package1.subpackage1.module1 as subpackage1.module1
-    # subpackage1.module1.func1()
+import package1.subpackage1.module1 as mymodule1
+mymodule1.func1()
+# 不能用 import 部分访问了
+# NameError: name 'package1' is not defined
+# package1.subpackage1.module1.func1()
 
-    # ### from ... import syntax
-    from package1.subpackage1 import module1
-    module1.func1()
+# #### 尝试给包名加个前缀
+# SyntaxError: invalid syntax. 因为标识符不能有点。
+# import package1.subpackage1.module1 as subpackage1.module1
+# subpackage1.module1.func1()
 
-    from package1.subpackage1.module1 import func1
-    func1()
+# ### from ... import syntax
+from package1.subpackage1 import module1
+module1.func1()
 
-    # 尝试给标识符加个 module 前缀
-    # SyntaxError: invalid syntax. 原因是标识符不能有“点”。
-    # from package1.subpackage1 import module1.func1
-    # module1.func1()
+from package1.subpackage1.module1 import func1
+func1()
 
-    # ### 去除包名前缀
-    from package1.subpackage1 import module1
-    from package1.subpackage1 import module2
-    module1.func1()
-    module2.func1()
+# 尝试给标识符加个 module 前缀
+# SyntaxError: invalid syntax. 原因是标识符不能有“点”。
+# from package1.subpackage1 import module1.func1
+# module1.func1()
 
-    # ### 去除 module 前缀
-    from package1.subpackage1.module1 import func1
-    func1()
+# ### 去除包名前缀
+from package1.subpackage1 import module1
+from package1.subpackage1 import module2
+module1.func1()
+module2.func1()
+
+# ### 去除 module 前缀
+from package1.subpackage1.module1 import func1
+func1()
+```
 
 ## Python 与 C/C++ 相互调用
 
@@ -1953,48 +2050,60 @@ PyObject 与 C/C++ 之间类型转换
 
 for example: ctype
 
-    # ## python 调用 C
+```
+# ## python 调用 C
+```
 
-    # ### pycallc.c
-    /* gcc -o libpycallc.so -shared -fPIC pycallc.c */
+```c
+# ### pycallc.c
+/* gcc -o libpycallc.so -shared -fPIC pycallc.c */
 
+long add(long a, long b) {
+    return a + b;
+}
+```
+
+```python
+# ### pycallc.py
+import ctypes
+
+loadLibrary = ctypes.cdll.LoadLibrary
+libpycallc = loadLibrary("./libpycallc.so")
+print('sum = {}'.format(libpycallc.add(1, 2)))
+```
+
+```
+# ## python 调用 C++
+```
+
+```cpp
+# ### pycallcpp.cpp
+/* g++ -o libpycallcpp.so -shared -fPIC pycallcpp.cpp */
+
+class Calculator {
+public:
     long add(long a, long b) {
         return a + b;
     }
+};
 
-    # ### pycallc.py
-    import ctypes
+extern "C" {
+    Calculator cal;
 
-    loadLibrary = ctypes.cdll.LoadLibrary
-    libpycallc = loadLibrary("./libpycallc.so")
-    print('sum = {}'.format(libpycallc.add(1, 2)))
-
-    # ## python 调用 C++
-
-    # ### pycallcpp.cpp
-    /* g++ -o libpycallcpp.so -shared -fPIC pycallcpp.cpp */
-
-    class Calculator {
-    public:
-        long add(long a, long b) {
-            return a + b;
-        }
-    };
-
-    extern "C" {
-        Calculator cal;
-
-        long add(long a, long b) {
-            return cal.add(a, b);
-        }
+    long add(long a, long b) {
+        return cal.add(a, b);
     }
+}
+```
 
-    # ### pycallcpp.py
-    import ctypes
+```python
+# ### pycallcpp.py
+import ctypes
 
-    loadLibrary = ctypes.cdll.LoadLibrary
-    libpycallcpp = loadLibrary("./libpycallcpp.so")
-    print("sum = {}".format(libpycallcpp.add(1, 2)))
+loadLibrary = ctypes.cdll.LoadLibrary
+libpycallcpp = loadLibrary("./libpycallcpp.so")
+print("sum = {}".format(libpycallcpp.add(1, 2)))
+```
 
 #### 用 C/C++ 扩展 Python
 
@@ -2006,105 +2115,113 @@ for example: ctype
 
 for example
     
-    # ## 相关文件
-    cextpy.c
-        用 C 制作 python module cext (用 C 扩展 Python)
-    setup.py
-        安装 cext 模块
-    test.py
-        在 python 中调用 cext 模块
+```
+# ## 相关文件
+cextpy.c
+    用 C 制作 python module cext (用 C 扩展 Python)
+setup.py
+    安装 cext 模块
+test.py
+    在 python 中调用 cext 模块
 
-    # ## 操作过程
-    python setup.py install
-    # 查看已安装的模块 cext
-    pip show cext
-    python test.py
+# ## 操作过程
+python setup.py install
+# 查看已安装的模块 cext
+pip show cext
+python test.py
 
-    # 卸载（因为使用了 distutils，无法使用 pip uninstall）
-    find /usr/lib/python*/site-packages/ | grep -i cext
-    find /usr/lib/python*/site-packages/ | grep -i cext | xargs rm
-    pip show cext
+# 卸载（因为使用了 distutils，无法使用 pip uninstall）
+find /usr/lib/python*/site-packages/ | grep -i cext
+find /usr/lib/python*/site-packages/ | grep -i cext | xargs rm
+pip show cext
+```
 
-    # ## cextpy.c
-    #include "Python.h"
+```c
+# ## cextpy.c
+#include "Python.h"
 
-    // ### C 函数
-    long add(long a, long b) {
-        return a + b;
+// ### C 函数
+long add(long a, long b) {
+    return a + b;
+}
+
+// ### 用样板来包装代码
+static PyObject* cExtAdd(PyObject *self, PyObject *args) {
+    long a, b;
+
+    if (!PyArg_ParseTuple(args, "ll", &a, &b)) {
+        return NULL;
     }
 
-    // ### 用样板来包装代码
-    static PyObject* cExtAdd(PyObject *self, PyObject *args) {
-        long a, b;
+    return (PyObject*) Py_BuildValue("l", add(a, b));
+}
 
-        if (!PyArg_ParseTuple(args, "ll", &a, &b)) {
-            return NULL;
-        }
+// ### 将函数封装到 python module
+static PyMethodDef cExtMethods[] = {
+    {"add", cExtAdd, METH_VARARGS, "Python interface for the add function"},
+    {NULL, NULL, 0, NULL}
+};
 
-        return (PyObject*) Py_BuildValue("l", add(a, b));
-    }
+/*********************************
+// python 2.x 的做法
+void initcExt() {
+    Py_InitModule("cExt", cExtMethods);
+}
+*********************************/
 
-    // ### 将函数封装到 python module
-    static PyMethodDef cExtMethods[] = {
-        {"add", cExtAdd, METH_VARARGS, "Python interface for the add function"},
-        {NULL, NULL, 0, NULL}
-    };
+static struct PyModuleDef cExtModule = {
+    PyModuleDef_HEAD_INIT,
+    "cExt",      /* name of module */
+    "",          /* module documentation, may be NULL */
+    -1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    cExtMethods
+};
 
-    /*********************************
-    // python 2.x 的做法
-    void initcExt() {
-        Py_InitModule("cExt", cExtMethods);
-    }
-    *********************************/
+// 函数名的格式：PyInit_<module>()
+// ImportError: dynamic module does not define module export function (PyInit_cext)
+PyMODINIT_FUNC PyInit_cext() {
+    return PyModule_Create(&cExtModule);
+}
+```
 
-    static struct PyModuleDef cExtModule = {
-        PyModuleDef_HEAD_INIT,
-        "cExt",      /* name of module */
-        "",          /* module documentation, may be NULL */
-        -1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
-        cExtMethods
-    };
+```python
+# ## setup.py
 
-    // 函数名的格式：PyInit_<module>()
-    // ImportError: dynamic module does not define module export function (PyInit_cext)
-    PyMODINIT_FUNC PyInit_cext() {
-        return PyModule_Create(&cExtModule);
-    }
+#!/usr/bin/python3
 
-    # ## setup.py
+// ### 安装 module
+"""
+from distutils.core import setup, Extension
 
-    #!/usr/bin/python3
+MOD = 'cext'
+setup(name=MOD, ext_modules=[Extension(MOD, sources=['cextpy.c'])])
+"""
 
-    // ### 安装 module
-    """
-    from distutils.core import setup, Extension
+# 另外一种做法。能添加更多的信息。
+from distutils.core import setup, Extension
 
-    MOD = 'cext'
-    setup(name=MOD, ext_modules=[Extension(MOD, sources=['cextpy.c'])])
-    """
+def main():
+    setup(name="cExt",
+        version="1.0.0",
+        description="Python interface for the C functions",
+        author="Johan Chane",
+        author_email="your_email@gmail.com",
+        ext_modules=[Extension("cExt", ["cextpy.c"])])
 
-    # 另外一种做法。能添加更多的信息。
-    from distutils.core import setup, Extension
+if __name__ == "__main__":
+    main()
+```
 
-    def main():
-        setup(name="cExt",
-            version="1.0.0",
-            description="Python interface for the C functions",
-            author="Johan Chane",
-            author_email="your_email@gmail.com",
-            ext_modules=[Extension("cExt", ["cextpy.c"])])
+```python
+# ## test.py
 
-    if __name__ == "__main__":
-        main()
+#!/usr/bin/python3
 
-    # ## test.py
+// ### 测试 module
+import cext
 
-    #!/usr/bin/python3
-    
-    // ### 测试 module
-    import cext
-
-    print("sum = {}".format(cext.add(1, 2)))
+print("sum = {}".format(cext.add(1, 2)))
+```
 
 ##### [用 C/C++ 扩展 Python 的类型](https://docs.python.org/zh-cn/3/extending/newtypes_tutorial.html)
 
@@ -2114,338 +2231,347 @@ for example
 
 for example
 
-    # ## 相关文件
-    custom.c
-        简单地添加一个新类型。
-    custom2.c
-        在 custom 模块上为类型添加属性与方法。
-    setup.py
-        安装 custom, custom2 模块
-    test.py
-        在 python 中调用 custom, custom2 模块的新类型
+```
+# ## 相关文件
+custom.c
+    简单地添加一个新类型。
+custom2.c
+    在 custom 模块上为类型添加属性与方法。
+setup.py
+    安装 custom, custom2 模块
+test.py
+    在 python 中调用 custom, custom2 模块的新类型
 
-    # ## 操作过程
-    python setup.py install
-    # 查看已安装的模块 custom, custom2
-    pip show custom custom2
-    python test.py
+# ## 操作过程
+python setup.py install
+# 查看已安装的模块 custom, custom2
+pip show custom custom2
+python test.py
 
-    # 卸载（因为使用了 distutils，无法使用 pip uninstall）
-    find /usr/lib/python*/site-packages/ | grep -i custom
-    find /usr/lib/python*/site-packages/ | grep -i custom | xargs rm
-    pip show custom custom2
+# 卸载（因为使用了 distutils，无法使用 pip uninstall）
+find /usr/lib/python*/site-packages/ | grep -i custom
+find /usr/lib/python*/site-packages/ | grep -i custom | xargs rm
+pip show custom custom2
+```
 
-    # ## custom.c
+```c
+# ## custom.c
 
-    #define PY_SSIZE_T_CLEAN
-    #include <Python.h>
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
 
-    typedef struct {
-        PyObject_HEAD
-        /* Type-specific fields go here. */
-    } CustomObject;
+typedef struct {
+    PyObject_HEAD
+    /* Type-specific fields go here. */
+} CustomObject;
 
-    /* 新的类型 CustomType */
-    static PyTypeObject CustomType = {
-        PyVarObject_HEAD_INIT(NULL, 0)
-        .tp_name = "custom.Custom",
-        .tp_doc = "Custom objects",
-        .tp_basicsize = sizeof(CustomObject),
-        .tp_itemsize = 0,
-        .tp_flags = Py_TPFLAGS_DEFAULT,
-        .tp_new = PyType_GenericNew,
-    };
+/* 新的类型 CustomType */
+static PyTypeObject CustomType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "custom.Custom",
+    .tp_doc = "Custom objects",
+    .tp_basicsize = sizeof(CustomObject),
+    .tp_itemsize = 0,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_new = PyType_GenericNew,
+};
 
-    static PyModuleDef custommodule = {
-        PyModuleDef_HEAD_INIT,
-        .m_name = "custom",
-        .m_doc = "Example module that creates an extension type.",
-        .m_size = -1,
-    };
+static PyModuleDef custommodule = {
+    PyModuleDef_HEAD_INIT,
+    .m_name = "custom",
+    .m_doc = "Example module that creates an extension type.",
+    .m_size = -1,
+};
 
-    PyMODINIT_FUNC
-    PyInit_custom(void)
-    {
-        PyObject *m;
-        if (PyType_Ready(&CustomType) < 0)
-            return NULL;
+PyMODINIT_FUNC
+PyInit_custom(void)
+{
+    PyObject *m;
+    if (PyType_Ready(&CustomType) < 0)
+        return NULL;
 
-        m = PyModule_Create(&custommodule);
-        if (m == NULL)
-            return NULL;
+    m = PyModule_Create(&custommodule);
+    if (m == NULL)
+        return NULL;
 
-        Py_INCREF(&CustomType);
-        // 添加新的类型
-        if (PyModule_AddObject(m, "Custom", (PyObject *) &CustomType) < 0) {
-            Py_DECREF(&CustomType);
-            Py_DECREF(m);
-            return NULL;
-        }
-
-        return m;
+    Py_INCREF(&CustomType);
+    // 添加新的类型
+    if (PyModule_AddObject(m, "Custom", (PyObject *) &CustomType) < 0) {
+        Py_DECREF(&CustomType);
+        Py_DECREF(m);
+        return NULL;
     }
 
-    # ## custom2.c
+    return m;
+}
+```
 
-    #define PY_SSIZE_T_CLEAN
-    #include <Python.h>
-    #include "structmember.h"
+```c
+# ## custom2.c
 
-    typedef struct {
-        PyObject_HEAD
-        PyObject *first; /* first name */
-        PyObject *last;  /* last name */
-        int number;
-    } CustomObject;
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+#include "structmember.h"
 
-    static void
-    Custom_dealloc(CustomObject *self)
-    {
-        Py_XDECREF(self->first);
-        Py_XDECREF(self->last);
-        Py_TYPE(self)->tp_free((PyObject *) self);
-    }
+typedef struct {
+    PyObject_HEAD
+    PyObject *first; /* first name */
+    PyObject *last;  /* last name */
+    int number;
+} CustomObject;
 
-    static PyObject *
-    Custom_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
-    {
-        CustomObject *self;
-        self = (CustomObject *) type->tp_alloc(type, 0);
-        if (self != NULL) {
-            self->first = PyUnicode_FromString("");
-            if (self->first == NULL) {
-                Py_DECREF(self);
-                return NULL;
-            }
-            self->last = PyUnicode_FromString("");
-            if (self->last == NULL) {
-                Py_DECREF(self);
-                return NULL;
-            }
-            self->number = 0;
-        }
-        return (PyObject *) self;
-    }
+static void
+Custom_dealloc(CustomObject *self)
+{
+    Py_XDECREF(self->first);
+    Py_XDECREF(self->last);
+    Py_TYPE(self)->tp_free((PyObject *) self);
+}
 
-    static int
-    Custom_init(CustomObject *self, PyObject *args, PyObject *kwds)
-    {
-        static char *kwlist[] = {"first", "last", "number", NULL};
-        PyObject *first = NULL, *last = NULL, *tmp;
-
-        if (!PyArg_ParseTupleAndKeywords(args, kwds, "|OOi", kwlist,
-                                        &first, &last,
-                                        &self->number))
-            return -1;
-
-        if (first) {
-            tmp = self->first;
-            Py_INCREF(first);
-            self->first = first;
-            Py_XDECREF(tmp);
-        }
-        if (last) {
-            tmp = self->last;
-            Py_INCREF(last);
-            self->last = last;
-            Py_XDECREF(tmp);
-        }
-        return 0;
-    }
-
-    static PyMemberDef Custom_members[] = {
-        {"first", T_OBJECT_EX, offsetof(CustomObject, first), 0,
-        "first name"},
-        {"last", T_OBJECT_EX, offsetof(CustomObject, last), 0,
-        "last name"},
-        {"number", T_INT, offsetof(CustomObject, number), 0,
-        "custom number"},
-        {NULL}  /* Sentinel */
-    };
-
-    static PyObject *
-    Custom_name(CustomObject *self, PyObject *Py_UNUSED(ignored))
-    {
+static PyObject *
+Custom_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    CustomObject *self;
+    self = (CustomObject *) type->tp_alloc(type, 0);
+    if (self != NULL) {
+        self->first = PyUnicode_FromString("");
         if (self->first == NULL) {
-            PyErr_SetString(PyExc_AttributeError, "first");
+            Py_DECREF(self);
             return NULL;
         }
+        self->last = PyUnicode_FromString("");
         if (self->last == NULL) {
-            PyErr_SetString(PyExc_AttributeError, "last");
+            Py_DECREF(self);
             return NULL;
         }
-        return PyUnicode_FromFormat("%S %S", self->first, self->last);
+        self->number = 0;
+    }
+    return (PyObject *) self;
+}
+
+static int
+Custom_init(CustomObject *self, PyObject *args, PyObject *kwds)
+{
+    static char *kwlist[] = {"first", "last", "number", NULL};
+    PyObject *first = NULL, *last = NULL, *tmp;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|OOi", kwlist,
+                                    &first, &last,
+                                    &self->number))
+        return -1;
+
+    if (first) {
+        tmp = self->first;
+        Py_INCREF(first);
+        self->first = first;
+        Py_XDECREF(tmp);
+    }
+    if (last) {
+        tmp = self->last;
+        Py_INCREF(last);
+        self->last = last;
+        Py_XDECREF(tmp);
+    }
+    return 0;
+}
+
+static PyMemberDef Custom_members[] = {
+    {"first", T_OBJECT_EX, offsetof(CustomObject, first), 0,
+    "first name"},
+    {"last", T_OBJECT_EX, offsetof(CustomObject, last), 0,
+    "last name"},
+    {"number", T_INT, offsetof(CustomObject, number), 0,
+    "custom number"},
+    {NULL}  /* Sentinel */
+};
+
+static PyObject *
+Custom_name(CustomObject *self, PyObject *Py_UNUSED(ignored))
+{
+    if (self->first == NULL) {
+        PyErr_SetString(PyExc_AttributeError, "first");
+        return NULL;
+    }
+    if (self->last == NULL) {
+        PyErr_SetString(PyExc_AttributeError, "last");
+        return NULL;
+    }
+    return PyUnicode_FromFormat("%S %S", self->first, self->last);
+}
+
+static PyMethodDef Custom_methods[] = {
+    {"name", (PyCFunction) Custom_name, METH_NOARGS,
+    "Return the name, combining the first and last name"
+    },
+    {NULL}  /* Sentinel */
+};
+
+/* tp_members 为新类型的成员；tp_methods 为新类型的方法 */
+static PyTypeObject CustomType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "custom2.Custom",
+    .tp_doc = "Custom objects",
+    .tp_basicsize = sizeof(CustomObject),
+    .tp_itemsize = 0,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    .tp_new = Custom_new,
+    .tp_init = (initproc) Custom_init,
+    .tp_dealloc = (destructor) Custom_dealloc,
+    .tp_members = Custom_members,
+    .tp_methods = Custom_methods,
+};
+
+static PyModuleDef custommodule = {
+    PyModuleDef_HEAD_INIT,
+    .m_name = "custom2",
+    .m_doc = "Example module that creates an extension type.",
+    .m_size = -1,
+};
+
+PyMODINIT_FUNC
+PyInit_custom2(void)
+{
+    PyObject *m;
+    if (PyType_Ready(&CustomType) < 0)
+        return NULL;
+
+    m = PyModule_Create(&custommodule);
+    if (m == NULL)
+        return NULL;
+
+    Py_INCREF(&CustomType);
+    if (PyModule_AddObject(m, "Custom", (PyObject *) &CustomType) < 0) {
+        Py_DECREF(&CustomType);
+        Py_DECREF(m);
+        return NULL;
     }
 
-    static PyMethodDef Custom_methods[] = {
-        {"name", (PyCFunction) Custom_name, METH_NOARGS,
-        "Return the name, combining the first and last name"
-        },
-        {NULL}  /* Sentinel */
-    };
+    return m;
+}
+```
 
-    /* tp_members 为新类型的成员；tp_methods 为新类型的方法 */
-    static PyTypeObject CustomType = {
-        PyVarObject_HEAD_INIT(NULL, 0)
-        .tp_name = "custom2.Custom",
-        .tp_doc = "Custom objects",
-        .tp_basicsize = sizeof(CustomObject),
-        .tp_itemsize = 0,
-        .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-        .tp_new = Custom_new,
-        .tp_init = (initproc) Custom_init,
-        .tp_dealloc = (destructor) Custom_dealloc,
-        .tp_members = Custom_members,
-        .tp_methods = Custom_methods,
-    };
+```python
+# ## setup.py
 
-    static PyModuleDef custommodule = {
-        PyModuleDef_HEAD_INIT,
-        .m_name = "custom2",
-        .m_doc = "Example module that creates an extension type.",
-        .m_size = -1,
-    };
+from distutils.core import setup, Extension
+setup(name="custom", version="1.0",
+    ext_modules=[
+        Extension("custom", ["custom.c"]),
+        Extension("custom2", ["custom2.c"]),
+        ])
+```
 
-    PyMODINIT_FUNC
-    PyInit_custom2(void)
-    {
-        PyObject *m;
-        if (PyType_Ready(&CustomType) < 0)
-            return NULL;
+```python
+# ## test.py
 
-        m = PyModule_Create(&custommodule);
-        if (m == NULL)
-            return NULL;
+import custom
+import custom2
 
-        Py_INCREF(&CustomType);
-        if (PyModule_AddObject(m, "Custom", (PyObject *) &CustomType) < 0) {
-            Py_DECREF(&CustomType);
-            Py_DECREF(m);
-            return NULL;
-        }
+mycustom = custom.Custom()
 
-        return m;
-    }
+mycustom2 = custom2.Custom('myfirst', 'mylast')
 
-    # ## setup.py
-
-    from distutils.core import setup, Extension
-    setup(name="custom", version="1.0",
-        ext_modules=[
-            Extension("custom", ["custom.c"]),
-            Extension("custom2", ["custom2.c"]),
-            ])
-
-    # ## test.py
-
-    import custom
-    import custom2
-
-    mycustom = custom.Custom()
-
-    mycustom2 = custom2.Custom('myfirst', 'mylast')
-
-    print(dir(mycustom2))
-    print(mycustom2.first)
-    print(mycustom2.last)
-    print(mycustom2.name())
+print(dir(mycustom2))
+print(mycustom2.first)
+print(mycustom2.last)
+print(mycustom2.name())
+```
 
 ### C/C++调用 Python
 
 for exmple: 通过 Python C/C++ API 调用 C/C++ 函数
 
-    # ## ccallpy.py
-    def add(a, b):
-        return a + b
-    
-    # ## ccallpy.c
-    /* gcc -o ccallpy ccallpy.c -I/usr/include/python3.8 -L/usr/lib64/python3.8/config -lpython3.8 */
-    #include <Python.h>
-    #include <stdio.h>
-    #include <stdlib.h>
+```python
+# ## ccallpy.py
+def add(a, b):
+    return a + b
+```
 
-    void ccallpy() {
-        Py_Initialize();
-        if (!Py_IsInitialized()) {
-            exit(EXIT_FAILURE);
-        }
+```c
+# ## ccallpy.c
+/* gcc -o ccallpy ccallpy.c -I/usr/include/python3.8 -L/usr/lib64/python3.8/config -lpython3.8 */
+#include <Python.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-        // 添加当前路径到 sys.path
-        PyRun_SimpleString("import sys");
-        PyRun_SimpleString("sys.path.append('./')");
-
-        // ### 载入 py module
-        char moduleName[] = "ccallpy";
-        PyObject* pyModuleName = PyUnicode_FromString(moduleName);
-        PyObject* pyModule = PyImport_Import(pyModuleName);
-        if (!pyModule) {
-            fprintf(stderr, "can't find %s\n", moduleName);
-            exit(EXIT_FAILURE);
-        }
-
-        // ### 调用函数
-        // #### 找出名为 add 的函数
-        /**********************************************
-        PyObject* pyDict = PyModule_GetDict(pyModule);
-        if (!pyDict) {
-            fprintf(stderr, "PyModule_GetDict failed!\n");
-            exit(EXIT_FAILURE);
-        }
-
-        PyObject* pyFunc = PyDict_GetItemString(pyDict, "add");
-        if (!pyFunc || !PyCallable_Check(pyFunc)) {
-            fprintf(stderr, "can't find function add OR function is not callable!\n");
-            exit(EXIT_FAILURE);
-        }
-        **********************************************/
-        // 找出函数的另一种方法
-        PyObject* pyFunc = PyObject_GetAttrString(pyModule, "add");
-        if (!pyFunc || !PyCallable_Check(pyFunc)) {
-            fprintf(stderr, "can't find function add OR function is not callable!\n");
-            exit(EXIT_FAILURE);
-        }
-
-        // #### 构建参数
-        /********************************
-        PyObject* pyArgs = PyTuple_New(2);
-        PyTuple_SetItem(pyArgs, 0, Py_BuildValue("l", 1));
-        PyTuple_SetItem(pyArgs, 1, Py_BuildValue("l", 2));
-        *********************************/
-        // 构建参数的另一种方法
-        PyObject* pyArgs = Py_BuildValue("ll", 1, 2);
-        if (!pyArgs) {
-            fprintf(stderr, "Py_BuildValue failed!\n");
-            exit(EXIT_FAILURE);
-        }
-
-        // #### 调用 python 函数
-        PyObject* pyRes = PyObject_CallObject(pyFunc, pyArgs);
-        if (!pyRes) {
-            fprintf(stderr, "PyObject_CallObject failed!\n");
-            exit(EXIT_FAILURE);
-        }
-
-        long res = PyLong_AsLong(pyRes);
-        printf("sum = %ld\n", res);
-
-        // ### 清除并退出
-        Py_DECREF(pyModuleName);
-        Py_DECREF(pyArgs);
-        Py_DECREF(pyModule);
-
-        // 退出 python
-        Py_Finalize();
+void ccallpy() {
+    Py_Initialize();
+    if (!Py_IsInitialized()) {
+        exit(EXIT_FAILURE);
     }
 
-    int main() {
-        ccallpy();
-        return 0;
+    // 添加当前路径到 sys.path
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("sys.path.append('./')");
+
+    // ### 载入 py module
+    char moduleName[] = "ccallpy";
+    PyObject* pyModuleName = PyUnicode_FromString(moduleName);
+    PyObject* pyModule = PyImport_Import(pyModuleName);
+    if (!pyModule) {
+        fprintf(stderr, "can't find %s\n", moduleName);
+        exit(EXIT_FAILURE);
     }
 
+    // ### 调用函数
+    // #### 找出名为 add 的函数
+    /**********************************************
+    PyObject* pyDict = PyModule_GetDict(pyModule);
+    if (!pyDict) {
+        fprintf(stderr, "PyModule_GetDict failed!\n");
+        exit(EXIT_FAILURE);
+    }
 
+    PyObject* pyFunc = PyDict_GetItemString(pyDict, "add");
+    if (!pyFunc || !PyCallable_Check(pyFunc)) {
+        fprintf(stderr, "can't find function add OR function is not callable!\n");
+        exit(EXIT_FAILURE);
+    }
+    **********************************************/
+    // 找出函数的另一种方法
+    PyObject* pyFunc = PyObject_GetAttrString(pyModule, "add");
+    if (!pyFunc || !PyCallable_Check(pyFunc)) {
+        fprintf(stderr, "can't find function add OR function is not callable!\n");
+        exit(EXIT_FAILURE);
+    }
 
+    // #### 构建参数
+    /********************************
+    PyObject* pyArgs = PyTuple_New(2);
+    PyTuple_SetItem(pyArgs, 0, Py_BuildValue("l", 1));
+    PyTuple_SetItem(pyArgs, 1, Py_BuildValue("l", 2));
+    *********************************/
+    // 构建参数的另一种方法
+    PyObject* pyArgs = Py_BuildValue("ll", 1, 2);
+    if (!pyArgs) {
+        fprintf(stderr, "Py_BuildValue failed!\n");
+        exit(EXIT_FAILURE);
+    }
 
+    // #### 调用 python 函数
+    PyObject* pyRes = PyObject_CallObject(pyFunc, pyArgs);
+    if (!pyRes) {
+        fprintf(stderr, "PyObject_CallObject failed!\n");
+        exit(EXIT_FAILURE);
+    }
 
+    long res = PyLong_AsLong(pyRes);
+    printf("sum = %ld\n", res);
+
+    // ### 清除并退出
+    Py_DECREF(pyModuleName);
+    Py_DECREF(pyArgs);
+    Py_DECREF(pyModule);
+
+    // 退出 python
+    Py_Finalize();
+}
+
+int main() {
+    ccallpy();
+    return 0;
+}
+```
 
 ## 常用
 
@@ -2461,11 +2587,13 @@ for exmple: 通过 Python C/C++ API 调用 C/C++ 函数
 
 for example
 
-    import sys
+```python
+import sys
 
-    print(sys.path)
-    print(sys.argv)
-    print(sys.modules)
+print(sys.path)
+print(sys.argv)
+print(sys.modules)
+```
 
 ### [IO](https://docs.python.org/zh-cn/3/library/io.html?highlight=seek#module-io)
 
@@ -2484,20 +2612,24 @@ for example
 
 for example
 
-    s = input('please input something: ')
-    print(s)
+```python
+s = input('please input something: ')
+print(s)
+```
 
 for example
 
-    import sys
+```python
+import sys
 
-    for line in sys.stdin:
-        if 'q' == line.rstrip():
-            break
-        # f 前缀表示 format
-        print(f'Input : {line}')
-        sys.stdout.write(line)
-        sys.stderr.write(line)
+for line in sys.stdin:
+    if 'q' == line.rstrip():
+        break
+    # f 前缀表示 format
+    print(f'Input : {line}')
+    sys.stdout.write(line)
+    sys.stderr.write(line)
+```
 
 #### [文件读写](https://www.programiz.com/python-programming/file-operation)
 
@@ -2508,73 +2640,79 @@ for example
 
 for example: 打开文件的方式
 
-    # ### 打开文件的两种方式
-    try:
-        f = open("testfile", mode='r', encoding='utf-8')
-        # perform file operations
-    finally:
-        f.close()
+```python
+# ### 打开文件的两种方式
+try:
+    f = open("testfile", mode='r', encoding='utf-8')
+    # perform file operations
+finally:
+    f.close()
 
-    # 会自动调用 close()
-    with open("testfile", mode='r', encoding = 'utf-8') as f:
-        # perform file operations
+# 会自动调用 close()
+with open("testfile", mode='r', encoding = 'utf-8') as f:
+    # perform file operations
+```
 
 for example
 
-    import io
-    import os
+```python
+import io
+import os
 
-    try:
-        f = open("testfile", mode='w', encoding='utf-8')
-        f.write('ABC\nDEF')
-        lines = ['\nUVW\n', 'XYZ']
-        f.writelines(lines)
+try:
+    f = open("testfile", mode='w', encoding='utf-8')
+    f.write('ABC\nDEF')
+    lines = ['\nUVW\n', 'XYZ']
+    f.writelines(lines)
 
-        f = open("testfile", mode='r', encoding='utf-8')
-        print(f'read():\n{f.read()}')
+    f = open("testfile", mode='r', encoding='utf-8')
+    print(f'read():\n{f.read()}')
 
-        f.seek(0, io.SEEK_SET)
-        print(f'read(2):\n{f.read(2)}')
+    f.seek(0, io.SEEK_SET)
+    print(f'read(2):\n{f.read(2)}')
 
-        f.seek(0, io.SEEK_SET)
-        # 读入换行符
-        print(f'readline():\n{f.readline()}')
+    f.seek(0, io.SEEK_SET)
+    # 读入换行符
+    print(f'readline():\n{f.readline()}')
 
-        f.seek(0, io.SEEK_SET)
-        print(f'readline(2):\n{f.readline(2)}')
+    f.seek(0, io.SEEK_SET)
+    print(f'readline(2):\n{f.readline(2)}')
 
-        f.seek(0, io.SEEK_SET)
-        print(f'readlines():\n{f.readlines()}')
+    f.seek(0, io.SEEK_SET)
+    print(f'readlines():\n{f.readlines()}')
 
-        f.seek(0, io.SEEK_SET)
-        # n 不包含换行符
-        print(f'readlines(8):\n{f.readlines(8)}')
+    f.seek(0, io.SEEK_SET)
+    # n 不包含换行符
+    print(f'readlines(8):\n{f.readlines(8)}')
 
-        os.remove('testfile')
+    os.remove('testfile')
 
-    finally:
-        f.close()
+finally:
+    f.close()
+```
 
 ##### 读写 json 文件
 
 for example
 
-    import json
+```python
+import json
 
-    data = {
-        'name' : 'ACME',
-        'shares' : 100,
-        'price' : 542.23
-    }
+data = {
+    'name' : 'ACME',
+    'shares' : 100,
+    'price' : 542.23
+}
 
-    with open('data.json', 'w') as f:
-        json.dump(data, f)
+with open('data.json', 'w') as f:
+    json.dump(data, f)
 
-    with open('data.json', 'r') as f:
-        data = json.load(f)
+with open('data.json', 'r') as f:
+    data = json.load(f)
 
-    print(type(data))
-    print(data)
+print(type(data))
+print(data)
+```
 
 ## [用 Python 代替操作系统的 shell](https://github.com/ninjaaron/replacing-bash-scripting-with-python/blob/master/README.rst)
 
@@ -2608,10 +2746,12 @@ pathlib
 
     for example
 
-        import subprocess, os, sys
-        exitCode = os.system('echo abc')
-        print(exitCode)
-        print(type(exitCode))
+    ```python
+    import subprocess, os, sys
+    exitCode = os.system('echo abc')
+    print(exitCode)
+    print(type(exitCode))
+    ```
         
 - [subprocess](https://docs.python.org/zh-cn/3/library/subprocess.html?highlight=subproces#module-subprocess)
 
@@ -2621,25 +2761,27 @@ pathlib
 
         当为 True 时，表示是命令（必须是一个字符串）是在 subshell 中执行的，而为 False 时，表示运行一个程序，第一个参数必须是一个可执行程序。且这个是没有经过 Shell 解析的。还有命令必须是一个列表。
 
-        for example 
+    for example 
 
-            import subprocess
-            # 命令在 subshell 中执行, $HOME 会被 `expand`
-            subprocess.run('echo $HOME', shell = True)
-            # echo 有一个可执行程序, 因为命令没有经过 Shell 解析，所以 `$HOME` 不会被 expand
-            subprocess.run(['echo', '$HOME'])
-            # 因为 type 是 shell builtin 所以第一参数不是可执行程序，所以出错。
-            # subprocess.run(['type', 'ls'])
+    ```python
+    import subprocess
+    # 命令在 subshell 中执行, $HOME 会被 `expand`
+    subprocess.run('echo $HOME', shell = True)
+    # echo 有一个可执行程序, 因为命令没有经过 Shell 解析，所以 `$HOME` 不会被 expand
+    subprocess.run(['echo', '$HOME'])
+    # 因为 type 是 shell builtin 所以第一参数不是可执行程序，所以出错。
+    # subprocess.run(['type', 'ls'])
+    ```
 
-        设置 linux 或 windows 的 shell 程序
+    设置 linux 或 windows 的 shell 程序
 
-            windows
-                os.environ["COMSPEC"] = 'cmd'
-                os.environ["COMSPEC"] = 'powershell'
-            linux
-                默认为 sh.
-                # subprocess.run 只能是 sh，除非在 arg 中指定用 bash。
-                subprocess.Popen(cmd, shell=True, executable='/bin/bash')
+        windows
+            os.environ["COMSPEC"] = 'cmd'
+            os.environ["COMSPEC"] = 'powershell'
+        linux
+            默认为 sh.
+            # subprocess.run 只能是 sh，除非在 arg 中指定用 bash。
+            subprocess.Popen(cmd, shell=True, executable='/bin/bash')
 
     作为 stdin, stdout, stderr 实参的 subprocess.DEVNULL，subprocess.PIPE，subprocess.STDOUT
 
@@ -2655,29 +2797,31 @@ pathlib
 
             int 类型，值为 -2。表示标准错误与标准输出使用同一句柄。不能作为 stdin, stdout 的实参。这是要注意的是，返回值 stderr 类型为 None，而不是 `b''`。
 
-        for example
+    for example
 
-            import subprocess
+    ```python
+    import subprocess
 
-            # ### PIPE
-            # 打开标准输出、错误输出流管道。
-            result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.PIPE, stdout = subprocess.PIPE, shell = True)
-            # `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`
-            print(result)
+    # ### PIPE
+    # 打开标准输出、错误输出流管道。
+    result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.PIPE, stdout = subprocess.PIPE, shell = True)
+    # `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`
+    print(result)
 
-            # #### stdin 与 PIPE
-            from subprocess import Popen, PIPE, STDOUT
-            p = Popen(['grep', 'f'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
-            grep_stdout = p.communicate(input=b'one\ntwo\nthree\nfour\nfive\nsix\n')[0]
-            print(grep_stdout.decode())
-            # -> four
-            # -> five
-            # ->
+    # #### stdin 与 PIPE
+    from subprocess import Popen, PIPE, STDOUT
+    p = Popen(['grep', 'f'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
+    grep_stdout = p.communicate(input=b'one\ntwo\nthree\nfour\nfive\nsix\n')[0]
+    print(grep_stdout.decode())
+    # -> four
+    # -> five
+    # ->
 
-            # ### STDOUT
-            result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.STDOUT, stdout = subprocess.PIPE, shell = True)
-            # `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`。返回值 stderr 类型为 None
-            print(result)
+    # ### STDOUT
+    result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.STDOUT, stdout = subprocess.PIPE, shell = True)
+    # `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`。返回值 stderr 类型为 None
+    print(result)
+    ```
 
     返回值
 
@@ -2691,20 +2835,22 @@ pathlib
 
             捕获到的子进程的标准错误. 
 
-        for example
+    for example
 
-            import subprocess
-            result = subprocess.run('echo -e \'aa\nbb\'', stdout=subprocess.PIPE, shell = True)
-            # 类型是 `<class 'subprocess.CompletedProcess'>`
-            print(result)
-            # 类型是 `<class 'bytes'>`
-            print(type(result.stdout))
+    ```python
+    import subprocess
+    result = subprocess.run('echo -e \'aa\nbb\'', stdout=subprocess.PIPE, shell = True)
+    # 类型是 `<class 'subprocess.CompletedProcess'>`
+    print(result)
+    # 类型是 `<class 'bytes'>`
+    print(type(result.stdout))
 
-            print(result.stdout.decode('utf-8'))
-            # `<class 'str'>`
-            print(type(result.stdout.decode('utf-8')))
+    print(result.stdout.decode('utf-8'))
+    # `<class 'str'>`
+    print(type(result.stdout.decode('utf-8')))
 
-            print(result.stdout.split(b'\n'))
+    print(result.stdout.split(b'\n'))
+    ```
         
 ### [os.path](https://docs.python.org/zh-cn/3/library/os.path.html)
 
@@ -2712,12 +2858,14 @@ pathlib
 
 for example
 
-    import os
-    
-    print( os.path.basename('/root/runoob.txt') )   # 返回文件名
-    print( os.path.dirname('/root/runoob.txt') )    # 返回目录路径
-    print( os.path.split('/root/runoob.txt') )      # 分割文件名与路径
-    print( os.path.join('root','test','runoob.txt') )  # 将目录和文件名合成一个路径
+```python
+import os
+
+print( os.path.basename('/root/runoob.txt') )   # 返回文件名
+print( os.path.dirname('/root/runoob.txt') )    # 返回目录路径
+print( os.path.split('/root/runoob.txt') )      # 分割文件名与路径
+print( os.path.join('root','test','runoob.txt') )  # 将目录和文件名合成一个路径
+```
 
 ## Others
 
@@ -2742,16 +2890,18 @@ for example
 
 for example
 
-    import urllib.request
+```python
+import urllib.request
 
-    response = urllib.request.urlopen("http://www.example.com")
-    html = response.read()
-    print(html)
+response = urllib.request.urlopen("http://www.example.com")
+html = response.read()
+print(html)
 
-    html = html.decode("utf-8")
-    print(html)
+html = html.decode("utf-8")
+print(html)
 
-    print(response.info())
+print(response.info())
+```
 
 ### [Tkinter(GUI)](https://docs.python.org/zh-cn/3/library/tk.html)
 

@@ -13,11 +13,11 @@
 vim 有多个帮助文档, 每个文档有多个 tags, 每个 tags 都有其说明。tags 包含了命令，option, 快捷键，函数, pattern 等。
 
 帮助文档的排版
-    
+
     文件头部都有标题汇总，接下来是每个标题的详细说明。每一部分都有相应的 tag，使用户可以快速定位文档的位置。
 
 #### tag 的格式
-    
+
     如果 tag 包含两个词，则用 `-` 连接。比如：help user-commands。
     命令的格式 `:<cmd>`
     函数的格式 `<function>()`
@@ -80,6 +80,7 @@ vim 有多个帮助文档, 每个文档有多个 tags, 每个 tags 都有其说�
     help :help
 
     help c_ctrl-w
+    # 查看 option
     help 'number'
     help -t
     help /[
