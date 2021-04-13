@@ -93,8 +93,8 @@ HEAD 文件通常是一个符号引用（symbolic reference），指向目前所
 
 [HEAD^[N], HEAD~[N]](https://stackoverflow.com/questions/20954566/what-is-the-difference-from-head-head-and-head1)
 
-HEAD^1 是 HEAD 的第一个 parent。HEAD^2 是 HEAD 的第二个 parent。  
-HEAD~1 是 HEAD 的 parent。HEAD~2 是 HEAD 的 grandparent。
+`HEAD^1` 是 HEAD 的第一个 parent。`HEAD^2` 是 HEAD 的第二个 parent。  
+`HEAD~1` 是 HEAD 的 parent。`HEAD~2` 是 HEAD 的 grandparent。
 
 #### 标签引用
 
