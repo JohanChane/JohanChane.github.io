@@ -120,7 +120,7 @@ filetype plugin indent on
 " show existing tab with 4 spaces width
 set tabstop=4
 " softtabstop 的意思是插入模式下，按 tab 则突出 softtabstop 的距离而不是 tabstop 的距离。
-set softtabstop=0
+set softtabstop=4
 " when indenting with '>', use 4 spaces width
 set shiftwidth=4
 " 在行前插入删除时，会根据 'shiftwidth' 来插入与删除，而其他地方则根据 'tabstop' or 'softtabstop'。
