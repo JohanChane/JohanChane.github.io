@@ -7,7 +7,7 @@
 ## ### History
 # author: Johan Chane
 
-## #### version: 1.0 
+## #### version: 1.0
 # date: 2020-10-31
 
 ## ### 使用说明
@@ -28,10 +28,11 @@ OBJ_SUFFIX := .o
 
 # 编译参数
 CXXINCS = -I$(SRC_DIR)
-CXXFLAGS += $(CXXINCS)
+# CXXFLAGS += -O1 -g -std=c++11 $(CXXINCS)
+CXXFLAGS += -g -std=c++11 $(CXXINCS)
 
 # 加载库
-LDLIBS = 
+LDLIBS =
 LDFLAGS = -L$(SRC_DIR)
 
 ## ### 分析项目
@@ -43,10 +44,10 @@ DEP_FILES := $(subst $(OBJ_SUFFIX),.d,$(OBJ_FILES))
 
 ## ### Rules
 
-.PHONY: all build rebuild clean cleantarget run help debug
+.PHONY: all build rebuild install clean cleantarget run help debug
 
-all: cleantarget build run
-	
+all: cleantarget build install run
+
 run:
 	./$(APP)
 
@@ -55,14 +56,24 @@ build: $(APP)
 rebuild: clean
 	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) build
 
+install: $(APP)
+	# install --mode=a+x $(APP) $(APP)
+	chmod a+x ./$(APP)
+
 $(APP): $(OBJ_FILES)
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) $(LDLIBS) -o $@
 
 cleantarget:
 	rm -rf $(APP) 2> /dev/null
-	
+
 clean:
 	rm -rf $(OUT_DIR) 2> /dev/null
+
+debug: cleantarget build install $(APP)
+	gdb ./$(APP)
+
+objdump: $(APP)
+	objdump -S ./$(APP) | c++filt | less
 
 ## #### Include dependence。
 # include <files> 会转到与 files 相关的目标。
@@ -72,7 +83,7 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(DEP_FILES)
 endif
 
-## #### Generate dependence, including rules to generate object files 
+## #### Generate dependence, including rules to generate object files
 # 为每个 target 产生一个 dep file。-MM 不包含系统头文件。
 
 # ##### 例如: out/mytest/mytest.d
@@ -81,8 +92,8 @@ endif
 # out/mytest/mytest.d: out/mytest/mytest.c
 
 $(OUT_DIR)/%.d:
-	@echo Generate $@ ... 
-    
+	@echo Generate $@ ...
+
     # 为生成目标文件添加命令
 	@$(CXX) -MM $(CXXFLAGS) $(SRC_DIR)/$*$(SRC_SUFFIX) | install -D /dev/stdin $@.$$$$; \
 	sed 's,.*:,$(subst .d,$(OBJ_SUFFIX),$@):,g' < $@.$$$$ > $@; \
@@ -93,7 +104,7 @@ $(OUT_DIR)/%.d:
 help:
 	@echo 'make [LDLIBS=<LDLIBS> ][<target>]'
 
-debug:
+makeDebug:
 	@echo $(SRC_FILES)
 	@echo $(OBJ_FILES)
 	@echo $(DEP_FILES)
