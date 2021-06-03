@@ -10,19 +10,20 @@
 
 ### Linux
 
-- Shell
-- Makefile
-- gdb
-- git
-- vim
+-   Shell
+-   Makefile
+-   gdb
+-   git
+-   vim
 
 ### Python
 
 ### Others
 
-- Markdown
-- Dos
-- PowerShell
+-   DesignPatterns
+-   Markdown
+-   Dos
+-   PowerShell
 
 ## Others
 
