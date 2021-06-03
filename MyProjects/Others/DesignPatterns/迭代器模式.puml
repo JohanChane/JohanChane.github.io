@@ -1,0 +1,57 @@
+@startuml
+
+class Item {
+}
+
+interface Iterator {
+    + hasNext()
+    + next()
+}
+
+class ConcreteIterator {
+    - items : List<Item>
+    + ConcreteIterator(agregate : Agregate)
+    + hasNext() : boolean
+    + next() : Item
+}
+
+abstract class Agregate {
+    + createIterator() : Iterator {abstract}
+}
+
+class ConcreteAgregate {
+    - items : List<Item>
+    + ConcreteAgregate()
+    + createIterator() : Iterator
+    + getItems() : List<Item>
+}
+
+class Client {
+}
+
+ConcreteIterator ..|> Iterator
+ConcreteAgregate --|> Agregate
+Agregate ..> ConcreteIterator : <<create>>
+
+Client ..> Agregate : <<use>>
+Client ..> Iterator : <<use>>
+
+note left of ConcreteAgregate::"ConcreteAgregate()"
+    this.items = new ArrayList<Item>();
+end note
+
+note left of ConcreteAgregate::"createIterator()"
+    return ConcreteIterator(this)
+end note
+
+note left of ConcreteIterator::"ConcreteIterator(agregate : Agregate)"
+    this.items = agregate.getItems()
+end note
+
+note right of Client
+    Agregate agregate = new ConcreteAgregate();
+    Iterator iterator = agregate.createIterator();
+    // iterator ...
+end note
+
+@enduml

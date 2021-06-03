@@ -1,0 +1,34 @@
+@startuml
+
+class Singleton {
+    - uniqueInstance : Singleton {static}
+    - Singleton()
+    + getInstance() : Singleton {static}
+}
+
+note left of Singleton::"getInstance()"
+    // ### 懒汉方式
+    return uniqueInstance
+
+    // ### 饿汉方式
+    if(uniqueInstance == null){
+        synchronized(Singleton.class){
+            // When more than two threads run into the first null check same time,
+            // to avoid instanced more than one time, it needs to be checked again.
+            if(uniqueInstance == null){
+                INSTANCE = new Singleton();
+            }
+        }
+    }
+    return INSTANCE;
+end note
+
+note left of Singleton::"uniqueInstance"
+    // ### 懒汉方式
+    private static final Singleton uniqueInstance = new Singleton()
+
+    // ### 饿汉方式
+    private static volatile Singleton uniqueInstance = null
+end note
+
+@enduml

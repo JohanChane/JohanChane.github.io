@@ -1,0 +1,28 @@
+@startuml
+
+abstract class Abstraction {
+    - implementor : Implementor
+    + operation() {abstract}
+}
+
+class RefinedAbstraction {
+    + operation()
+}
+
+interface Implementor {
+    + operationImp()
+}
+
+class ConcreteImplementor {
+    + operationImp()
+}
+
+RefinedAbstraction --|> Abstraction
+ConcreteImplementor ..|> Implementor
+Implementor "-implementor" --o Abstraction
+
+note left of RefinedAbstraction::"operation()"
+    implementor.operationImp()
+end note
+
+@enduml

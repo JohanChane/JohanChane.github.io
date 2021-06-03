@@ -1,0 +1,31 @@
+@startuml
+
+class Memento {
+    - state
+    + getState() : State
+    - setState(state : State)
+}
+
+class Originator {
+    - state
+    + createMemento() : Memento
+    + restore(memento : Memento)
+}
+
+class Caretaker {
+    - memento : Memento
+}
+
+Memento "-memento" --o Caretaker
+Originator ..> Memento : <<create & use>>
+Caretaker ..> Originator : <<use>>
+
+note left of Originator::"createMemento()"
+    return new Memento(state);
+end note
+
+note left of Originator::"restore(memento : Memento)"
+    state = memento.getState();
+end note
+
+@enduml

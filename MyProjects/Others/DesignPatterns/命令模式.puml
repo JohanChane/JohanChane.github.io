@@ -1,0 +1,54 @@
+@startuml
+
+abstract class Command {
+    - receiver : Receiver
+    + command(receiver : Receiver)
+    + execute()
+}
+
+class ConcreteCommand {
+}
+
+class Invoker {
+    - command : Command
+    + setCommand(command : Command)
+    + executeCommand()
+}
+
+class Receiver {
+    + action()
+}
+
+class Client {
+}
+
+ConcreteCommand --|> Command
+Command --o "-command" Invoker
+Receiver --o "-receiver" Command
+
+note left of Command::"execute()"
+    receiver.action();
+end note
+
+note left of Invoker
+    Invoker invoker = new Invoker();
+    // 客户设置好的 command（请求）
+    invoker.setCommand(command);
+    Invoker.executeCommand() {
+        // 发出请求
+        command.execute();
+    }
+end note
+
+note right of Client
+    // 设置请求的接收者
+    Receiver receiver = new Receiver();
+    Command command = new ConcreteCommand(receiver);
+end note
+
+note as N1
+    // 主要目的是让 Invoker 最终调用客户设置的 Receiver.action()（功能的具体实现）
+    1.  客户设置命令的接收者, Command command = new <Command>(receiver)
+    2.  调用者取得客户设置好的命令，并执行 command.execute()。最终调用客户设置的接收者 receiver.action()。
+end note
+@enduml

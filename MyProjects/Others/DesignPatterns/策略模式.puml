@@ -1,0 +1,23 @@
+@startuml
+
+interface Strategy {
+    + algorithm()
+}
+
+class ConcreteStrategy {
+    + algorithm()
+}
+
+class Context {
+    - strategy
+    + operation()
+}
+
+ConcreteStrategy ..|> Strategy
+Strategy --o "-strategy" Context
+
+note right of Context::"operation()"
+    strategy.algorithm();
+end note
+
+@enduml

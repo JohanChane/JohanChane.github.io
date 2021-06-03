@@ -1,0 +1,41 @@
+@startuml
+
+abstract class Component {
+    + count() : int
+    + add()
+    + remove()
+    + getChild()
+    + operation()
+}
+
+class Leaf {
+    + count() : int
+    + add()
+    + remove()
+    + getChild()
+    + operation()
+}
+
+class Composite {
+    - children : List<Component>
+    + count() : int
+    + add()
+    + remove()
+    + getChild()
+    + operation()
+}
+
+Leaf --|> Component
+Composite --|> Component
+Component "-children" --o Composite
+
+note left of Composite::"operation()"
+    for each child in children
+        child.operation()
+end note
+
+note as N1
+    Leaf, Composite 是一个 Component，但 Leaf 只是一个 Component, 而 Composite 是 Component 的集合。
+end note
+
+@enduml

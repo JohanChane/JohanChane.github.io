@@ -1,0 +1,38 @@
+@startuml
+
+together {
+    class Subject {
+        + operation()
+    }
+
+    class RealSubject {
+        + operation()
+    }
+
+    class Proxy {
+        - subject : Subject
+        + operation()
+    }
+}
+
+class Client {
+}
+
+RealSubject ..|> Subject
+Proxy ..|> Subject
+Subject "-subject" --o Proxy
+Client ..> Subject : <<use>>
+
+note left of Proxy::"operation()"
+    // ...
+    subject.operation()
+    // ...
+end note
+
+note right of Client
+    Subject subject = new RealSubject();
+    Proxy proxy = new Proxy(subject);
+    proxy.operation();
+end note
+
+@enduml

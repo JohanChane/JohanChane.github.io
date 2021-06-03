@@ -1,0 +1,40 @@
+@startuml
+
+interface Component {
+    + operation()
+}
+
+class ConcreteComponent {
+    + ConcreteComponent()
+    + operation()
+}
+
+abstract class Decorator {
+    + operation()
+}
+
+class ConcreteDecorator {
+    + ConcreteDecorator(component : Component)
+    + operation()
+}
+
+ConcreteComponent ..|> Component
+ConcreteDecorator --|> Decorator
+Decorator ..|> Component
+Component --o Decorator
+
+note left of ConcreteDecorator::"operation()"
+    operation() {
+        component.operation();
+    }
+end note
+
+note as Context
+    // ### 使用
+    Component component = new Component();
+    Decorator decorator1 = new ConcreteDecoratorA(component);
+    Decorator decorator2 = new ConcreteDecoratorB(decorator1);
+    decorator2.operation();
+end note
+
+@enduml

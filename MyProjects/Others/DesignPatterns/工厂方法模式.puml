@@ -1,0 +1,25 @@
+@startuml
+interface Product {
+}
+
+class ConreteProduct {
+}
+
+interface Creator {
+    + create() : Product
+}
+
+class ConreteCreator {
+    + create() : Product
+}
+
+ConreteProduct ..|> Product
+ConreteCreator ..|> Creator
+ConreteCreator ..> ConreteProduct : <<create>>
+
+note left of Creator::"create()"
+    // 如果有多个具体产品
+    create(type)。
+end note
+
+@enduml

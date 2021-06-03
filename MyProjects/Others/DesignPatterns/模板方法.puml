@@ -1,0 +1,25 @@
+@startuml
+
+abstract class AbstractClass {
+    + templateMethod()
+    + primitiveOperationA() {abstract}
+    + primitiveOperationB() {abstract}
+}
+
+class ConcreteClass {
+    + primitiveOperationA()
+    + primitiveOperationB()
+}
+
+ConcreteClass --|> AbstractClass
+
+note left of AbstractClass::"templateMethod()"
+    // `templateMethod()` 已实现，而有些方法要求子类实现。
+    // ...
+    primitiveOperationA();
+    // ...
+    primitiveOperationB();
+    // ...
+end note
+
+@enduml
