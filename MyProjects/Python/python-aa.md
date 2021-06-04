@@ -41,7 +41,7 @@
     * [查看信息（用于反馈）](#查看信息用于反馈)
     * [调试程序](#调试程序)
     * [Output](#output)
-    * [[print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)](https://docs.python.org/zh-cn/3/library/functions.html#print)](#printobjects-sep--endn-filesysstdout-flushfalsehttpsdocspythonorgzh-cn3libraryfunctionshtmlprint)
+    * [`print()`](#print)
     * [输出格式](#输出格式)
     * [字面值](#字面值)
         * [字符串字面值拼接](#字符串字面值拼接)
@@ -301,7 +301,9 @@ print('ABC\nDEF')
 print('ABC')
 ```
 
-### [print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)](https://docs.python.org/zh-cn/3/library/functions.html#print)
+### `print()`
+
+[`print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)`](https://docs.python.org/zh-cn/3/library/functions.html#print)
 
 for example
 
