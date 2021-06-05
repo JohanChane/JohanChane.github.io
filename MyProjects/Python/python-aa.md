@@ -91,7 +91,7 @@
     * [Others](#others)
 * [`__*__` 标识符](#____-标识符)
     * [特殊属性](#特殊属性)
-    * [class.__mro__, class.mro(), class.__subclass__(), super()](#class__mro__-classmro-class__subclass__-super)
+    * [`class.__mro__, class.mro(), class.__subclass__(), super()`](#class__mro__-classmro-class__subclass__-super)
     * [Magic Method(重点)](#magic-method重点)
         * [基本定制](#基本定制)
             * [`__new__(), __init__()`](#__new__-__init__)
@@ -163,11 +163,13 @@ for example
 ```python
 list1 = [1, 2]
 list1 = 100;
-list1.append(3)		       # AttributeError: 'int' object has no attribute 'append'
-print(type(list1))         # 显示 list1 变量引用的对象的类型。
+list1.append(3)             # AttributeError: 'int' object has no attribute 'append'
+print(type(list1))          # 显示 list1 变量引用的对象的类型。
 ```
 
-#### [对象的 id](https://docs.python.org/zh-cn/3/reference/datamodel.html#objects-values-and-types)
+#### 对象的 id
+
+[对象的 id](https://docs.python.org/zh-cn/3/reference/datamodel.html#objects-values-and-types)
 
 每个对象都有各自的编号、类型和值。一个对象被创建后，它的编号就绝不会改变；你可以将其理解为该对象在内存中的地址。 'is' 运算符可以比较两个对象的编号是否相同；`id()` 函数能返回一个代表其编号的整型数。
 
@@ -184,9 +186,9 @@ print(type(list1))         # 显示 list1 变量引用的对象的类型。
     扁平序列
     　　str 这类序列只能容纳一种类型。
 
-						
+
 > 容器序列对象存放的东西都是引用，存入数字和字符串时，也是存入引用。扁平序列对象存放的东西不是引用，而是对象的内容（无引用）。
-    
+
 > 可变序列的对象是可变对象，而不可变序列的对象是不可变对象。
 
 ### Ohters
@@ -238,7 +240,7 @@ else:
         type([object])
 
             查看对象类型
-                
+
         dir([object])
 
             列出对象属性
@@ -315,7 +317,9 @@ for i in list1:
 print('')
 ```
 
-### [输出格式](https://docs.python.org/zh-cn/3/tutorial/inputoutput.html?highlight=seek#input-and-output)
+### 输出格式
+
+[输出格式](https://docs.python.org/zh-cn/3/tutorial/inputoutput.html?highlight=seek#input-and-output)
 
 - `f/F` 前缀与 `{<expression>}`
 
@@ -356,14 +360,18 @@ import math
 print('The value of pi is approximately %5.3f.' % math.pi)
 ```
 
-### [字面值](https://docs.python.org/zh-cn/3.8/reference/lexical_analysis.html#literals)
+### 字面值
+
+[字面值](https://docs.python.org/zh-cn/3.8/reference/lexical_analysis.html#literals)
 
 字符串字面值(单引号与双引号无区别)
 
     'ABC'
     "ABC"
 
-#### [字符串字面值拼接](https://docs.python.org/zh-cn/3/reference/lexical_analysis.html#string-literal-concatenation)
+#### 字符串字面值拼接
+
+[字符串字面值拼接](https://docs.python.org/zh-cn/3/reference/lexical_analysis.html#string-literal-concatenation)
 
 有两种拼接方式，用空格或加号。两者区别：[空格是编译时实现拼接的，加号是运行时实现拼接的](https://docs.python.org/zh-cn/3.8/reference/lexical_analysis.html#implicit-line-joining)
 
@@ -386,8 +394,8 @@ print('The value of pi is approximately %5.3f.' % math.pi)
     and 1 <= day <= 31 and 0 <= hour < 24 \
     and 0 <= minute < 60 and 0 <= second < 60:
         return 1
-        
-    
+
+
 [圆括号、方括号或花括号以内的表达式允许分成多个物理行，无需使用反斜杠。](https://docs.python.org/zh-cn/3.8/reference/lexical_analysis.html#implicit-line-joining)
 
     month_names = ['Januari', 'Februari', 'Maart',      # These are the
@@ -395,7 +403,9 @@ print('The value of pi is approximately %5.3f.' % math.pi)
                'Juli',    'Augustus', 'September',      # for the months
                'Oktober', 'November', 'December']       # of the year
 
-### [内置数据类型](https://docs.python.org/zh-cn/3.8/reference/datamodel.html#the-standard-type-hierarchy)
+### 内置数据类型
+
+[内置数据类型](https://docs.python.org/zh-cn/3.8/reference/datamodel.html#the-standard-type-hierarchy)
 
 - 数字类型
 
@@ -424,7 +434,7 @@ print('The value of pi is approximately %5.3f.' % math.pi)
 - 集合类型
 
     此类对象表示由不重复且不可变对象组成的无序且有限的集合。因此它们不能通过下标来索引。但是它们可被迭代。
-    
+
     set 类型是可变的（***注意：虽然元素是不可变的，但 set 是可变的***），而 ***frozenset 类型是不可变并且为 hashable***。
 
     - set
@@ -462,7 +472,9 @@ python 常用的内置容器类型：tuple, list, set, dict。它们是可以迭
 
     int, bool, float, complex, string, tuple, frozenset
 
-#### [hashable](https://docs.python.org/zh-cn/3.8/glossary.html#term-hashable)
+#### hashable
+
+[hashable](https://docs.python.org/zh-cn/3.8/glossary.html#term-hashable)
 
 一个对象的哈希值如果在其生命周期内绝不改变，就被称为 hashable （它需要具有 __hash__() 方法），并可以同其他对象进行比较（它需要具有 __eq__() 方法）。可哈希对象必须具有相同的哈希值比较结果才会相同。用户定义类的实例对象默认是可哈希的。 它们在比较时一定不相同（除非是与自己比较），它们的哈希值的生成是基于它们的 id()。
 
@@ -496,7 +508,7 @@ set1 = {1, 2}
 frozenset1 = frozenset('ABC')
 print(hash(frozenset1))
 ```
-    
+
 #### 数字类型
 
 for example
@@ -586,7 +598,7 @@ list3 = []
     A2 = [i for i in A1 if i in A0]
 
     相当于：
-    
+
     A2 = []
     for i in A1:
         if i in A0:
@@ -716,9 +728,9 @@ print(id(s1))
 print(id(s2))
 
 t1 = (1, 2)
-t2 = (1, 2)		# tuple 也是不可改变的，有些解释器会新建对象，而有些不会。
+t2 = (1, 2)     # tuple 也是不可改变的，有些解释器会新建对象，而有些不会。
 print(id(t1))
-print(id(t2))	
+print(id(t2))
 ```
 
 ### Branch Control
@@ -736,7 +748,9 @@ print(id(t2))
 
 - `==` 比较对象内容
 
-##### [运算符](https://www.runoob.com/python/python-operators.html)
+##### 运算符
+
+[运算符](https://www.runoob.com/python/python-operators.html)
 
 - 成员运算符 `in, not in`
 - 身份运算符 `is, not is`
@@ -751,7 +765,7 @@ print(id(t2))
     words = ['cat', 'window', 'defenestrate']
     for w in words:
         print(w, len(w))
-    
+
     # range(start : end : step)
     for i in range(5):
         print(i)
@@ -810,7 +824,9 @@ def func(a, b):
 func(1, 2)
 ```
 
-##### [positional-only or keyword-only arguments](https://docs.python.org/3/tutorial/controlflow.html#positional-or-keyword-arguments)
+##### positional-only or keyword-only arguments
+
+[positional-only or keyword-only arguments](https://docs.python.org/3/tutorial/controlflow.html#positional-or-keyword-arguments)
 
 - positional-only argments (仅限位置参数) 只能接收位置实参。其类型是 tuple。
 
@@ -895,14 +911,16 @@ funcForWayOfPassParam(list1.copy(), set1.copy(), dict1.copy())
 funcForWayOfPassParam(list1[:], set1[:], dict1.copy())
 ```
 
-##### [浅层 (shallow) 和深层 (deep) 复制操作](https://docs.python.org/zh-cn/3/library/copy.html)
+##### 浅层 (shallow) 和深层 (deep) 复制操作
+
+[浅层 (shallow) 和深层 (deep) 复制操作](https://docs.python.org/zh-cn/3/library/copy.html)
 
     copy.copy(x)
 
         返回 x 的浅层复制。
 
     copy.deepcopy(x[, memo])
-    
+
         返回 x 的深层复制。
 
 ### 内嵌函数与闭包
@@ -922,7 +940,7 @@ def outerFunc():
     # 内嵌函数
     def innerFunc():
         print('innerFunc')
-    
+
     innerFunc()
 
 outerFunc()
@@ -934,7 +952,7 @@ def outerFunc():
     def closure():
         # 当对被引用的变量赋值时，则可能是修改外部变量，或新建局变量。默认会认为你在新建一个局部变量，所以 x 是一个局部变量。
         # 但是因为 x 还没有创建，所以出现 `UnboundLocalError: local variable 'x' referenced before assignment`
-        x += 1   
+        x += 1
         print(x)
     return closure
 
@@ -973,7 +991,9 @@ lmbd = lambda a, b: a + b
 print(lmbd(10, 20))
 ```
 
-### [异常](https://docs.python.org/zh-cn/3/tutorial/errors.html)
+### 异常
+
+[异常](https://docs.python.org/zh-cn/3/tutorial/errors.html)
 
 无论是否出现异常，finally 语句块都会执行。
 
@@ -1042,7 +1062,9 @@ self, cls
     因为父类的属性无法用 super() 访问，只能用 self 访问，所以父类属性会被覆盖，只通过父类的方法访问。
     父方法没有被覆盖，可用 super() 访问。
 
-### [super()](https://docs.python.org/zh-cn/3/library/functions.html?highlight=super#super)
+### super()
+
+[super()](https://docs.python.org/zh-cn/3/library/functions.html?highlight=super#super)
 
 `super()`
 
@@ -1134,7 +1156,7 @@ class MyClass():
     @staticmethod
     def staticMethod():
         pass
-    
+
 myClass = MyClass()
 myClass.defaultMethod()
 MyClass.defaultMethod(myClass)
@@ -1179,7 +1201,7 @@ for example
 ```python
 class MyClass():
     __privateProperty = 10
-    
+
 myClass = MyClass()
 # AttributeError: 'MyClass' object has no attribute '__privateProperty'
 # myClass.__privateProperty
@@ -1305,7 +1327,9 @@ class MyClass(Base):
 myClass = MyClass()
 ```
 
-### [抽象基类 abc](https://docs.python.org/zh-cn/3/library/abc.html#module-abc)
+### 抽象基类 abc
+
+[抽象基类 abc](https://docs.python.org/zh-cn/3/library/abc.html#module-abc)
 
 含有抽象方法的类都是抽象基类。
 
@@ -1370,6 +1394,8 @@ MyClass.myAbstractStaticmethod()
 
 ## 装饰器（decorator）
 
+装饰器接收类型对象（比如：类对象和函数对象等）并对其进行包装，返回包装后的类型对象，重新赋值原来的标识符，使原始类型对象无法访问。
+
 ### 添加一个自定义的 decorator
 
 [参考 Property Decorator Example](# propertyDecoratorExample)
@@ -1383,24 +1409,23 @@ def null_decorator(func):
     print('null_decorator')
     return func
 
+@null_decorator
+def greet():
+    print('Hello!')
+# output:
+#   null _decorator
+#   Hello!
+greet()
+
+# 上面相当于
+
 def greet():
     print('Hello!')
 
 greet = null_decorator(greet)
 
-# output: `Hello!`
 greet()
-
-# 调用 null_decorator()
-@null_decorator
-def greet1():
-    print('Hello!')
-
-# 调用 null_decorator 返回的 func(), 实际是调用 greet1()
-# output: `Hello!`
-greet1()
 ```
-
 
 for example
 
@@ -1504,7 +1529,7 @@ del myClass.size
 
 参考 [property 例子](# propertyExample)
 
-<a name="propertyDecoratorExample"></a> 
+<a name="propertyDecoratorExample"></a>
 
 for example
 
@@ -1519,7 +1544,7 @@ class MyClass():
     def size(self):
         print('get size property')
         return self._size
-    
+
     # 等同于 size = property(fget=size)。所以，size 不是方法而是 property。
     @size.setter
     def size(self, value):
@@ -1536,12 +1561,16 @@ myClass.size
 myClass.size = 100
 del myClass.size
 ```
-    
-## [`__*__` 标识符](https://docs.python.org/zh-cn/3/reference/lexical_analysis.html#identifiers)
+
+## `__*__` 标识符
+
+[`__*__` 标识符](https://docs.python.org/zh-cn/3/reference/lexical_analysis.html#identifiers)
 
 *系统定义的名称，在非正式场合下被叫做 "dunder" 名称。*
 
-### [特殊属性](https://docs.python.org/zh-cn/3/library/stdtypes.html?highlight=__dict__#special-attributes)
+### 特殊属性
+
+[特殊属性](https://docs.python.org/zh-cn/3/library/stdtypes.html?highlight=__dict__#special-attributes)
 
     object.__dict__
     instance.__class__
@@ -1584,7 +1613,9 @@ mymodule.printName()
 python test.py
 ```
 
-### [class.__mro__, class.mro(), class.__subclass__(), super()](https://docs.python.org/zh-cn/3/library/stdtypes.html#class.__mro__)
+### `class.__mro__, class.mro(), class.__subclass__(), super()`
+
+[`class.__mro__, class.mro(), class.__subclass__(), super()`](https://docs.python.org/zh-cn/3/library/stdtypes.html#class.__mro__)
 
     class.__mro__, class.mro()
     class.__subclasses__()
@@ -1615,7 +1646,9 @@ print(MyClass.mro())
 print(Base1.__subclasses__())
 ```
 
-### [Magic Method(重点)](https://docs.python.org/zh-cn/3/reference/datamodel.html?highlight=__new__#special-method-names)
+### Magic Method(重点)
+
+[Magic Method(重点)](https://docs.python.org/zh-cn/3/reference/datamodel.html?highlight=__new__#special-method-names)
 
 魔法方法会被自动执行。
 
@@ -1641,7 +1674,7 @@ print(Base1.__subclasses__())
     object.__format__(self, format_spec)
 
     object.__lt__(self, other)
-        
+
         object < otherobject 时调用
 
     object.__le__(self, other)
@@ -1767,7 +1800,7 @@ for example
 ```python
     [example](# customizeDecoratorExample)
 ```
-    
+
 #### 模拟数字类型
 
     object.__add__(self, other)
@@ -1788,7 +1821,7 @@ class Computation():
         return self.value + other
     def __sub__(self,other):
         return self.value - other
-    
+
     c = Computation(5)
     print(c + 5)
     print(c - 3)
@@ -1822,7 +1855,7 @@ for animal in animals:
 
 ##### `迭代器, __iter__(), __next__()`
 
-<a name="iterNextExample"></a> 
+<a name="iterNextExample"></a>
 
 - [`iter()`](https://docs.python.org/zh-cn/3/library/functions.html?highlight=iter#iter)
 
@@ -1870,7 +1903,9 @@ print(next(iterOfMyClass))
 print(next(iterOfMyClass))
 ```
 
-##### [生成器](https://docs.python.org/zh-cn/3/tutorial/classes.html#iterators)
+##### 生成器
+
+[生成器](https://docs.python.org/zh-cn/3/tutorial/classes.html#iterators)
 
 在 Python 中，使用了 yield 的函数被称为生成器（generator）。
 
@@ -1944,7 +1979,7 @@ while True:
 #### python 的搜索路径
 
 将 packages 或 module 放在搜索路径即可。
-            
+
 列出搜索路径
 
     import sys
@@ -1958,7 +1993,7 @@ while True:
 [from import 的语法](https://docs.python.org/zh-cn/3.8/reference/simple_stmts.html#the-import-statement)
 
 - `import <module> [as <identifier>] [, <module> [as <identifier>]]...`
-    
+
     导入整个 module
 
 - `from {<package> | <module>} import <identifier> [as <identifier>] [, <identifier> as <identifier>]`
@@ -2116,7 +2151,7 @@ print("sum = {}".format(libpycallcpp.add(1, 2)))
 [*CPython 用 C 添加 builtin 函数 print。(搜索 `builtin_print`)*](https://github.com/python/cpython/blob/master/Python/bltinmodule.c)
 
 for example
-    
+
 ```
 # ## 相关文件
 cextpy.c
@@ -2225,7 +2260,9 @@ import cext
 print("sum = {}".format(cext.add(1, 2)))
 ```
 
-##### [用 C/C++ 扩展 Python 的类型](https://docs.python.org/zh-cn/3/extending/newtypes_tutorial.html)
+##### 用 C/C++ 扩展 Python 的类型
+
+[用 C/C++ 扩展 Python 的类型](https://docs.python.org/zh-cn/3/extending/newtypes_tutorial.html)
 
 用 C/C++ 实现一个 Python 类型。
 
@@ -2577,7 +2614,9 @@ int main() {
 
 ## 常用
 
-### [sys](https://docs.python.org/zh-cn/3/library/sys.html#module-sys)
+### sys
+
+[sys](https://docs.python.org/zh-cn/3/library/sys.html#module-sys)
 
 `sys.path`
 
@@ -2597,11 +2636,15 @@ print(sys.argv)
 print(sys.modules)
 ```
 
-### [IO](https://docs.python.org/zh-cn/3/library/io.html?highlight=seek#module-io)
+### IO
+
+[IO](https://docs.python.org/zh-cn/3/library/io.html?highlight=seek#module-io)
 
 处理流的核心工具
 
-#### [stdandard input output](https://docs.python.org/zh-cn/3/library/sys.html?highlight=sys%20stdin#sys.stdin)
+#### stdandard input output
+
+[stdandard input output](https://docs.python.org/zh-cn/3/library/sys.html?highlight=sys%20stdin#sys.stdin)
 
     input(), print()
 
@@ -2633,7 +2676,9 @@ for line in sys.stdin:
     sys.stderr.write(line)
 ```
 
-#### [文件读写](https://www.programiz.com/python-programming/file-operation)
+#### 文件读写
+
+[文件读写](https://www.programiz.com/python-programming/file-operation)
 
     open(), close()
     read(), readline(), readlines()
@@ -2716,7 +2761,9 @@ print(type(data))
 print(data)
 ```
 
-## [用 Python 代替操作系统的 shell](https://github.com/ninjaaron/replacing-bash-scripting-with-python/blob/master/README.rst)
+## 用 Python 代替操作系统的 shell
+
+[用 Python 代替操作系统的 shell](https://github.com/ninjaaron/replacing-bash-scripting-with-python/blob/master/README.rst)
 
 *个人例子代码的系统平台默认是 linux。*
 
@@ -2754,16 +2801,16 @@ pathlib
     print(exitCode)
     print(type(exitCode))
     ```
-        
+
 - [subprocess](https://docs.python.org/zh-cn/3/library/subprocess.html?highlight=subproces#module-subprocess)
 
     模块提供了更强大的工具来生成新进程并跟踪执行结果，使用该模块比使用本函数更好。Popen 是更底层的接口。
 
     shell 参数意义
 
-        当为 True 时，表示是命令（必须是一个字符串）是在 subshell 中执行的，而为 False 时，表示运行一个程序，第一个参数必须是一个可执行程序。且这个是没有经过 Shell 解析的。还有命令必须是一个列表。
+    > 当为 True 时，表示是命令（必须是一串字符串）是在 subshell 中执行的，而为 False 时，表示运行一个程序，第一个参数必须是一个可执行程序。且这个是没有经过 Shell 解析的。还有命令必须是一个列表。
 
-    for example 
+    for example
 
     ```python
     import subprocess
@@ -2812,7 +2859,7 @@ pathlib
 
     # #### stdin 与 PIPE
     from subprocess import Popen, PIPE, STDOUT
-    p = Popen(['grep', 'f'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)    
+    p = Popen(['grep', 'f'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
     grep_stdout = p.communicate(input=b'one\ntwo\nthree\nfour\nfive\nsix\n')[0]
     print(grep_stdout.decode())
     # -> four
@@ -2831,11 +2878,11 @@ pathlib
 
         stdout
 
-            从子进程捕获到的标准输出. 
+            从子进程捕获到的标准输出.
 
         stderr
 
-            捕获到的子进程的标准错误. 
+            捕获到的子进程的标准错误.
 
     for example
 
@@ -2853,8 +2900,10 @@ pathlib
 
     print(result.stdout.split(b'\n'))
     ```
-        
-### [os.path](https://docs.python.org/zh-cn/3/library/os.path.html)
+
+### os.path
+
+[os.path](https://docs.python.org/zh-cn/3/library/os.path.html)
 
 常用路径操作
 
@@ -2871,13 +2920,17 @@ print( os.path.join('root','test','runoob.txt') )  # 将目录和文件名合成
 
 ## Others
 
-### [PEPs (Python Enhancement Proposals)](https://www.python.org/dev/peps/)
+### PEPs (Python Enhancement Proposals)
+
+[PEPs (Python Enhancement Proposals)](https://www.python.org/dev/peps/)
 
 [pep 翻译](https://github.com/chinesehuazhou/peps-cn)
 
 [Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
 
-### [python 的实现](https://docs.python.org/zh-cn/3/reference/introduction.html#alternate-implementations)
+### python 的实现
+
+[python 的实现](https://docs.python.org/zh-cn/3/reference/introduction.html#alternate-implementations)
 
 - CPython
 
@@ -2888,7 +2941,9 @@ print( os.path.join('root','test','runoob.txt') )  # 将目录和文件名合成
 - IronPython
 - PyPy
 
-### [urllib](https://docs.python.org/zh-cn/3/library/urllib.html)
+### urllib
+
+[urllib](https://docs.python.org/zh-cn/3/library/urllib.html)
 
 for example
 
@@ -2905,6 +2960,8 @@ print(html)
 print(response.info())
 ```
 
-### [Tkinter(GUI)](https://docs.python.org/zh-cn/3/library/tk.html)
+### Tkinter(GUI)
+
+[Tkinter(GUI)](https://docs.python.org/zh-cn/3/library/tk.html)
 
 EasyGUI 太简单了，功能不够强大。Tkinter 比较优秀，移植性比较高，被很多脚本语言（perl, ruby）使用，这也是 python 的默认 GUI 包。
