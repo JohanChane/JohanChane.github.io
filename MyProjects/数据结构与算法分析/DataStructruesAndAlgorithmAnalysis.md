@@ -11,7 +11,7 @@
     * [Bubble Sort](#bubble-sort)
     * [Merge Sort（归并排序）](#merge-sort归并排序)
     * [Quick Sort（快速排序）](#quick-sort快速排序)
-    * [Shell Sort（哈希排序）](#shell-sort哈希排序)
+    * [Shell Sort（希尔排序）](#shell-sort希尔排序)
     * [Heap Sort（堆排序）](#heap-sort堆排序)
     * [External Sort（外部排序）](#external-sort外部排序)
         * [用胜者树合并的外部排序](#用胜者树合并的外部排序)
@@ -604,7 +604,7 @@ int main() {
 }
 ```
 
-### Shell Sort（哈希排序）
+### Shell Sort（希尔排序）
 
 ```c
 #include <stdio.h>
