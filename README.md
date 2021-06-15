@@ -30,6 +30,9 @@
 ### Linux
 ### VSCode
 ### 五笔打字
+### RightClickMenu
+
+用 python 管理 app 的右键菜单
 
 ---
 
