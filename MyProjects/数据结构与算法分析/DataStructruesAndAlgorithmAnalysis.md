@@ -1,10 +1,16 @@
-# Data Structrues and Algorithm Analysis
+Data Structrues and Algorithm Analysis
+===
 
-## Content
+Content
+---
 
 <!-- vim-markdown-toc GFM -->
 
 * [References](#references)
+* [时间复杂度](#时间复杂度)
+    * [References](#references-1)
+    * [分治算法的运行时间](#分治算法的运行时间)
+    * [Others](#others)
 * [排序算法](#排序算法)
     * [Insertion Sort](#insertion-sort)
     * [Selection Sort](#selection-sort)
@@ -49,11 +55,50 @@
 
 <!-- vim-markdown-toc -->
 
-## References
+References
+---
 
--   《数据结构与算法分析》
+-   《数据结构与算法分析：C 语言描述》
 
-## 排序算法
+时间复杂度
+---
+
+### References
+
+-   <https://www.bigocheatsheet.com/>
+-   <https://mp.weixin.qq.com/s/VQN5pQAAwi3Zwn-vcsu-3w>
+
+### 分治算法的运行时间
+
+方程 $ T(N) = aT(N / b) + \Theta(N^{k}) $ 的解为
+
+$$
+T(N) =
+\begin{cases}
+O(N^{\log_{b} a}), & a > b^{k} \\
+O(N^{k}\log N), & a = b^{k} \\
+O(N^{k}), & a < b^{k} \\
+\end{cases}
+$$
+
+其中 $ a \geq 1, b > 1 $。
+
+常见的情况
+
+快速排序、归并排序、堆排序的平均时间复杂度是，$ O(N^{1}\log N) = O(N\log N), a = 2, b = 2, k = 1 $。
+
+二叉搜索树、AVL 树、红黑树、伸展树、B 树的搜索、插入、删除的平均时间复杂度是, $ O(N^{0}\log N) = O(\log N), a = 1, b = 2, k = 0 $。
+
+### Others
+
+希尔排序的计算比较复杂。至于最坏情形的时间复杂度，[有的资料](https://www.bigocheatsheet.com/)说是 $ (N\log (N))^{2} $，而《数据结构与算法分析：C 语言描述》说是 $ N^{2} $。
+
+堆排序的平均时间复杂度是，$ \log_{2} N + \log_{2} (N - 1), + \cdots + log_{2} 1 = \Theta(\log_{2} (N!)) = O(N\log N) $。
+
+二叉堆的建堆的时间复杂度是，$ O(N) $。
+
+排序算法
+---
 
 ### Insertion Sort
 
@@ -1968,7 +2013,9 @@ int main() {
 }
 ```
 
-## List
+List
+---
+
 ### Linked List
 #### Single Linked List
 
@@ -2823,7 +2870,8 @@ int main() {
 }
 ```
 
-## Tree
+Tree
+---
 ### Basic Tree
 
 ```c
@@ -4859,7 +4907,8 @@ int main() {
 
 ```
 
-## Heap
+Heap
+---
 ### Binary Heap（二叉堆）
 
 ```c
@@ -6062,7 +6111,8 @@ int main() {
 }
 ```
 
-## Hash Table
+Hash Table
+---
 ### SeparateChaining
 
 解决冲突的方法是分离链接法，是将散列到同一值的所有元素保留到一个链表中。
@@ -6716,7 +6766,8 @@ int main() {
 }
 ```
 
-## Stack, Queue
+Stack, Queue
+---
 
 ### Stack
 
