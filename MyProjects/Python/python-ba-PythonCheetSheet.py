@@ -91,7 +91,7 @@ DEF'
             'DEF']
     print(str1)
 
-    str1 = {'ABC', 
+    str1 = {'ABC',
             'DEF'}
     print(str1)
 

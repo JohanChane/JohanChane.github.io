@@ -1,33 +1,14 @@
-# Python
+Python
+===
 
 *Python version: Python3.8*
 
-### Refers
-
-- <https://docs.python.org/zh-cn/3.8/tutorial/index.html>
-
-    官方入门教程
-
-- <https://docs.python.org/zh-cn/3.8/reference/index.html>
-
-    python 语法和语义(重点)
-
-- <https://docs.python.org/zh-cn/3.8/library/index.html>
-
-    Python 标准库参考。有 python 使用例子
-
-- <https://docs.python.org/zh-cn/3.8/search.html>
-
-    搜索 python 文档
-
-- <https://docs.python.org/zh-cn/3/library/functions.html>
-
-    python 的内置函数
-
-### Content
+Content
+---
 
 <!-- vim-markdown-toc GFM -->
 
+* [References](#references)
 * [基本概念](#基本概念)
     * [一切都是对象。](#一切都是对象)
     * [变量名与对象](#变量名与对象)
@@ -81,10 +62,9 @@
     * [类的访问属性](#类的访问属性)
         * [name mangling](#name-mangling)
     * [类的继承](#类的继承)
-        * [类的多态](#类的多态)
         * [单继承](#单继承)
         * [多重继承](#多重继承)
-            * [子类同名覆盖父类的问题](#子类同名覆盖父类的问题)
+        * [类的多态](#类的多态)
     * [抽象基类 abc](#抽象基类-abc)
 * [装饰器（decorator）](#装饰器decorator)
     * [添加一个自定义的 decorator](#添加一个自定义的-decorator)
@@ -114,25 +94,72 @@
             * [用 C/C++ 扩展 Python 的类型](#用-cc-扩展-python-的类型)
     * [C/C++调用 Python](#cc调用-python)
 * [常用](#常用)
+    * [str, byte, bytearray](#str-byte-bytearray)
     * [sys](#sys)
     * [IO](#io)
         * [stdandard input output](#stdandard-input-output)
         * [文件读写](#文件读写)
-            * [读写 json 文件](#读写-json-文件)
+    * [re（正则表达式）](#re正则表达式)
+    * [time](#time)
+    * [读写 json 文件](#读写-json-文件)
 * [用 Python 代替操作系统的 shell](#用-python-代替操作系统的-shell)
     * [原因](#原因)
     * [Python 与操作系统交互的工具](#python-与操作系统交互的工具)
-        * [执行 Shell 命令](#执行-shell-命令)
+    * [执行 Shell 命令](#执行-shell-命令)
+        * [os.system](#ossystem)
+        * [subprocess](#subprocess)
+            * [shell 参数意义](#shell-参数意义)
+            * [subprocess.DEVNULL，subprocess.PIPE，subprocess.STDOUT](#subprocessdevnullsubprocesspipesubprocessstdout)
+            * [返回值](#返回值)
+    * [os](#os)
     * [os.path](#ospath)
+    * [pathlib.Path](#pathlibpath)
+    * [glob](#glob)
+    * [fnmatch](#fnmatch)
+    * [shutil](#shutil)
+    * [tarfile](#tarfile)
+    * [zipfile](#zipfile)
+    * [psutil](#psutil)
+    * [python 获得管理员权限 ??](#python-获得管理员权限-)
+        * [linux](#linux)
+        * [windows](#windows)
+    * [总结 python 替代 shell](#总结-python-替代-shell)
+* [Python 编码风格](#python-编码风格)
+    * [References](#references-1)
+    * [命名约定](#命名约定)
 * [Others](#others-1)
     * [PEPs (Python Enhancement Proposals)](#peps-python-enhancement-proposals)
     * [python 的实现](#python-的实现)
     * [urllib](#urllib)
-    * [Tkinter(GUI)](#tkintergui)
+    * [Python GUI](#python-gui)
 
 <!-- vim-markdown-toc -->
 
-## 基本概念
+References
+---
+
+- <https://docs.python.org/zh-cn/3.8/tutorial/index.html>
+
+    官方入门教程
+
+- <https://docs.python.org/zh-cn/3.8/reference/index.html>
+
+    python 语法和语义(重点)
+
+- <https://docs.python.org/zh-cn/3.8/library/index.html>
+
+    Python 标准库参考。有 python 使用例子
+
+- <https://docs.python.org/zh-cn/3.8/search.html>
+
+    搜索 python 文档
+
+- <https://docs.python.org/zh-cn/3/library/functions.html>
+
+    python 的内置函数
+
+基本概念
+---
 
 ### 一切都是对象。
 
@@ -207,7 +234,8 @@ if True :
 else:
 ```
 
-## Basic
+Basic
+---
 
 ### Get help
 
@@ -245,13 +273,13 @@ else:
 
             列出对象属性
 
-        dir(<object>)
+        id(<object>)
 
             列出对象 id
 
 - `isinstance(object, classinfo)`
 
-        如果参数 object 是参数 classinfo 的实例或者是其 (直接、间接或 虚拟) 子类则返回 True。
+        如果参数 object 是参数 classinfo 的实例或者是其 (直接、间接或 虚拟) 子类的实例则返回 True。
 
 - `issubclass(class, classinfo)`
 
@@ -433,9 +461,9 @@ print('The value of pi is approximately %5.3f.' % math.pi)
 
 - 集合类型
 
-    此类对象表示由不重复且不可变对象组成的无序且有限的集合。因此它们不能通过下标来索引。但是它们可被迭代。
+    set 对象是由具有唯一性的 hashable 对象所组成的无序多项集。因此它们不能通过下标来索引。但是它们可被迭代。
 
-    set 类型是可变的（***注意：虽然元素是不可变的，但 set 是可变的***），而 ***frozenset 类型是不可变并且为 hashable***。
+    ***set 类型是可变的（注意：虽然元素是 hashable 的，但 set 是可变的），而 frozenset 类型是不可变并且为 hashable。***
 
     - set
     - frozenset
@@ -480,19 +508,21 @@ python 常用的内置容器类型：tuple, list, set, dict。它们是可以迭
 
 大多数 Python 中的不可变内置对象都是可哈希的；可变容器（例如列表或字典）都不可哈希；不可变容器（例如元组和 frozenset）仅当它们的元素均为可哈希时才是可哈希的。 用户定义类的实例对象默认是可哈希的。
 
-*可变对象一定是 unhashable，不可变对象的元素都为不可变对象时，它才是 hashable。*
+*可变对象一定是 unhashable，不可变对象的元素都是 hashable 时，它才是 hashable。  
+hashable 对象则是不可变对象且其元素也是 hashable。  
+不可变对象不一定是 hashable 的，比如：`([1, 2], [3, 4])`*
 
-- hashable
+-   hashable
 
-    int, bool, float, complex, string
+    int, bool, float, complex, string, frozenset
 
-- unhashable
+-   unhashable
 
     list, set, dict
 
-- hashable 不确定的
+-   hashable 不确定的
 
-    tuple, frozenset
+    tuple
 
 
 for example
@@ -610,6 +640,10 @@ for example
 list1 = [2*i for i in range(1, 100, 10)]
 # [0, 20, 40, 60, 80, 100, 120, 140, 160, 180]
 print(list1)
+
+with open(filename) as f:
+    content = f.readlines()
+content = [x.strip() for x in content]
 ```
 
 #### 集合类型
@@ -666,8 +700,7 @@ fset1 = frozenset({1: 2, 3: 4})
 
 ##### 字典
 
-
-[字典的键只能是非 hashable 的值。即包含列表、字典或其他可变类型的值（此类对象基于值而非对象标识进行比较）不可用作键。](https://docs.python.org/zh-cn/3.8/library/stdtypes.html#mapping-types-dict)
+[字典的键只能是 hashable 的值。即包含列表、字典或其他可变类型的值（此类对象基于值而非对象标识进行比较）不可用作键。](https://docs.python.org/zh-cn/3.8/library/stdtypes.html#mapping-types-dict)
 
 for example
 
@@ -679,7 +712,7 @@ dict1[0.1+0.1j]
 dict1[(1,2)]
 
 # 出错，key 不是 hashable
-# dict2 = {(1, [1, 2])}
+# dict2 = {(1, [1, 2]): 1}
 ```
 
 ### 垃圾回收机制
@@ -875,6 +908,16 @@ funcForFuncParam(1, 2, c = 3)
 # funcForFuncParam(1, b = 2, c = 3)
 # 错误的
 # funcForFuncParam(a = 1, b = 2, c = 3)
+
+# ### 形参是一个星号时，表示后面的参数不能是 positional 的，那只能是 keyword-only 的。
+def funcForFuncParam(a, b, *, c):
+    pass
+#  错误的
+#  funcForFuncParam(1, 2, 3)
+
+funcForFuncParam(1, 2, c = 3)
+funcForFuncParam(1, b = 2, c = 3)
+funcForFuncParam(a = 1, b = 2, c = 3)
 ```
 
 #### return
@@ -1046,7 +1089,8 @@ except NameError as err:
         print(err)
 ```
 
-## class
+class
+---
 
 类的继承与 java 一样，是 `is-a` 的关系。支持多继承。
 
@@ -1133,7 +1177,7 @@ print(classForClassProperties.classProperty)
 - `类方法（class method） (@classmethod)`
 
         至少有一个参数（一般第一个形参为 cls），否则出错。
-        可用 `<className>.<instanceMethod>(<instance>), <instance>.<instanceMethod()>` 的方式调用。
+        可用 `<className>.<classMethod>(), <instance>.<classMethod()>` 的方式调用。
         当用类名或对象名调用 class method 时，解释器自动传类对象给第一个形参。
 
 - `静态方法（static method） (@staticmethod)`
@@ -1209,27 +1253,87 @@ dir(myClass)
 print(myClass._MyClass__privateProperty)
 ```
 
+for example
+
+```python
+class Base():
+    def __init__(self):
+        self.__x = 1
+        self.y = 2
+
+class Child(Base):
+    def __init__(self):
+        super().__init__()
+        # AttributeError: 'Child' object has no attribute '_Child__x'
+        #  print(self.__x)
+        print(self.y)
+
+child = Child()
+```
+
 ### 类的继承
 
-可以通过 `super()` 调用父类的方法，但是不能调用父类的属性（要用 self 调用从父类继承的属性）。
-
-#### 类的多态
+可以通过 `self, 父类名，super()` 调用父类的方法。但是只能通过 `self` 来访问父类的属性。
 
 for example
 
 ```python
 class Base():
+    def __init__(self):
+        self.y = 2
     def method(self):
-        print('Base method()')
+        print('Base.method')
+
+class Child(Base):
+    def __init__(self):
+        super().__init__()
+
+        # ### 调用父类的属性
+        print(self.y)
+        #  AttributeError: 'super' object has no attribute 'y'
+        #  print(super().y)
+        #  AttributeError: type object 'Base' has no attribute 'y'
+        #  print(Base.y)
+
+        # ### 调用父类的方法
+        self.method()
+        super().method()
+        Base.method(self)
+
+child = Child()
+```
+
+如果子类同名覆盖父类属性, 则只能通过调用父类的方法来访问被同名覆盖的父类的属性。
+
+for example:
+
+```python
+class Base():
+    def __init__(self):
+        self.x = 100
+
+    def method(self):
+        print('Base.method()')
 
 class MyClass(Base):
-    def method(self):
-        print('MyClass method()')
+    def __init__(self):
+        super().__init__()
 
-base = Base()
-base.method()
-base = MyClass()
-base.method()
+        # 无法通过 super() 调用父类的属性
+        # AttributeError: 'super' object has no attribute 'x'
+        # print(super().x)
+        print(self.x)
+        # 这里是赋值而不是创建 x
+        self.x = 1000
+
+        # 可通过 super() 调用父类的 method()
+        super().method()
+        self.method()
+
+    def method(self):
+        print('MyClass.method()')
+
+myClass = MyClass()
 ```
 
 #### 单继承
@@ -1243,6 +1347,7 @@ class Base():
 
 class MyClass(Base):
     def __init__(self):
+        # 调用父类的构造函数的两种方法
         # Base.__init__(self)
         super().__init__()
 
@@ -1294,37 +1399,23 @@ class MyClass(Base1, Base2):
 myClass = MyClass()
 ```
 
-##### 子类同名覆盖父类的问题
+#### 类的多态
 
-for example:
+for example
 
 ```python
 class Base():
-    def __init__(self):
-        self.x = 100
-
     def method(self):
-        print('Base.method()')
+        print('Base method()')
 
 class MyClass(Base):
-    def __init__(self):
-        super().__init__()
-
-        # 无法通过 super() 调用父类的属性
-        # AttributeError: 'super' object has no attribute 'x'
-        # print(super().x)
-        print(self.x)
-        # 这里是赋值而不是创建 x
-        self.x = 1000
-
-        # 可通过 super() 调用父类的 method()
-        super().method()
-        self.method()
-
     def method(self):
-        print('MyClass.method()')
+        print('MyClass method()')
 
-myClass = MyClass()
+base = Base()
+base.method()
+base = MyClass()
+base.method()
 ```
 
 ### 抽象基类 abc
@@ -1339,24 +1430,26 @@ myClass = MyClass()
 
 定义抽象类的方式
 
-    # ### 方式1：利用 ABC
-    from abc import ABC, abstractmethod
+```python
+# ### 方式1：利用 ABC
+from abc import ABC, abstractmethod
 
-    class MyAbstractClass(ABC):
-        pass
+class MyAbstractClass(ABC):
+    pass
 
-    # ### 方式2：利用 ABCMeta
-    from abc import ABCMeta, abstractmethod
+# ### 方式2：利用 ABCMeta
+from abc import ABCMeta, abstractmethod
 
-    class MyAbstractClass(metaclass=ABCMeta):
-        pass
+class MyAbstractClass(metaclass=ABCMeta):
+    pass
 
-    # OR
-    from abc import ABCMeta, abstractmethod
+# OR
+from abc import ABCMeta, abstractmethod
 
-    class MyAbstractClass():
-        __metaclass__ = ABCMeta
-        pass
+class MyAbstractClass():
+    __metaclass__ = ABCMeta
+    pass
+```
 
 for example
 
@@ -1392,7 +1485,8 @@ MyClass.myAbstractClassmethod()
 MyClass.myAbstractStaticmethod()
 ```
 
-## 装饰器（decorator）
+装饰器（decorator）
+---
 
 装饰器接收类型对象（比如：类对象和函数对象等）并对其进行包装，返回包装后的类型对象，重新赋值原来的标识符，使原始类型对象无法访问。
 
@@ -1511,6 +1605,7 @@ class MyClass():
 
 myClass = MyClass()
 print('get size in main:')
+# ### myClass.size 的类型是 Property，其属性 fget, fset, fdel 是被装饰对象（MyClass）的方法。
 # 调用 size.__get__()
 myClass.size
 print('set size in main:')
@@ -1562,7 +1657,8 @@ myClass.size = 100
 del myClass.size
 ```
 
-## `__*__` 标识符
+`__*__` 标识符
+---
 
 [`__*__` 标识符](https://docs.python.org/zh-cn/3/reference/lexical_analysis.html#identifiers)
 
@@ -1611,6 +1707,15 @@ mymodule.printName()
 
 # 输出 `__mymodule__`
 python test.py
+```
+
+`__main__` 的常用形式
+
+for example
+
+```python
+if __name__ == '__main__':
+    # main 函数体
 ```
 
 ### `class.__mro__, class.mro(), class.__subclass__(), super()`
@@ -1797,9 +1902,7 @@ del myClass.x
 
 for example
 
-```python
-    [example](# customizeDecoratorExample)
-```
+> [example](#customizeDecoratorExample)
 
 #### 模拟数字类型
 
@@ -1956,9 +2059,11 @@ while True:
 
 ### 包与模块
 
+[ref](https://www.liaoxuefeng.com/wiki/1016959663602400/1017454145014176)
+
 - 包
 
-    含有 `__init__.py` 文件的文件夹
+    含有 `__init__.py` 文件的文件夹。其实 `__init__.py` 也是一个模块，其名与文件名相同。作用是使用包也变成一个模块。
 
     可用 `pip` 管理包
 
@@ -2001,14 +2106,13 @@ while True:
     导入整个 module 或导入某个标识符。
     可用于去包名前缀或 module 名前缀。
 
-
 *identifier 是标志符的意思，只能由字母、数字和下划线组成，且不能以数字开头。*
 
-*不能导入整个包*
+*import 之后，要用 import 或 as 之后的名称来访问其下的东西。*
 
-*如果没有 as 部分则用 import 部分来访问*
+*`import <package>` 不会导入包内的所有模块。应该用 `from <package> import \*`。*
 
-*当导入很多包时，导入的 module 名称要尽量不相同且用不同的 module 前缀来访问 module 内的标识符。这样就能避免同名问题。*
+*当导入的名称相同时，无法通过添加限定符解决，而是要用别名解决。*
 
 for example
 
@@ -2053,7 +2157,26 @@ from package1.subpackage1.module1 import func1
 func1()
 ```
 
-## Python 与 C/C++ 相互调用
+module 的内嵌
+
+for example
+
+```python
+# ### package1/module1
+def func():
+    print('module1.func')
+# ### package1/module2
+import module1
+# ### main.py
+import sys
+sys.path.append('./package1')
+
+import module2
+module2.module1.func()
+```
+
+Python 与 C/C++ 相互调用
+---
 
 Refer
 
@@ -2612,7 +2735,37 @@ int main() {
 }
 ```
 
-## 常用
+常用
+---
+
+### str, byte, bytearray
+
+```python
+# ### str, byte, bytearray 都有的函数
+str.split(sep=None, maxsplit=-1)
+str.rsplit(sep=None, maxsplit=-1)
+str.splitlines([keepends])
+
+str.strip([chars])
+# left strip
+str.lstrip([chars])
+# right strip
+str.rstrip([chars])
+
+str.count(sub[, start[, end]])
+str.endswith(suffix[, start[, end]])
+
+str.removeprefix(prefix, /)
+str.removesuffix(suffix, /)
+
+str.join(iterable)
+str.replace(old, new[, count])
+str.partition(sep)
+str.rpartition(sep)
+
+# byte, bytearray 独有的函数
+bytes.decode(encoding="utf-8", errors="strict")
+```
 
 ### sys
 
@@ -2738,7 +2891,95 @@ finally:
     f.close()
 ```
 
-##### 读写 json 文件
+常用操作
+
+for example
+
+```python
+# ### read the whole file
+with open(<file>, 'r') as file:
+    # 返回一个 str
+    content = file.read()
+    print(content)
+
+with open(<file>, 'r') as file:
+    # 返回一个 list, 将每一行作为 list 的元素（读入换行符）。
+    content = file.readlines()
+    print(content)
+
+myfile = open("bar", "r")
+while myfile:
+    line  = myfile.readline()
+    print(line)
+    # readline() 会读入换行符, 所以这样就能判断读到了 EOF。
+    if line == "":
+        break
+myfile.close()
+
+# ### read file line by line
+with open(<file>, 'r') as file:
+    # line 包含换行符
+    for line in file:
+        print(line)
+
+with open(filePath, 'r') as f:
+    # line 包含换行符
+    lines = f.readlines()
+    for i in range(0, len(lines)):
+        print(lines[i])
+
+# ### read file word by word
+with open(<file>, 'r') as file:
+    for line in file:
+        for word in line.split():
+            print(word)
+
+# ### 删除每行最后的空白符
+with open(filename) as f:
+    content = f.readlines()
+content = [x.strip() for x in content]
+```
+
+### re（正则表达式）
+
+```python
+re.match(pattern, string, flags=0)
+re.search(pattern, string, flags=0)
+
+# 序列
+prog = re.compile(pattern)
+result = prog.match(string)
+# 等价于
+result = re.match(pattern, string)
+```
+[re.match vs re.search](https://docs.python.org/zh-cn/3/library/re.html?highlight=re#search-vs-match)
+
+> match 是从字符串的开始位置匹配，而 search 是任意位置匹配。
+
+for example
+
+```python
+re.match("c", "abcdef")    # No match
+# 等价于
+re.search("^c", "abcdef")  # No match
+
+re.search("a", "abcdef")   # Match
+re.search("c", "abcdef")   # Match
+
+# 有特殊字符用 raw str 更好
+re.search("^\\s+a", " abcdef")
+re.search(r"^\s+a", " abcdef")
+```
+
+### time
+
+```python
+import time
+
+time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
+```
+
+### 读写 json 文件
 
 for example
 
@@ -2761,7 +3002,8 @@ print(type(data))
 print(data)
 ```
 
-## 用 Python 代替操作系统的 shell
+用 Python 代替操作系统的 shell
+---
 
 [用 Python 代替操作系统的 shell](https://github.com/ninjaaron/replacing-bash-scripting-with-python/blob/master/README.rst)
 
@@ -2775,158 +3017,720 @@ print(data)
 
 ### Python 与操作系统交互的工具
 
+***os, os.path, pathlib.Path, glob, fnmatch, shutil, subprocess***
+
 [OS 模块](https://docs.python.org/zh-cn/3/library/os.html)
-sys
-shutil
-pathlib
 
 > 多种操作系统接口。比如：os.chdir(path) os.getcwd() os.listdir()。
 
-#### 执行 Shell 命令
+### 执行 Shell 命令
 
 那么什么时候执行 Shell 命令？
 
 > 虽然 Python 已有很多与操作系统交互的工具，但是有 Shell 的程序的功能是 Python 没有，虽然可以用 python 实现这个功能，但是比较麻烦，所以还是直接调用 Shell 命令或运行这个命令的可执行程序会比较省时间。但会是降低可移植性。所以尽量先用 Python 自带的功能。
 
+#### os.system
 
-- [os.system](https://docs.python.org/zh-cn/3/library/os.html?highlight=system#os.system)
+[os.system](https://docs.python.org/zh-cn/3/library/os.html?highlight=system#os.system)
 
-    在子 shell 中执行命令（字符串）。这是调用标准 C 函数 system() 来实现的，因此限制条件与该函数相同。对 sys.stdin 等的更改不会反映在执行命令的环境中。command 产生的任何输出将被发送到解释器标准输出流。
+> 在子 shell 中执行命令（字符串）。这是调用标准 C 函数 system() 来实现的，因此限制条件与该函数相同。对 sys.stdin 等的更改不会反映在执行命令的环境中。command 产生的任何输出将被发送到解释器标准输出流，不会放在返回值中。
 
-    for example
+for example
 
-    ```python
-    import subprocess, os, sys
-    exitCode = os.system('echo abc')
-    print(exitCode)
-    print(type(exitCode))
-    ```
+```python
+import subprocess, os, sys
+exitCode = os.system('echo abc')
+print(exitCode)
+print(type(exitCode))
+```
 
-- [subprocess](https://docs.python.org/zh-cn/3/library/subprocess.html?highlight=subproces#module-subprocess)
+#### subprocess
 
-    模块提供了更强大的工具来生成新进程并跟踪执行结果，使用该模块比使用本函数更好。Popen 是更底层的接口。
+[subprocess](https://docs.python.org/zh-cn/3/library/subprocess.html?highlight=subproces#module-subprocess)
 
-    shell 参数意义
+> 提供了更强大的工具来生成新进程并跟踪执行结果，使用该模块比使用本函数更好。Popen 是更底层的接口。
 
-    > 当为 True 时，表示是命令（必须是一串字符串）是在 subshell 中执行的，而为 False 时，表示运行一个程序，第一个参数必须是一个可执行程序。且这个是没有经过 Shell 解析的。还有命令必须是一个列表。
+##### shell 参数意义
 
-    for example
+> 当为 True 时，表示是命令（必须是一串字符串）是在 subshell 中执行的，而为 False 时，表示运行一个程序，第一个参数必须是一个可执行程序。且这个是没有经过 Shell 解析的。还有命令必须是一个列表。
 
-    ```python
-    import subprocess
-    # 命令在 subshell 中执行, $HOME 会被 `expand`
-    subprocess.run('echo $HOME', shell = True)
-    # echo 有一个可执行程序, 因为命令没有经过 Shell 解析，所以 `$HOME` 不会被 expand
-    subprocess.run(['echo', '$HOME'])
-    # 因为 type 是 shell builtin 所以第一参数不是可执行程序，所以出错。
-    # subprocess.run(['type', 'ls'])
-    ```
+for example
 
-    设置 linux 或 windows 的 shell 程序
+```python
+import subprocess
 
-        windows
-            os.environ["COMSPEC"] = 'cmd'
-            os.environ["COMSPEC"] = 'powershell'
-        linux
-            默认为 sh.
-            # subprocess.run 只能是 sh，除非在 arg 中指定用 bash。
-            subprocess.Popen(cmd, shell=True, executable='/bin/bash')
+# 命令在 subshell 中执行, $HOME 会被 `expand`
+subprocess.run('echo $HOME', shell = True)
+# echo 有一个可执行程序, 因为命令没有经过 Shell 解析，所以 `$HOME` 不会被 expand
+subprocess.run(['echo', '$HOME'])
 
-    作为 stdin, stdout, stderr 实参的 subprocess.DEVNULL，subprocess.PIPE，subprocess.STDOUT
+# 因为 type 是 shell builtin 所以第一参数不是可执行程序，所以出错。
+# subprocess.run(['type', 'ls'])
+```
 
-        subprocess.DEVNULL
+设置 linux 或 windows 的 shell 程序
 
-            int 类型，值为 -3。表示使用特殊文件 os.devnull。
+-   windows
 
-        subprocess.PIPE
+        os.environ["COMSPEC"] = 'cmd'
+        os.environ["COMSPEC"] = 'powershell'
 
-            int 类型，值为 -1。表示打开标准流的管道。用于获取程序的输出或向程序输入。
+-   linux
 
-        subprocess.STDOUT
+        默认为 sh.
+        # subprocess.run 只能是 sh，除非在 arg 中指定用 bash。
+        subprocess.Popen(cmd, shell=True, executable='/bin/bash')
 
-            int 类型，值为 -2。表示标准错误与标准输出使用同一句柄。不能作为 stdin, stdout 的实参。这是要注意的是，返回值 stderr 类型为 None，而不是 `b''`。
+##### subprocess.DEVNULL，subprocess.PIPE，subprocess.STDOUT
 
-    for example
+作为 stdin, stdout, stderr 实参的 subprocess.DEVNULL，subprocess.PIPE，subprocess.STDOUT
 
-    ```python
-    import subprocess
+-   subprocess.DEVNULL
 
-    # ### PIPE
-    # 打开标准输出、错误输出流管道。
-    result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.PIPE, stdout = subprocess.PIPE, shell = True)
-    # `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`
-    print(result)
+    int 类型，值为 -3。可被 Popen 的 stdin, stdout 或者 stderr 参数使用的特殊值, 表示使用特殊文件 os.devnull.
 
-    # #### stdin 与 PIPE
-    from subprocess import Popen, PIPE, STDOUT
-    p = Popen(['grep', 'f'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-    grep_stdout = p.communicate(input=b'one\ntwo\nthree\nfour\nfive\nsix\n')[0]
-    print(grep_stdout.decode())
-    # -> four
-    # -> five
-    # ->
+-   subprocess.PIPE
 
-    # ### STDOUT
-    result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.STDOUT, stdout = subprocess.PIPE, shell = True)
-    # `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`。返回值 stderr 类型为 None
-    print(result)
-    ```
+    int 类型，值为 -1。可被 Popen 的 stdin, stdout 或者 stderr 参数使用的特殊值, 表示打开标准流的管道. 常用于 Popen.communicate().
 
-    返回值
+-   subprocess.STDOUT
 
-        类型是 `<class 'subprocess.CompletedProcess'>`
+    int 类型，值为 -2。可被 Popen 的 stdin ，stdout 或者 stderr 参数使用的特殊值，表示标准错误与标准输出使用同一句柄。
 
-        stdout
+for example
 
-            从子进程捕获到的标准输出.
+```python
+import subprocess
 
-        stderr
+# ### PIPE
+# 打开标准输出、错误输出流管道。标准输出、错误输出输出到 result。
+result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.PIPE, stdout = subprocess.PIPE, shell = True)
+# `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`
+print(result)
 
-            捕获到的子进程的标准错误.
+# #### stdin 与 PIPE
+from subprocess import Popen, PIPE, STDOUT
+p = Popen(['grep', 'f'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+grep_stdout = p.communicate(input=b'one\ntwo\nthree\nfour\nfive\nsix\n')[0]
+print(grep_stdout.decode())
+# -> four
+# -> five
+# ->
 
-    for example
+# ### STDOUT
+result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.STDOUT, stdout = subprocess.PIPE, shell = True)
+# `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`。返回值 stderr 类型为 None
+print(result)
+```
 
-    ```python
-    import subprocess
-    result = subprocess.run('echo -e \'aa\nbb\'', stdout=subprocess.PIPE, shell = True)
-    # 类型是 `<class 'subprocess.CompletedProcess'>`
-    print(result)
-    # 类型是 `<class 'bytes'>`
-    print(type(result.stdout))
+##### 返回值
 
-    print(result.stdout.decode('utf-8'))
-    # `<class 'str'>`
-    print(type(result.stdout.decode('utf-8')))
+类型是 `<class 'subprocess.CompletedProcess'>`, 成员：
 
-    print(result.stdout.split(b'\n'))
-    ```
+-   stdout
+
+    从子进程捕获到的标准输出.
+
+-   stderr
+
+    捕获到的子进程的标准错误.
+
+for example
+
+```python
+import subprocess
+result = subprocess.run('echo -e \'aa\nbb\'', stdout=subprocess.PIPE, shell = True)
+# 类型是 `<class 'subprocess.CompletedProcess'>`
+print(result)
+# 类型是 `<class 'bytes'>`
+print(type(result.stdout))
+
+print(result.stdout.decode('utf-8'))
+# `<class 'str'>`
+print(type(result.stdout.decode('utf-8')))
+
+print(result.stdout.split(b'\n'))
+```
+
+### os
+
+```python
+import os
+
+# ### 进程参数
+# #### uid, gid
+os.getegid()
+os.geteuid()
+os.getgid()
+os.getpid()
+
+# #### environ
+# 注解 直接调用 putenv() 并不会影响 os.environ，所以推荐直接修改 os.environ。
+os.environ
+# 该变量名修改会影响由 os.system()， popen() ，fork() 和 execv() 发起的子进程。
+# os.environ 中的参数赋值会自动转换为对 putenv() 的调用。不过 putenv() 的调用不会更新 os.environ，因此最好使用 os.environ 对变量赋值。
+os.getenv(key)
+os.putenv(key, value)
+os.unsetenv(key)
+
+# ### 文件和目录
+os.getcwd()
+os.chdir(path)
+os.chmod(path, mode, *, dir_fd=None, follow_symlinks=True)
+os.chown(path, uid, gid, *, dir_fd=None, follow_symlinks=True)
+
+os.listdir(path='.')
+os.stat(path, *, dir_fd=None, follow_symlinks=True)
+os.lstat(path, *, dir_fd=None)
+
+# 没有进入子目录
+os.scandir(path='.')
+    os.DirEntry.name
+    os.DirEntry.path
+    os.DirEntry.is_dir(*, follow_symlinks=True)
+    os.DirEntry.is_file(*, follow_symlinks=True)
+    os.DirEntry.is_symlink()
+    os.DirEntry.stat(*, follow_symlinks=True)
+# 它都会生成一个三元组 (dirpath, dirnames, filenames)，分别是目录的路径，该目录下的子目录名，该目录下的文件名。会递归地访问目录。
+os.walk(top, topdown=True, onerror=None, followlinks=False)
+
+# 创建文件
+os.mknod(path, mode=0o600, device=0, *, dir_fd=None)
+os.mkdir(path, mode=0o777, *, dir_fd=None)
+# `mdkir -p`
+os.makedirs(name, mode=0o777, exist_ok=False)
+# 用于删除文件，不能删除目录
+os.remove(path, *, dir_fd=None)
+# 相当于 `os.remove`
+os.unlink(path, *, dir_fd=None)
+# 相当于 shell 的 rmdir`
+os.rmdir(path, *, dir_fd=None)
+# 相当于 shell 的 `rmdir -p`
+os.removedirs(name)
+os.rename(src, dst, *, src_dir_fd=None, dst_dir_fd=None)
+# 工作方式类似 rename()，除了会首先创建新路径所需的中间目录。重命名后，将调用 removedirs() 删除旧路径中不需要的目录。比如：os.renames(old, newdir/new)。
+os.renames(old, new)
+os.replace(src, dst, *, src_dir_fd=None, dst_dir_fd=None)
+
+# 创建硬链接
+os.link(src, dst, *, src_dir_fd=None, dst_dir_fd=None, follow_symlinks=True)
+# 创建软链接
+os.symlink(src, dst, target_is_directory=False, *, dir_fd=None)
+
+# `os.F_OK os.R_OK os.W_OK os.X_OK` 作为 access() 的 mode 参数的可选值，分别测试 path 的存在性、可读性、可写性和可执行性。
+os.access(path, mode, *, dir_fd=None, effective_ids=False, follow_symlinks=True)
+
+# ### 进程管理
+os.execl(path, arg0, arg1, ...)
+os.execle(path, arg0, arg1, ..., env)
+os.execlp(file, arg0, arg1, ...)
+os.execlpe(file, arg0, arg1, ..., env)
+
+os.execv(path, args)
+os.execve(path, args, env)
+os.execvp(file, args)
+os.execvpe(file, args, env)
+
+os.kill(pid, sig)
+os.system(command)
+# 可用于计算程序运行时间
+os.times()
+# 相当于 `xdgopen`, 只适用于 windows 平台
+os.startfile(path[, operation])
+```
+
+os.chown
+
+for example
+
+```python
+import pwd
+import grp
+import os
+
+uid = pwd.getpwnam("nobody").pw_uid
+gid = grp.getgrnam("nogroup").gr_gid
+path = '/tmp/f.txt'
+os.chown(path, uid, gid)
+```
+
+os.scandir()
+
+for example
+
+```python
+for entry in os.scandir('.') :
+    if entry.is_dir() or entry.is_file():
+        print(entry.name)
+
+```
+
+os.walk()
+
+for example
+
+```python
+for dirpath, dirnames, filenames in os.walk('AA'):
+    print(dirpath, dirnames, filenames)
+
+# 只显示文件
+for dirpath, dirnames, filenames in os.walk('destDir'):
+    for f in filenames:
+        fullFilename = os.path.join(dirpath, f)
+        print(fullFilename)
+
+# 只显示目录
+for dirpath, dirnames, filenames in os.walk('destDir'):
+    for d in dirnames:
+        fullDirname = os.path.join(dirpath, d)
+        print(fullDirname)
+```
+
+os.times()
+
+```python
+startTime = os.times()
+sum = 0
+for i in range(0, 100000000):
+    sum += i
+endTime = os.times()
+print(startTime)
+print(endTime)
+print(f"程序运行时间: {endTime.user - startTime.user} s")
+```
 
 ### os.path
 
 [os.path](https://docs.python.org/zh-cn/3/library/os.path.html)
+
+```python
+import os
+
+os.path.abspath(path)
+os.path.isabs(path)
+os.path.expanduser(path)
+
+os.path.exists(path)
+os.path.lexists(path)
+os.path.isfile(path)
+os.path.isdir(path)
+os.path.islink(path)
+
+os.path.basename(path)
+os.path.dirname(path)
+os.path.join(path, *paths)
+os.path.split(path)
+os.path.splitdrive(path)
+os.path.splitext(path)
+
+os.path.normpath(path)
+os.path.samefile(path1, path2)
+
+os.path.getatime(path)
+os.path.getmtime(path)
+os.path.getctime(path)
+```
 
 常用路径操作
 
 for example
 
 ```python
-import os
-
-print( os.path.basename('/root/runoob.txt') )   # 返回文件名
-print( os.path.dirname('/root/runoob.txt') )    # 返回目录路径
-print( os.path.split('/root/runoob.txt') )      # 分割文件名与路径
-print( os.path.join('root','test','runoob.txt') )  # 将目录和文件名合成一个路径
+print( os.path.basename('/root/runoob.txt') )       # 返回文件名
+print( os.path.dirname('/root/runoob.txt') )        # 返回目录路径
+print( os.path.split('/root/runoob.txt') )          # 分割文件名与路径
+print( os.path.join('root','test','runoob.txt') )   # 将目录和文件名合成一个路径
 ```
 
-## Others
+### pathlib.Path
+
+[对应的 os 模块的工具](https://docs.python.org/zh-cn/3/library/pathlib.html?highlight=pathlib#correspondence-to-tools-in-the-os-module)
+
+```python
+from pathlib import Path
+
+Path.glob(pattern)
+# 这就像调用 Path.glob`时在给定的相对 *pattern* 前面添加了"``**/`()"
+Path.rglob(pattern)
+# 不会进入子目录。如果是 linux 平台，返回 <class 'pathlib.PosixPath'>
+Path.iterdir()
+Path.touch(mode=0o666, exist_ok=True)
+```
+
+for example
+
+```python
+from pathlib import Path
+
+Path('path/to/file.txt').touch()
+```
+
+### glob
+
+相当于 linux 的通配符。支持 `*, ?, [`。
+
+for example
+
+```python
+import glob
+
+glob.glob(pathname, *, recursive=False)
+```
+
+### fnmatch
+
+用 linux 的通匹符模式匹配文件名。
+
+```python
+import fnmatch
+
+fnmatch.fnmatch(filename, pattern)
+fnmatch.fnmatchcase(filename, pattern)
+# 它等价于 [n for n in names if fnmatch(n, pattern)]，但实现得更有效率。
+fnmatch.filter(names, pattern)
+# 将通匹符模式转换为正则表达式模式
+fnmatch.translate(pattern)
+```
+
+fnmatch.filter()
+
+for example
+
+```python
+for root, dirs, files in os.walk(directory):
+    for filename in fnmatch.filter(files, '*.png'):
+        pass
+```
+
+fnmatch.translate()
+
+for example
+
+```python
+import fnmatch, re
+regex = fnmatch.translate('*.txt')
+reobj = re.compile(regex)
+reobj.match('foobar.txt')
+```
+
+### shutil
+
+shutil 模块提供了一系列对文件和文件集合的高阶操作。对于单个文件的操作，请参阅 os 模块。
+
+```python
+import shutil
+
+# ### 目录和文件操作
+# 仅复制文件，不能复制目录
+shutil.copy(src, dst, *, follow_symlinks=True)
+# 类似于 copy()，区别在于 copy2() 还会尝试保留文件的元数据。比如：创建时间，修改时间等。
+shutil.copy2(src, dst, *, follow_symlinks=True)
+shutil.copytree(src, dst, symlinks=False, ignore=None, copy_function=copy2, ignore_dangling_symlinks=False, dirs_exist_ok=False)
+shutil.rmtree(path, ignore_errors=False, onerror=None)
+
+# 移动文件或目录。与 `os.rename()` 是一样的功能。
+shutil.move(src, dst, copy_function=copy2)
+# 与 `os.chown()` 是一样的功能。
+shutil.chown(path, user=None, group=None)
+# 相当于 shell which
+shutil.which(cmd, mode=os.F_OK | os.X_OK, path=None)
+
+# ### 归档操作（tarfile 模块更加强大）
+# format: zip, tar, gztar, bztar, xztar，用于 `shutil.get_archive_formats()` 显示支持的 format。
+# 只能添加一个目录。
+shutil.make_archive(base_name, format[, root_dir[, base_dir[, verbose[, dry_run[, owner[, group[, logger]]]]]]])
+shutil.unpack_archive(filename[, extract_dir[, format]])
+```
+
+`shutil.make_archive, shutil.unpack_archive`
+
+for example
+
+```python
+os.makedirs('aa/bb')
+Path('aa/bb/bar').touch()
+
+# `zip -r theArchive.zip ./aa`
+shutil.make_archive('theArchive', 'zip', '/home/johan/Desktop/Temp', 'aa')
+# `zip -r theArchive.zip ./aa`
+shutil.make_archive("theArchive", "zip", ".", "aa")
+# `zip -r theArchive.zip /home/johan/Desktop/Temp/aa`
+shutil.make_archive("theArchive", "zip", "/", "home/johan/Desktop/Temp/aa")
+
+# `unzip <zipfile>`
+shutil.unpack_archive("theArchive.zip")
+# `unzip <zipfile> -d <destDir>`
+shutil.unpack_archive("theArchive.zip", "destDir")
+```
+
+### tarfile
+
+tarfile 支持的 format 和 shell 的 tar 命令相同。
+
+```python
+import tarfile
+
+tarfile.open(name=None, mode='r', fileobj=None, bufsize=10240, **kwargs)
+TarFile.add(name, arcname=None, recursive=True, *, filter=None)
+TarFile.extractall(path=".", members=None, *, numeric_owner=False)
+```
+
+for example
+
+```python
+import tarfile
+
+# ### 创建压缩文件
+with tarfile.open("sample.tar.gz", "w:gz") as tar:
+    for name in ["foo", "bar", "quux"]:
+        tar.add(name)
+
+# ### 提取压缩文件
+tar = tarfile.open("sample.tar.gz")
+tar.extractall()
+# tar.extractall("destDir")
+tar.close()
+
+# ### 查看压缩文件
+import tarfile
+tar = tarfile.open("sample.tar.gz", "r:gz")
+for tarinfo in tar:
+    print(tarinfo.name, "is", tarinfo.size, "bytes in size and is ", end="")
+    if tarinfo.isreg():
+        print("a regular file.")
+    elif tarinfo.isdir():
+        print("a directory.")
+    else:
+        print("something else.")
+tar.close()
+```
+
+### zipfile
+
+```python
+ZipFile.printdir()
+ZipFile.extractall(path=None, members=None, pwd=None)
+ZipFile.write(filename, arcname=None, compress_type=None, compresslevel=None)
+```
+
+for example
+
+```python
+from zipfile import ZipFile
+
+with ZipFile('sample.zip','w') as zip:
+    for name in ["foo", "bar", "qux"]:
+        zip.write(name)
+
+with ZipFile('sample.zip', 'r') as zip:
+    zip.extractall()
+    # zip.extractall('destDir')
+
+with ZipFile('sample.zip','r') as zip:
+    zip.printdir()
+```
+
+### psutil
+
+`pip install psutil`
+
+for example
+
+```python
+# 列出进程
+for p in psutil.process_iter():
+    print(p)
+
+# 列出网络
+psutil.net_connections()
+
+# 列出特定进程的网络
+p = psutil.Process(1694)
+p.name()
+p.connections()
+```
+
+### python 获得管理员权限 ??
+
+#### linux
+
+[ref](https://stackoverflow.com/a/20153881/16235950)
+
+```python
+#!/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+
+import os, subprocess
+
+def prompt_sudo():
+    ret = 0
+    if os.geteuid() != 0:
+        msg = "[sudo] password for %u:"
+        ret = subprocess.check_call("sudo -v -p '{0}'".format(msg), shell=True)
+    return ret
+
+if __name__ == "__main__":
+    if prompt_sudo():
+        sys.stderr.write("Can't gain admin privilege!\n")
+
+    print(os.geteuid())
+```
+
+#### windows
+
+[ref](https://blog.csdn.net/qq_17550379/article/details/79006655)
+
+```python
+from __future__ import print_function
+import ctypes, sys
+
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
+
+# ### main
+if is_admin():
+    # 将要运行的代码加到这里
+else:
+    if sys.version_info[0] == 3:
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
+    else:#in python2.x
+        ctypes.windll.shell32.ShellExecuteW(None, u"runas", unicode(sys.executable), unicode(__file__), None, 1)
+```
+
+### 总结 python 替代 shell
+
+```python
+import os, glob, fnmatch, shutil, subprocess
+from pathlib import Path
+import psutil
+
+# ## 文件管理
+os.getcwd()
+os.chdir(path)
+
+# ### 创建/删除文件（不包含目录）
+# `os.mknod(path, 0o644)`
+os.mknod(path, mode=0o600, device=0, *, dir_fd=None)
+Path(path).touch()
+os.remove(path, *, dir_fd=None)
+os.unlink(path, *, dir_fd=None)
+
+# ### 创建/删除空目录（rmdir）
+os.mkdir(path, mode=0o777, *, dir_fd=None)
+os.makedirs(name, mode=0o777, exist_ok=False)
+os.rmdir(path, *, dir_fd=None)
+os.removedirs(name)
+
+# ### 复制/删除目录
+shutil.copy(src, dst, *, follow_symlinks=True)
+shutil.copy2(src, dst, *, follow_symlinks=True)
+shutil.copytree(src, dst, symlinks=False, ignore=None, copy_function=copy2, ignore_dangling_symlinks=False, dirs_exist_ok=False)
+shutil.rmtree(path, ignore_errors=False, onerror=None)
+
+# ### 重命名文件
+os.rename(src, dst, *, src_dir_fd=None, dst_dir_fd=None)
+os.renames(old, new)
+os.replace(src, dst, *, src_dir_fd=None, dst_dir_fd=None)
+
+# ### 进入目录
+os.scandir(path='.')
+os.walk(top, topdown=True, onerror=None, followlinks=False)
+Path.iterdir()
+
+# ### 判断文件的属性、状态等
+os.path.exists(path)
+os.path.lexists(path)
+os.path.isfile(path)
+os.path.isdir(path)
+os.path.islink(path)
+
+# `os.F_OK os.R_OK os.W_OK os.X_OK` 作为 access() 的 mode 参数的可选值，分别测试 path 的存在性、可读性、可写性和可执行性。
+os.access(path, mode, *, dir_fd=None, effective_ids=False, follow_symlinks=True)
+os.scandir(path='.')
+    os.DirEntry.is_dir(*, follow_symlinks=True)
+    os.DirEntry.is_file(*, follow_symlinks=True)
+    os.DirEntry.is_symlink()
+    os.DirEntry.stat(*, follow_symlinks=True)
+
+os.stat(path, *, dir_fd=None, follow_symlinks=True)
+os.lstat(path, *, dir_fd=None)
+
+# ## 用户
+# ### 用户名和 uid 之间相互查询
+pwd.getpwuid(uid).pw_name
+pwd.getpwnam(name).pw_uid
+grp.getgrgid(gid).gr_name
+grp.getgrnam(name).gr_gid
+
+# ### 列出用户组成员
+os.getgroups()
+os.getgrouplist('johan', os.getgid())
+
+# ### 通匹符模式
+glob.glob(pathname, *, recursive=False)
+fnmatch.fnmatch(filename, pattern)
+fnmatch.fnmatchcase(filename, pattern)
+
+# ## 压缩文件
+shutil.make_archive(base_name, format[, root_dir[, base_dir[, verbose[, dry_run[, owner[, group[, logger]]]]]]])
+shutil.unpack_archive(filename[, extract_dir[, format]])
+tarfile.open(name=None, mode='r', fileobj=None, bufsize=10240, **kwargs)
+TarFile.add(name, arcname=None, recursive=True, *, filter=None)
+TarFile.extractall(path=".", members=None, *, numeric_owner=False)
+ZipFile.printdir()
+ZipFile.extractall(path=None, members=None, pwd=None)
+ZipFile.write(filename, arcname=None, compress_type=None, compresslevel=None)
+
+# ## environ
+os.environ
+os.getenv(key)
+os.putenv(key, value)
+os.unsetenv(key)
+
+# ## 进程管理和网络
+os.kill(pid, sig)
+
+# 列出进程
+for p in psutil.process_iter():
+    print(p)
+
+# 列出网络
+psutil.net_connections()
+
+# 列出特定进程的网络
+p = psutil.Process(1694)
+p.name()
+p.connections()
+```
+
+Python 编码风格
+---
+
+### References
+
+-   [Python风格规范— Google 开源项目风格指南](https://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/python_style_rules/)
+-   [Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
+
+### 命名约定
+
+[Python之父Guido推荐的规范](https://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/python_style_rules/#id16)
+
+> Classes, Exceptions 应该用驼峰命名法，且首字母大写。  
+> `Global/Class Constants` 全是大写，用下划线分隔单词。`Global/Class Variables` 全是小写，用下划线分隔单词。  
+> 其他全是小写，用下划线分隔单词。  
+> 如果是模块内部的，则用一个下划线作为前缀。
+
+Others
+---
 
 ### PEPs (Python Enhancement Proposals)
 
 [PEPs (Python Enhancement Proposals)](https://www.python.org/dev/peps/)
 
 [pep 翻译](https://github.com/chinesehuazhou/peps-cn)
-
-[Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
 
 ### python 的实现
 
@@ -2960,8 +3764,12 @@ print(html)
 print(response.info())
 ```
 
-### Tkinter(GUI)
+### Python GUI
 
 [Tkinter(GUI)](https://docs.python.org/zh-cn/3/library/tk.html)
 
+*linux 有名的 GUI 库是 `Qt` 和 `GTK+`，python 对它们的融合分别是 PyQt 和 PyGtk。*
+
 EasyGUI 太简单了，功能不够强大。Tkinter 比较优秀，移植性比较高，被很多脚本语言（perl, ruby）使用，这也是 python 的默认 GUI 包。
+
+PyQt, PyGtk 比 Tkinter 更加强大，但比 Tkinter 复杂。

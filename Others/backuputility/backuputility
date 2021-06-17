@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+# _*_ coding: UTF-8 _*_
+
+import os, sys, re, time, getopt, configparser, tarfile
+
+def usage():
+    print("backuputility [option] <record>...")
+    print("opts, args = getopt.getopt(sys.argv[1:], 'hcDa:d:l', ['help', 'check', 'list-duplicate', 'add-file', 'delete-file', 'list-records'])")
+
+def read_file(path):
+    with open(path) as f:
+        content = f.readlines()
+    content = [x.strip() for x in content]
+
+    return content
+
+def parse_records(record_names, record_dir):
+    records = {}
+    for rn in record_names:
+        record_path = record_dir + "/" + rn
+        with open(record_path, "r") as f:
+            content = f.readlines()
+
+        parsed_content = []
+        for i in range(0, len(content)):
+            # 删除空白行
+            if re.match(r"^\s+$", content[i]):
+                continue
+            # 删除注释
+            if re.match(r"^\s*#", content[i]):
+                continue
+
+            parsed_content.append(content[i].rstrip())
+
+        records[rn] = parsed_content
+
+    return records
+
+def get_files_in_records(records):
+    files_in_records = []
+    for v in records.values():
+        files_in_records += v
+
+    return files_in_records
+
+def check_files(files):
+    nonexistent_files = []
+    for f in files:
+        if not os.path.exists(f):
+            nonexistent_files.append(f)
+
+    return nonexistent_files
+
+def get_duplicate_files(files):
+    duplicate_files = []
+    unique_files = set()
+    for f in files:
+        if f not in unique_files:
+            unique_files.add(f)
+        else:
+            duplicate_files.append(f)
+
+    return duplicate_files
+
+if __name__ == "__main__":
+    # ### parse args
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hcDa:d:lg:", ["help", "check", "list-duplicate", "add-file", "delete-file", "list-records"])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(os.EX_USAGE)
+
+    is_check = False
+    is_list_duplicate = False
+    is_add_file = False
+    addingFile = ""
+    is_delete_file = False
+    deleting_file = ""
+    is_list_records = False
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt in ("-c", "--check"):
+            is_check = True
+        elif opt in ("-D", "--list-duplicate"):
+            is_list_duplicate = True
+        elif opt in ("-a", "--add-file"):
+            is_add_file = True
+            addingFile = arg
+        elif opt in ("-d", "--delete-file"):
+            is_delete_file = True
+            deleting_file = arg
+        elif opt in ("-l", "--list-records"):
+            is_list_records = True
+        else:
+            usage()
+            sys.exit(os.EX_USAGE)
+
+    record_names = args
+
+    # ### read config file
+    user = os.getlogin()
+    config_path = "/home/" + user + "/.config/backuputility/backuputility.conf"
+
+    if not os.path.exists(config_path):
+        sys.stderr.write(config_path + " is not exists!\n")
+        sys.exit(os.EX_CONFIG)
+
+    config = configparser.ConfigParser()
+    config.read(config_path, encoding="utf-8")
+    section = "base"
+    dest_dir = config.get(section, "dest_dir")
+    record_dir = config.get(section, "record_dir")
+
+    if not os.path.exists(record_dir):
+        sys.stderr.write(record_dir + " is not exists!\n")
+        sys.exit(os.EX_CONFIG)
+
+    if dest_dir.endswith("/"):
+        dest_dir = dest_dir[:-1]
+
+    if record_dir.endswith("/"):
+        record_dir = record_dir[:-1]
+
+    # ### action commands checkfile and list-duplicate
+    records = parse_records(record_names, record_dir)
+
+    if is_check:
+        files_in_records = get_files_in_records(records)
+        print(*check_files(files_in_records), sep = "\n")
+        sys.exit()
+
+    if is_list_duplicate:
+        files_in_records = get_files_in_records(records)
+        print(*get_duplicate_files(files_in_records), sep = "\n")
+        sys.exit()
+
+    if is_add_file:
+        for rn in record_names:
+            record_path = record_dir + "/" + rn
+            content = read_file(record_path)
+            if addingFile not in content:
+                content.append(addingFile)
+
+            with open(record_path, "w") as f:
+                f.write("\n".join(content))
+
+        sys.exit()
+
+    if is_delete_file:
+        for rn in record_names:
+            record_path = record_dir + "/" + rn
+            content = read_file(record_path)
+            content.remove(deleting_file)
+
+            with open(record_path, "w") as f:
+                f.write("\n".join(content))
+
+        sys.exit()
+
+    if is_list_records:
+        content = []
+        for rn in record_names:
+            record_path = record_dir + "/" + rn
+            content.append("# record: {0}\n# ===\n".format(rn))
+            content += read_file(record_path)
+
+        print(*content, sep = "\n")
+
+        sys.exit()
+
+    # ## action backup
+    # ### 如果 dest_dir 不存在则创建
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir, mode=0o755)
+
+    # ### backup files in records
+    for record_name, files in records.items():
+        tarfileOfRecord = dest_dir + "/" + record_name + "_" + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())+ ".tar.gz"
+        with tarfile.open(tarfileOfRecord, "w:gz") as tar:
+            for f in files:
+                if os.path.exists(f):
+                    tar.add(f)
+                else:
+                    print(f + " isn't exists")
