@@ -54,6 +54,7 @@ Content
     * [内嵌函数与闭包](#内嵌函数与闭包)
     * [lambda](#lambda)
     * [异常](#异常)
+    * [命名空间和作用域](#命名空间和作用域)
 * [class](#class)
     * [super()](#super)
     * [类的属性与方法](#类的属性与方法)
@@ -1089,6 +1090,66 @@ except NameError as err:
     except ZeroDivisionError as err:
         print(err)
 ```
+
+### 命名空间和作用域
+
+[ref](https://www.runoob.com/python3/python3-namespace-scope.html)
+
+***虽然 python 的命名空间与 C 语言相差不大，但是作用域与 C 语言是有点区别。***
+
+一般有三种命名空间：
+
+-   内置名称（built-in names）， Python 语言内置的名称，比如函数名 abs、char 和异常名称 BaseException、Exception 等等。
+-   全局名称（global names），模块中定义的名称，记录了模块的变量，包括函数、类、其它导入的模块、模块级的变量和常量。
+-   局部名称（local names），函数中定义的名称，记录了函数的变量，包括函数的参数和局部定义的变量。（类中定义的也是）
+
+[for example](https://www.zhihu.com/question/22466764/answer/21464993)
+
+```python
+a1 = 1 # Global
+
+class Foo:
+    a2 = 1 # Local
+
+    def func():
+        a3 = 1 # Local
+        def _func():
+            a5 = 1 # Local
+```
+
+有四种作用域：
+
+-   L（Local）：最内层，包含局部变量，比如一个函数/方法内部或闭包内部。
+-   E（Enclosing locals）：包围 Local 作用域的非全局非内建作用域。比如：闭包之外的函数作用域，类的作用域。
+-   G（Global）：当前脚本的最外层，比如当前模块的全局变量。
+-   B（Built-in）： 包含了内建的变量/关键字等，最后被搜索。
+
+[当 Python 遇到一个变量的话他会按照这样的顺序进行搜索：](https://www.zhihu.com/question/22466764)
+
+> L -> E -> G -> B
+
+***注意：PYTHON的作用域由def、class、lambda等语句产生，if、try、for等语句并不会产生新的作用域。***
+
+for example
+
+```python
+if True:
+    var1 = 10
+print(var1)
+
+for i in range(0, 2)
+    pass
+print(i)
+
+def func():
+    local_var = 100
+# 没有定义变量
+# print(local_var)
+```
+
+由于 if, for, try, with 等语句没有产生新的作用域，那么如何避免覆盖其他值？
+
+> 比如用于循环的变量尽量使用单字符。
 
 class
 ---

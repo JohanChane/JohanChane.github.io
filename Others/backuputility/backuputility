@@ -16,8 +16,8 @@ def read_file(path):
 
 def parse_records(record_names, record_dir):
     records = {}
-    for rn in record_names:
-        record_path = record_dir + "/" + rn
+    for n in record_names:
+        record_path = record_dir + "/" + n
         with open(record_path, "r") as f:
             content = f.readlines()
 
@@ -34,7 +34,7 @@ def parse_records(record_names, record_dir):
 
             parsed_content.append(content[i].rstrip())
 
-        records[rn] = parsed_content
+        records[n] = parsed_content
 
     return records
 
@@ -140,8 +140,8 @@ if __name__ == "__main__":
         sys.exit()
 
     if is_add_file:
-        for rn in record_names:
-            record_path = record_dir + "/" + rn
+        for n in record_names:
+            record_path = record_dir + "/" + n
             content = read_file(record_path)
             if addingFile not in content:
                 content.append(addingFile)
@@ -152,8 +152,8 @@ if __name__ == "__main__":
         sys.exit()
 
     if is_delete_file:
-        for rn in record_names:
-            record_path = record_dir + "/" + rn
+        for n in record_names:
+            record_path = record_dir + "/" + n
             content = read_file(record_path)
             content.remove(deleting_file)
 
@@ -164,9 +164,9 @@ if __name__ == "__main__":
 
     if is_list_records:
         content = []
-        for rn in record_names:
-            record_path = record_dir + "/" + rn
-            content.append("# record: {0}\n# ===\n".format(rn))
+        for n in record_names:
+            record_path = record_dir + "/" + n
+            content.append("# record: {0}\n# ===\n".format(n))
             content += read_file(record_path)
 
         print(*content, sep = "\n")
