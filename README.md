@@ -24,9 +24,6 @@
 -   Markdown
 -   Dos
 -   PowerShell
--   backuputility
-
-    用 python 实现的备份工具。支持 linux 和 windows(msys2)。
 
 ## Others
 
@@ -36,6 +33,10 @@
 ### RightClickMenu
 
 用 python 管理 app 的右键菜单
+
+### backuputility
+
+用 python 实现的备份工具。支持 linux 和 windows(msys2)。
 
 ---
 
