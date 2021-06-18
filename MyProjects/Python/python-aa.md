@@ -120,6 +120,7 @@ Content
     * [tarfile](#tarfile)
     * [zipfile](#zipfile)
     * [psutil](#psutil)
+    * [检测系统平台](#检测系统平台)
     * [python 获得管理员权限 ??](#python-获得管理员权限-)
         * [linux](#linux)
         * [windows](#windows)
@@ -3548,6 +3549,21 @@ psutil.net_connections()
 p = psutil.Process(1694)
 p.name()
 p.connections()
+```
+
+### 检测系统平台
+
+[ref](https://stackoverflow.com/questions/1854/python-what-os-am-i-running-on)
+
+```python
+import os, platform
+
+# `posix`, `nt`
+os.name
+# `Linux`, `Windows`, `Darwin`
+platform.system()
+# `linux`, `linux2`, `win32`, `win64`, `darwin`
+sys.platform
 ```
 
 ### python 获得管理员权限 ??

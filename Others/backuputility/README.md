@@ -5,6 +5,8 @@ backuputility
 
 支持 linux 和 windows(msys2)。
 
+所有文件的格式都为 `utf-8 nobomb`。
+
 ### 帮助
 
 `backuputility {-h | --help}`

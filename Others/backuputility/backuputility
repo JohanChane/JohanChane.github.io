@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# _*_ coding: UTF-8 _*_
+# -*- coding: utf-8 -*-
 
 import os, sys, re, time, getopt, configparser, tarfile
 
@@ -24,11 +24,13 @@ def parse_records(record_names, record_dir):
         parsed_content = []
         for i in range(0, len(content)):
             # 删除空白行
-            if re.match(r"^\s+$", content[i]):
+            if re.match(r"^\s*$", content[i]):
                 continue
             # 删除注释
-            if re.match(r"^\s*#", content[i]):
+            elif re.match(r"^\s*#", content[i]):
                 continue
+            else:
+                pass
 
             parsed_content.append(content[i].rstrip())
 
