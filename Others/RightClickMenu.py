@@ -8,7 +8,7 @@ def is_admin():
     except:
         return False
 
-program = r'D:\PortableProgramFiles\Neovim\bin\nvim-qt.exe'
+program = r"D:\PortableProgramFiles\Neovim\bin\nvim-qt.exe"
 menuName = "Edit with Neovim"
 menuIcon = program
 
@@ -19,19 +19,19 @@ def addRightClickMenu(subKey, menuCommand):
         winreg.SetValueEx(key, "", 0, winreg.REG_SZ, menuName)
         winreg.SetValueEx(key, "Icon", 0, winreg.REG_SZ, menuIcon)
 
-    with winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, subKey + '\\command') as key:
+    with winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, subKey + "\\command") as key:
         winreg.SetValueEx(key, "", 0, winreg.REG_SZ, menuCommand)
 
 def addRightClickMenuOnFile(menuCommand):
-    subKey = '*\\shell\\' + subKeyName
+    subKey = "*\\shell\\" + subKeyName
     addRightClickMenu(subKey, menuCommand)
 
 def addRightClickMenuOnDirectory(menuCommand):
-    subKey = 'Directory\\shell\\' + subKeyName
+    subKey = "Directory\\shell\\" + subKeyName
     addRightClickMenu(subKey, menuCommand)
 
 def addRightClickMenuOnDirectoryBackground(menuCommand):
-    subKey = 'Directory\\Background\\shell\\' + subKeyName
+    subKey = "Directory\\Background\\shell\\" + subKeyName
     addRightClickMenu(subKey, menuCommand)
 
 def deleteRegistryTree(root, subkey):
