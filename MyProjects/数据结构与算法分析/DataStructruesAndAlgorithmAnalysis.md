@@ -2889,9 +2889,9 @@ typedef struct TreeStruct* Tree;
 typedef const struct TreeStruct* ConstTree;
 
 struct Node {
-	ElementType element;
-	Position firstChild;		// 第一个儿子
-	Position nextSibling;		// 兄弟
+    ElementType element;
+    Position firstChild;        // 第一个儿子
+    Position nextSibling;        // 兄弟
 };
 
 struct TreeStruct {
@@ -2919,18 +2919,18 @@ void treeInsert(const ElementType* elementPtr, Position position, Tree tree) {
 }
 
 void treePrint(Position theTree) {
-	if (!theTree) {
+    if (!theTree) {
         return;
     }
 
-	printf("%c\t", theTree->element);
+    printf("%c\t", theTree->element);
 
     // ### 打印儿子的兄弟
-	Position siblingPos = theTree->firstChild;
-	while (siblingPos) {
-		treePrint(siblingPos);
-		siblingPos = siblingPos->nextSibling;
-	}
+    Position siblingPos = theTree->firstChild;
+    while (siblingPos) {
+        treePrint(siblingPos);
+        siblingPos = siblingPos->nextSibling;
+    }
 }
 ```
 
@@ -2955,9 +2955,9 @@ typedef PtrToNode BinSearchTree;
 typedef PtrToNode Position;
 
 struct TreeNode {
-	ElementType element;
-	PtrToNode leftChild;
-	PtrToNode rightChild;
+    ElementType element;
+    PtrToNode leftChild;
+    PtrToNode rightChild;
 };
 
 BinSearchTree bstInsert(ElementType element, BinSearchTree binSearchTree);
@@ -3159,15 +3159,15 @@ void testBst() {
     genRandomNums(array, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
     /* printArray(array, ARRAY_SIZE); */
 
-	BinSearchTree binSearchTree = NULL;
+    BinSearchTree binSearchTree = NULL;
     int center = ARRAY_SIZE / 2;
     clock_t start, end, duration;
     start = getTime();
-	for (int i = center; i >= 0; i--) {
-		binSearchTree = bstInsert(array[i], binSearchTree);
-	}
+    for (int i = center; i >= 0; i--) {
+        binSearchTree = bstInsert(array[i], binSearchTree);
+    }
     for (int j = center + 1; j < ARRAY_SIZE; j++) {
-		binSearchTree = bstInsert(array[j], binSearchTree);
+        binSearchTree = bstInsert(array[j], binSearchTree);
     }
     /* int checkRet = checkBst(binSearchTree); */
     /* if (checkRet < 0) { */
@@ -3175,8 +3175,8 @@ void testBst() {
     /*     exit(EXIT_FAILURE); */
     /* } */
     /* printBst(binSearchTree); */
-	printf("Result of bstFindMin is %d\n", bstFindMin(binSearchTree)->element);
-	printf("Result of bstFindMax is %d\n", bstFindMax(binSearchTree)->element);
+    printf("Result of bstFindMin is %d\n", bstFindMin(binSearchTree)->element);
+    printf("Result of bstFindMax is %d\n", bstFindMax(binSearchTree)->element);
 
     for (int q = 0; q < ARRAY_SIZE; q++) {
         binSearchTree = bstDelete(array[q], binSearchTree);
@@ -3194,9 +3194,9 @@ void testBst() {
 }
 
 int main() {
-	testBst();
+    testBst();
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -3397,7 +3397,7 @@ static inline Position avlTreeDoubleRotateWithRight(Position k3) {
 }
 
 static inline int max(int a, int b) {
-	return a > b ? a : b;
+    return a > b ? a : b;
 }
 
 Position avlTreeFind(ElementType element, AvlTree avlTree) {
@@ -3544,19 +3544,19 @@ static void testAvlTree() {
     genRandomNums(array, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
     /* printArray(array, ARRAY_SIZE); */
 
-	AvlTree avlTree = NULL;
+    AvlTree avlTree = NULL;
     int center = ARRAY_SIZE / 2;
     clock_t start, end, duration;
     start = getTime();
-	for (int i = center; i >= 0; i--) {
-		avlTree = avlTreeInsert(array[i], avlTree);
-	}
+    for (int i = center; i >= 0; i--) {
+        avlTree = avlTreeInsert(array[i], avlTree);
+    }
     for (int j = center + 1; j < ARRAY_SIZE; j++) {
-		avlTree = avlTreeInsert(array[j], avlTree);
+        avlTree = avlTreeInsert(array[j], avlTree);
     }
     /* printAvlTree(avlTree); */
-	printf("Result of avlTreeFindMin is %d\n", avlTreeFindMin(avlTree)->element);
-	printf("Result of avlTreeFindMax is %d\n", avlTreeFindMax(avlTree)->element);
+    printf("Result of avlTreeFindMin is %d\n", avlTreeFindMin(avlTree)->element);
+    printf("Result of avlTreeFindMax is %d\n", avlTreeFindMax(avlTree)->element);
     /* int checkRet = checkAvlTree(avlTree); */
     /* if (checkRet < 0) { */
     /*     fprintf(stderr, "checkRet: %d\n", checkRet); */
@@ -3579,8 +3579,8 @@ static void testAvlTree() {
 }
 
 int main() {
-	testAvlTree();
-	return 0;
+    testAvlTree();
+    return 0;
 }
 ```
 
@@ -3606,9 +3606,9 @@ typedef PtrToNode SplayTree;
 typedef PtrToNode Position;
 
 struct TreeNode {
-	ElementType element;
-	PtrToNode leftChild;
-	PtrToNode rightChild;
+    ElementType element;
+    PtrToNode leftChild;
+    PtrToNode rightChild;
 };
 
 Position splayTreeSplay(ElementType element, SplayTree splayTree);
@@ -3854,15 +3854,15 @@ void testSplayTree() {
     genRandomNums(array, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
     /* printArray(array, ARRAY_SIZE); */
 
-	SplayTree splayTree = NULL;
+    SplayTree splayTree = NULL;
     int center = ARRAY_SIZE / 2;
     clock_t start, end, duration;
     start = getTime();
-	for (int i = center; i >= 0; i--) {
-		splayTree = splayTreeInsert(array[i], splayTree);
-	}
+    for (int i = center; i >= 0; i--) {
+        splayTree = splayTreeInsert(array[i], splayTree);
+    }
     for (int j = center + 1; j < ARRAY_SIZE; j++) {
-		splayTree = splayTreeInsert(array[j], splayTree);
+        splayTree = splayTreeInsert(array[j], splayTree);
     }
     /* int checkRet = checkSplayTree(splayTree); */
     /* if (checkRet < 0) { */
@@ -3870,8 +3870,8 @@ void testSplayTree() {
     /*     exit(EXIT_FAILURE); */
     /* } */
     /* printSplayTree(splayTree); */
-	printf("Result of bstFindMin is %d\n", splayTreeFindMin(splayTree)->element);
-	printf("Result of bstFindMax is %d\n", splayTreeFindMax(splayTree)->element);
+    printf("Result of bstFindMin is %d\n", splayTreeFindMin(splayTree)->element);
+    printf("Result of bstFindMax is %d\n", splayTreeFindMax(splayTree)->element);
 
     for (int q = 0; q < ARRAY_SIZE; q++) {
         splayTree = splayTreeDelete(array[q], splayTree);
@@ -3891,8 +3891,8 @@ void testSplayTree() {
 }
 
 int main() {
-	testSplayTree();
-	return 0;
+    testSplayTree();
+    return 0;
 }
 ```
 
@@ -4555,11 +4555,11 @@ static void testBTree() {
     int center = ARRAY_SIZE / 2;
     clock_t start, end, duration;
     start = getTime();
-	for (int i = center; i >= 0; i--) {
-		btreeInsert(array[i], btree);
-	}
+    for (int i = center; i >= 0; i--) {
+        btreeInsert(array[i], btree);
+    }
     for (int j = center + 1; j < ARRAY_SIZE; j++) {
-		btreeInsert(array[j], btree);
+        btreeInsert(array[j], btree);
     }
     int checkRet = checkBTree(btree);
     if (checkRet < 0) {
@@ -4887,22 +4887,22 @@ clock_t getTime() {
 }
 
 void testHuffmanTree() {
-	char datas[ARRAY_SIZE];
+    char datas[ARRAY_SIZE];
     for (int i = 0; i < 26; i++) {
         datas[i] = 'A' + i;
         datas[26 + i] = 'a' + i;
     }
-	FreqSize freqs[ARRAY_SIZE];
+    FreqSize freqs[ARRAY_SIZE];
     genRandomNums(freqs, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
 
-	HuffmanTree huffmanTree = huffmanTreeBuild(datas, freqs, ARRAY_SIZE);
+    HuffmanTree huffmanTree = huffmanTreeBuild(datas, freqs, ARRAY_SIZE);
     int prefix[ARRAY_SIZE];
     printHuffmanTreeCodes(huffmanTree, prefix, 0);
 }
 
 int main() {
     testHuffmanTree();
-	return 0;
+    return 0;
 }
 
 ```
@@ -4927,9 +4927,9 @@ typedef struct HeapStruct *BinHeap;
 typedef int Position;
 
 struct HeapStruct {
-	int capacity;
-	int size;
-	ElementType *elements;
+    int capacity;
+    int size;
+    ElementType *elements;
 };
 
 void binHeapInsert(ElementType element, BinHeap binHeap);
@@ -5105,15 +5105,15 @@ void testBinHeap() {
     genRandomNums(array, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
     /* printArray(array, ARRAY_SIZE); */
 
-	BinHeap binHeap = binHeapInitialize(ARRAY_SIZE + 1);
+    BinHeap binHeap = binHeapInitialize(ARRAY_SIZE + 1);
     int center = ARRAY_SIZE / 2;
     clock_t start, end, duration;
     start = getTime();
-	for (int i = center; i >= 0; i--) {
-		binHeapInsert(array[i], binHeap);
-	}
+    for (int i = center; i >= 0; i--) {
+        binHeapInsert(array[i], binHeap);
+    }
     for (int j = center + 1; j < ARRAY_SIZE; j++) {
-		binHeapInsert(array[j], binHeap);
+        binHeapInsert(array[j], binHeap);
     }
     /* int checkRet = checkBinHeap(binHeap); */
     /* if (checkRet < 0) { */
@@ -5140,8 +5140,8 @@ void testBinHeap() {
 }
 
 int main() {
-	testBinHeap();
-	return 0;
+    testBinHeap();
+    return 0;
 }
 ```
 
@@ -5373,9 +5373,9 @@ static void testLeftistHeap() {
     int center = ARRAY_SIZE / 2;
     clock_t start, end, duration;
     start = getTime();
-	for (int i = center; i >= 0; i--) {
+    for (int i = center; i >= 0; i--) {
         leftistHeap = leftistHeapInsert(array[i], leftistHeap);
-	}
+    }
     for (int j = center + 1; j < ARRAY_SIZE; j++) {
         leftistHeap = leftistHeapInsert(array[j], leftistHeap);
     }
@@ -5606,9 +5606,9 @@ static void testSkewHeap() {
     int center = ARRAY_SIZE / 2;
     clock_t start, end, duration;
     start = getTime();
-	for (int i = center; i >= 0; i--) {
+    for (int i = center; i >= 0; i--) {
         skewHeap = skewHeapInsert(array[i], skewHeap);
-	}
+    }
     for (int j = center + 1; j < ARRAY_SIZE; j++) {
         skewHeap = skewHeapInsert(array[j], skewHeap);
     }
@@ -6072,11 +6072,11 @@ static void testBinQueue() {
     int center = ARRAY_SIZE / 2;
     clock_t start, end, duration;
     start = getTime();
-	for (int i = center; i >= 0; i--) {
-		binQueue = binQueueInsert(array[i], binQueue);
-	}
+    for (int i = center; i >= 0; i--) {
+        binQueue = binQueueInsert(array[i], binQueue);
+    }
     for (int j = center + 1; j < ARRAY_SIZE; j++) {
-		binQueue = binQueueInsert(array[j], binQueue);
+        binQueue = binQueueInsert(array[j], binQueue);
     }
     /* int checkRet = checkBinQueue(binQueue); */
     /* if (checkRet < 0) { */
@@ -6107,7 +6107,7 @@ static void testBinQueue() {
 
 int main() {
     testBinQueue();
-	return 0;
+    return 0;
 }
 ```
 
@@ -6151,13 +6151,13 @@ struct Element {
 };
 
 struct ListNode {
-	ElementType element;
-	Position next;
+    ElementType element;
+    Position next;
 };
 
 struct HashTbl {
-	TableSize tableSize;
-	List* theListArray;
+    TableSize tableSize;
+    List* theListArray;
 };
 
 inline ElementType elementCreate(const char* str) {
@@ -6199,18 +6199,18 @@ static void printLinkedList(List list);
 static void printHashTable(HashTable hashTable);
 
 static Index hashTableHash(const ElementType* keyPtr, TableSize tableSize) {
-	TableSize hashVal = 0;
+    TableSize hashVal = 0;
 
     TableSize dataIndex = 0;
-	while (keyPtr->data[dataIndex] != '\0') {
-		hashVal += (hashVal << 5) + keyPtr->data[dataIndex++];
-	}
-	return hashVal % tableSize;
+    while (keyPtr->data[dataIndex] != '\0') {
+        hashVal += (hashVal << 5) + keyPtr->data[dataIndex++];
+    }
+    return hashVal % tableSize;
 }
 
 // 不存放相同的 key
 void hashTableInsert(const ElementType* keyPtr, HashTable hashTable) {
-	Position pos = hashTableFind(keyPtr, hashTable);
+    Position pos = hashTableFind(keyPtr, hashTable);
     if (pos) {
         return;
     }
@@ -6237,32 +6237,32 @@ Position hashTableFind(const ElementType* keyPtr, HashTable hashTable) {
 }
 
 HashTable hashTableCreate(TableSize tableSize) {
-	HashTable hashTable = malloc(sizeof(struct HashTbl));
+    HashTable hashTable = malloc(sizeof(struct HashTbl));
     if (!hashTable) {
         fprintf(stderr, "No space for hashTable!\n");
         exit(EXIT_FAILURE);
     }
-	hashTable->tableSize = tableSize;
+    hashTable->tableSize = tableSize;
 
     // ### 创建 Lists
     // 创建指向 lists 数组
-	hashTable->theListArray = malloc(sizeof(List) * hashTable->tableSize);
+    hashTable->theListArray = malloc(sizeof(List) * hashTable->tableSize);
     if (!hashTable->theListArray) {
         fprintf(stderr, "No space for hashTable->theListArray!\n");
         exit(EXIT_FAILURE);
     }
 
-	// #### 分配表头
-	for (Index i = 0; i < hashTable->tableSize; i++) {
-		hashTable->theListArray[i] = malloc(sizeof(struct ListNode));
+    // #### 分配表头
+    for (Index i = 0; i < hashTable->tableSize; i++) {
+        hashTable->theListArray[i] = malloc(sizeof(struct ListNode));
         if (!hashTable->theListArray[i]) {
             fprintf(stderr, "No space for hashTable->theListArray[i]!\n");
             exit(EXIT_FAILURE);
         }
-		hashTable->theListArray[i]->next = NULL;
-	}
+        hashTable->theListArray[i]->next = NULL;
+    }
 
-	return hashTable;
+    return hashTable;
 }
 
 void hashTableDelete(const ElementType* keyPtr, HashTable hashTable) {
@@ -6474,8 +6474,8 @@ void TestHashTable() {
 }
 
 int main() {
-	TestHashTable();
-	return 0;
+    TestHashTable();
+    return 0;
 }
 ```
 
@@ -6523,13 +6523,13 @@ enum EntryStatusStruct {
 
 struct HashEntry {
     ElementType element;
-	EntryStatus status;
+    EntryStatus status;
 };
 
 struct HashTbl {
-	TableSize tableSize;
-	TableSize size;
-	Cell *theCellArray;
+    TableSize tableSize;
+    TableSize size;
+    Cell *theCellArray;
 };
 
 inline ElementType elementCreate(const char* str) {
@@ -6559,7 +6559,7 @@ static void hashTableReHash(HashTable hashTable);
 static void printHashTable(HashTable hashTable);
 
 inline Position hashTableDetect(TableSize collisionNum) {
-	return collisionNum * collisionNum;
+    return collisionNum * collisionNum;
 }
 
 inline ElementType hashTableRetrieve(Position position, HashTable hashTable) {
@@ -6571,18 +6571,18 @@ static void genRandomStrings(char (*outArray)[KEY_SIZE], size_t n, char lower, c
 static clock_t getTime();
 
 static Position hashTableHash(const ElementType* keyPtr, TableSize tableSize) {
-	TableSize hashVal = 0;
+    TableSize hashVal = 0;
 
     TableSize dataIndex = 0;
-	while (keyPtr->data[dataIndex] != '\0') {
-		hashVal += (hashVal << 5) + keyPtr->data[dataIndex++];
-	}
-	return hashVal % tableSize;
+    while (keyPtr->data[dataIndex] != '\0') {
+        hashVal += (hashVal << 5) + keyPtr->data[dataIndex++];
+    }
+    return hashVal % tableSize;
 }
 
 Position hashTableFind(const ElementType* keyPtr, HashTable hashTable) {
     Position curPos = hashTableHash(keyPtr, hashTable->tableSize);
-	TableSize collisionNum = 0;
+    TableSize collisionNum = 0;
 
     Position firstPos = curPos;
     int firstPosCount = 0;
@@ -6602,7 +6602,7 @@ Position hashTableFind(const ElementType* keyPtr, HashTable hashTable) {
         }
     }
 
-	return curPos;
+    return curPos;
 }
 
 // 不插入重复的 key
@@ -6667,12 +6667,12 @@ static void hashTableReHash(HashTable hashTable) {
     hashTable->size = 0;
     hashTable->theCellArray = newCellArray;
 
-	for (Position i = 0; i < oldTableSize; i++) {
+    for (Position i = 0; i < oldTableSize; i++) {
         // 不保留 deleted
-		if (oldCellArray[i].status == legitimate) {
+        if (oldCellArray[i].status == legitimate) {
             hashTableInsert(&oldCellArray[i].element, hashTable);
         }
-	}
+    }
     free(oldCellArray);
 }
 
@@ -6761,8 +6761,8 @@ static void testHashTable() {
 }
 
 int main() {
-	testHashTable();
-	return 0;
+    testHashTable();
+    return 0;
 }
 ```
 
