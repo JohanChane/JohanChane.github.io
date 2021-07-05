@@ -89,22 +89,22 @@ for example:
 
     indexed arrays
     associative arrays
-    
+
     declare indexed arrays
         declare -a name
         declare -a name[subscript]      # the subscript is ignored.
-        
+
     declare associative arrays
         declare -A name
         associative arrays 必须要声明才能用，否则会出问题。
-    
+
     name[subscript]=value           # 创建或赋值 indexed arrays
     name=(value1 value2 … )         # 创建或赋值 indexed arrays
-    
+
     name[key]=value                             # 赋值 associative arrays
     name=([keya]=value1 [keyb]=value2 … )       # 赋值 associative arrays
-        
-    
+
+
 ### 分支控制
 
 
@@ -123,7 +123,7 @@ condition 可取反的位置
 `-a, -o` 只能用于 test 中，当然还有 `[ ]`。
 
 for example:
-    
+
     if [ 1 -a 1 ]
     if [[ 1 -a 1 ]]          # 出错
     if [ 1 ] -a [ 1 ]       # 出错
@@ -137,10 +137,10 @@ for example:
 
     -eq, -ne
     -lt, -le
-    -gt, -ge, 
+    -gt, -ge,
 
 #### 字符的比较
-    
+
     ==, !=
     -z, -n
 
@@ -169,10 +169,10 @@ Positional 与 Special Parameters 都无法直接修改，因为不符合变量�
     $1, $2, ...
 
 *$0 不是 Positional Parameters。*
-    
+
     设置 Positional Parameters
         set -- <Positional Parameters>
-        
+
 #### Special Parameters
 
     $*, $@, $#:
@@ -182,12 +182,12 @@ Positional 与 Special Parameters 都无法直接修改，因为不符合变量�
             $*: $1 $2 ...
             "$@": "$1" "$2" ...
             "$*": "$1c$2c..."           # c 是 IFS 的第一个字符
-            
+
             ./test.sh one two "three four"
                 $1=one
                 $2=two
                 $3=three four
-                
+
     $?: the exit status of the most recently executed foreground pipeline.
     $0: shell name or shell script name
     $$: the process ID of the shell.
@@ -211,7 +211,7 @@ Positional 与 Special Parameters 都无法直接修改，因为不符合变量�
         [return [<大于 0 的整数>]]
 
     }
-    
+
     return 只是改变 $? 的值而不改变 function substitution（$(<function>)）。function substitution 是函数的输出结果。
 
 #### 名字空间
@@ -230,7 +230,7 @@ Positional 与 Special Parameters 都无法直接修改，因为不符合变量�
 
 ### Quoting（引用）
 
-#### quoting rules 
+#### quoting rules
 
     \: 转义字符。\newline
     "": $, `, \ 有效
@@ -249,13 +249,13 @@ Positional 与 Special Parameters 都无法直接修改，因为不符合变量�
 单引号在双引号中是失效的。双引号在单引号中是失效的。
 
 单引号在单引号中是有效的。双引号在双引号中是有效的。
-    
-    
+
+
     输出单引号
         echo '\''               # ksh, bash, and zsh only
         echo 'str'\''str'       # all shells, single quote is outside the quotes
         echo 'str''str'         # 有些脚本是这样设计的，在单引号中，两个单引号则代替一个引号。
-        
+
         echo "'"                # all shells
     输出双引号
         echo "\""
@@ -290,8 +290,8 @@ printf
     <, >, 0<, 1>
     >>
     >file 2>&1, &>file
-    >>file 2>>&1, &>>file
-
+    # 注意不是 `2>>&1`
+    >>file 2>&1, &>>file
 
 ### Here Documents, Here Strings
 
@@ -300,18 +300,18 @@ printf
     [n]<<[-]word
             here-document
     delimiter
-    
+
     for example:
         cat>test<<end      # 定义 end 为结束字符
             abc
             efg
             end
-        
+
         xargs echo>test
             abc
             efg
             <eof>
-            
+
 #### Here Strings
 
 
@@ -338,11 +338,11 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
 
     tilde expansion(~)
         '~' 必须是前缀。
-        
+
         ~: $HOME
         ~+: $PWD
         ~-: $OLDPWD
-        
+
 
 #### shell 对通配符的扩展
 
@@ -350,7 +350,7 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
         ‘*’, ‘?’, and ‘[’
 
 只要通配符能匹配到文件则将其转换所匹配的文件名。如果没有匹配的文件名则不转换。在引号中无效。
-    
+
 [`**`](https://stackoverflow.com/questions/28176590/what-do-double-asterisk-wildcards-mean)
 
     有些 shell 支持 `**`, 表示匹配多个目录。比如：bash 则要用 `shopt -s globstar` 开启这个功能。
@@ -358,7 +358,7 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
     对目录：
         dir/*/subdir            # dir, subdir 之间隔着一层目录
         dir/**/subdir           # 隔着多层目录
-        
+
     for example:
         # testsh
         #!/usr/bin/bash
@@ -375,7 +375,7 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
 ##### 匹配隐藏文件
 
 为了防止误操作 '.' 开头的文件，除非明确地指定的 '.' 开头的文件模式，否则都不会匹配 '.' 开头的文件。
-        
+
         for example:
             echo *
             echo .*
@@ -386,9 +386,9 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
     环境变量: 是进程环境列表。可传给其子进程。exec。
     全局变量: 在函数外中定义。
     局部变量: 只能在函数定义。
-    
+
     export 将变量加本进程的进程环境列表。
-        
+
 ### word splitting
 
     IFS=$' \t\n' && printf %q "$IFS"
@@ -402,9 +402,9 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
         offset 为负数是从左开始数
         length 为负数是(从 offset 开始到未尾的长度 + length) 个字符或数组单元。
         offset 与 length 不能同为负数。
-            
+
         ${@}, ${*} 被当成数组
-        
+
     ${parameter#word}, ${parameter##word}
         从左到右匹配，如果匹配第一个到 n 个字符的字符串，则删除 1~n 个字符。
         #, ## 区别
@@ -417,7 +417,7 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
         将匹配到 pattern 的字符串，替换成 string。
         /, // 区别
             // 是尽量匹配长一些(全局匹配)，而 / 是尽量匹配短一些(只匹配一个)。
-    
+
 ### 脚本执行方式
 
     shell 执行 `. <shell script>` OR `source <shell script>`
@@ -428,12 +428,12 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
         新建一个 '#!' 指定的 shell 子进程（subshell）来执行。
     `<binaryProgram>` 或 `<binaryProgram 的相对路径或绝对路径>`
         新建一个 binary program 子进程（subprocess）来执行。
-            
+
 ### 调试
 
     set -x; set +x
     bash -x <shell_script>
-        
+
 ### `-` 的作用
 
 用 '-' 代替命令参数中的 filename 代表是 STDIN/STDOUT(/dev/stdin; /dev/stdout)。某些程序不支持，这个功能取决于程序，而不是 shell 决定的。
@@ -441,9 +441,9 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
         for example:
             cat -;
             cat /dev/stdin
-        
+
 ### `--`
-    
+
     表示参数是 `-`, 这个一般用于分隔作用，由程序内部决定，而不是 shell 决定的。比如：git, getopt, ...
 
 ### Others
