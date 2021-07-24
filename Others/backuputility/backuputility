@@ -5,7 +5,7 @@ import os, sys, re, time, getopt, configparser, tarfile
 
 def usage():
     print("backuputility [option] <record>...")
-    print("opts, args = getopt.getopt(sys.argv[1:], 'hcDa:d:l', ['help', 'check', 'list-duplicate', 'add-file', 'delete-file', 'list-records'])")
+    print("opts, args = getopt.getopt(sys.argv[1:], 'hcDa:d:l:e', ['help', 'check', 'list-duplicate', 'add-file', 'delete-file', 'list-records', 'execute-cmd'])")
 
 def read_file(path):
     with open(path) as f:
@@ -67,7 +67,7 @@ def get_duplicate_files(files):
 if __name__ == "__main__":
     # ### parse args
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hcDa:d:lg:", ["help", "check", "list-duplicate", "add-file", "delete-file", "list-records"])
+        opts, args = getopt.getopt(sys.argv[1:], "hcDa:d:l:e", ["help", "check", "list-duplicate", "add-file", "delete-file", "list-records", "execute-cmd"])
     except getopt.GetoptError:
         usage()
         sys.exit(os.EX_USAGE)
@@ -79,6 +79,7 @@ if __name__ == "__main__":
     is_delete_file = False
     deleting_file = ""
     is_list_records = False
+    is_execute_cmd = False
 
     for opt, arg in opts:
         if opt in ("-h", "--help"):
@@ -96,6 +97,8 @@ if __name__ == "__main__":
             deleting_file = arg
         elif opt in ("-l", "--list-records"):
             is_list_records = True
+        elif opt in ("-e", "--execute-cmd"):
+            is_execute_cmd = True
         else:
             usage()
             sys.exit(os.EX_USAGE)
@@ -115,16 +118,17 @@ if __name__ == "__main__":
     section = "base"
     dest_dir = config.get(section, "dest_dir")
     record_dir = config.get(section, "record_dir")
-
-    if not os.path.exists(record_dir):
-        sys.stderr.write(record_dir + " is not exists!\n")
-        sys.exit(os.EX_CONFIG)
+    cmd_path = config.get(section, "cmd_path")
 
     if dest_dir.endswith("/"):
         dest_dir = dest_dir[:-1]
 
     if record_dir.endswith("/"):
         record_dir = record_dir[:-1]
+
+    if not os.path.exists(record_dir):
+        sys.stderr.write(record_dir + " is not exists!\n")
+        sys.exit(os.EX_CONFIG)
 
     # ### action commands checkfile and list-duplicate
     records = parse_records(record_names, record_dir)
@@ -174,6 +178,13 @@ if __name__ == "__main__":
         sys.exit()
 
     # ## action backup
+    # ### execute backuputility_cmd
+    if is_execute_cmd:
+        exit_code = os.system(cmd_path)
+        if exit_code:
+            sys.stderr.write("exit_code is " + str(exit_code))
+            sys.exit(os.EX_CONFIG)
+
     # ### 如果 dest_dir 不存在则创建
     if not os.path.exists(dest_dir):
         os.makedirs(dest_dir, mode=0o755)
