@@ -5,13 +5,12 @@ all: install
 install:
 	mkdir -p ~/.config/backuputility
 	cp ./default.conf ~/.config/backuputility/backuputility.conf
-	mkdir ~/BackupUtilityRecords
-	cp ./default.confs.record ~/BackupUtilityRecords/confs
-	cp ./default.backuputility_cmd ~/BackupUtilityRecords/backuputility_cmd
-	chmod a+x ~/BackupUtilityRecords/backuputility_cmd
+	mkdir -p ~/BackupUtility/Records
+	cp ./default.confs.record ~/BackupUtility/Records/confs
+	cp ./default.user_cmds ~/BackupUtility/Cmds/user_cmds
+	chmod a+x ~/BackupUtility/Cmds/user_cmds
 	mkdir ~/BackupUtilityBackups
 
 uninstall:
-	@echo 'rm -r ~/BackupUtilityRecords'
+	@echo 'rm -r ~/BackupUtility'
 	@echo 'rm -r ~/BackupUtilityBackups'
-	@echo 'rm -r ~/BackupUtilityCmdOutput'

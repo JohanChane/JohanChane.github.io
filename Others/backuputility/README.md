@@ -22,8 +22,8 @@ for example
 ```
 [base]
 dest_dir = /home/johan/BackupUtilityBackups
-record_dir = /home/johan/BackupUtilityRecords
-cmd_path = /home/johan/BackupUtilityRecords/backuputility_cmd
+record_dir = /home/johan/BackupUtility/Records
+cmd_dir = /home/johan/BackupUtility/Cmds
 ```
 
 `dest_dir`
@@ -36,42 +36,53 @@ cmd_path = /home/johan/BackupUtilityRecords/backuputility_cmd
 > 支持 linux 路径格式。windows 路径格式，比如: `C:\dir\subdir`, `C:/dir/subdir`。<br>
 > *可以添加注释。*
 
-`cmd_path`
+`cmd_dir`
 
-> 执行脚本的路径。记录命令的输出。因为有时候要记录系统的状态。比如：`pacman -Qeq, pip list` 等。<br>
-> 实现细节。脚本中的命令将结果输出到一个个文件，然后这些文件的路径添加到 record 中即可。
+> 脚本的路径。记录命令的输出。因为有时候要记录系统的状态。比如：`pacman -Qeq, pip list` 等。<br>
+> 实现细节: 脚本中的命令将结果输出到一个个文件，然后这些文件的路径添加到 record 中即可。
 
 ### 例子
 
 #### backuputility_cmd
 
-`/home/johan/BackupUtilityRecords/backuputility_cmd`
+`/home/johan/BackupUtility/Cmds/johan_cmds`
 
 ```
 #!/bin/bash
 
 old_pwd=$(pwd)
-cd /home/johan/BackupUtilityCmdOutput
+cd /home/johan/BackupUtility/CmdOutput
 
 # add cmds here
-pacman -Qeq > ./pacmanQeq
-pacman -Qeq | xargs expac -Q --timefmt='%Y-%m-%d %T' '%l\t%n' | sort -nr | awk '{print $1" "$2"\t"$3}' > ./expacqe
+
+# ### pacman
+pacman -Qeq > pacmanQeq
+pacman -Qeq | xargs expac -Q --timefmt='%Y-%m-%d %T' '%l\t%n' | sort -nr | awk '{print $1" "$2"\t"$3}' > expacqe
+
+# ### python
+python -m pip list -v > pip.list
+python -m pip freeze > pip.requirements.txt
+
+# ### nodejs
+npm list > npm.local.list
+npm list -g > npm.global.list
 
 cd $old_pwd
 ```
 
 #### records
 
-`/home/johan/BackupUtilityRecords/confs`
+`/home/johan/BackupUtility/Records/confs`
 
 ```
 # ### backuputility
-/opt/myapps/backuputility/
-/home/johan/.config/backuputility/
-/home/johan/BackupUtilityRecords/
+/opt/myapps/backuputility
+/home/johan/.config/backuputility
+/home/johan/BackupUtility/Records
+/home/johan/BackupUtility/Cmds
 
-# #### backuputility_cmd
-/home/johan/BackupUtilityCmdOutput
+# #### backuputility CmdOutput
+/home/johan/BackupUtility/CmdOutput
 
 # ### system config files
 /etc/fstab
@@ -98,7 +109,7 @@ cd $old_pwd
 /home/johan/.config/nvimpager/init.vim
 ```
 
-`/home/johan/backuputilityRecords/apps`
+`/home/johan/backuputility/Records/apps`
 
 ```
 ...
@@ -113,11 +124,9 @@ cd $old_pwd
     # 备份文件
     backuputility confs apps
 
-    # 执行 cmd
-    backuputility -e
-
-    # 执行 cmd 并备份命令的输出（confs record 记得添加输出结果的文件）
-    backuputility -e confs
+    # 执行 cmd（用管理员身份执行时，要注意区别。比如：`pip list` 不会列出 johan 用户的 local packages）
+    # confs record 记得添加输出结果的文件
+    backuputility -e johan_cmds; sudo backuputility confs
 
     # 添加，删除，查看（建议直接编辑）
     backuputility -a <file> confs
