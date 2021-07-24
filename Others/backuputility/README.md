@@ -5,7 +5,7 @@ backuputility
 
 支持 linux 和 windows(msys2)。
 
-所有文件的格式都为 `utf-8 nobomb`。
+所有文件的格式都为 `utf-8`。如果 record 的第一行注释不起作用时，检查 record 的文件是否是 `utf-8 nobomb` 的。
 
 ### 帮助
 
@@ -13,7 +13,9 @@ backuputility
 
 ### 配置文件
 
-`~/.config/backuputility/backuputility.conf`
+***执行 `backuputility` 时, 因为一般要记录一些系统文件，所以要管理员权限。所以在路径中不建议使用 `~`。***
+
+`/home/johan/.config/backuputility/backuputility.conf`
 
 for example
 
@@ -41,7 +43,7 @@ cmd_path = /home/johan/BackupUtilityRecords/backuputility_cmd
 
 ### 例子
 
-#### records
+#### backuputility_cmd
 
 `/home/johan/BackupUtilityRecords/backuputility_cmd`
 
@@ -57,6 +59,8 @@ pacman -Qeq | xargs expac -Q --timefmt='%Y-%m-%d %T' '%l\t%n' | sort -nr | awk '
 
 cd $old_pwd
 ```
+
+#### records
 
 `/home/johan/BackupUtilityRecords/confs`
 
@@ -119,3 +123,11 @@ cd $old_pwd
     backuputility -a <file> confs
     backuputility -d <file> confs
     backuputility -l confs apps
+
+### 安装和卸载
+
+    # 这里的安装不算完善，还需添加 backuputility 到 path
+    make install
+
+    # 实际只是输出一些参考命令
+    make uninstall
