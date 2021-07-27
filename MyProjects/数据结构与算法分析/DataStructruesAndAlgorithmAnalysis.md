@@ -9,7 +9,7 @@ Content
 * [References](#references)
 * [时间复杂度](#时间复杂度)
     * [References](#references-1)
-    * [分治算法的运行时间](#分治算法的运行时间)
+    * [分治算法的时间复杂度](#分治算法的时间复杂度)
     * [Others](#others)
 * [排序算法](#排序算法)
     * [Insertion Sort](#insertion-sort)
@@ -36,14 +36,52 @@ Content
     * [AVL Tree（自平衡二叉查找树）](#avl-tree自平衡二叉查找树)
     * [Splay Tree（伸展树）](#splay-tree伸展树)
     * [BTree（多路搜索树）](#btree多路搜索树)
+        * [References](#references-2)
+        * [Btree 性质](#btree-性质)
+            * [Knuth's Definition](#knuths-definition)
+            * [CLRS（算法导论）](#clrs算法导论)
+        * [操作](#操作)
+            * [三个基本的操作](#三个基本的操作)
+            * [插入的递归操作](#插入的递归操作)
+            * [删除的递归操作：](#删除的递归操作)
+                * [填充操作：](#填充操作)
+        * [说明](#说明)
     * [Huffman Tree（哈夫曼树）](#huffman-tree哈夫曼树)
+        * [refer:](#refer)
+        * [说明](#说明-1)
+        * [main.c](#mainc)
+        * [huffman_tree.h](#huffman_treeh)
+        * [huffman_tree.c](#huffman_treec)
+        * [binheap.h](#binheaph)
+        * [binheap.c](#binheapc)
+    * [Red-black tree](#red-black-tree)
+        * [References](#references-3)
+        * [红黑树的定义](#红黑树的定义)
+        * [二叉搜索树与红黑树的插入与删除](#二叉搜索树与红黑树的插入与删除)
+        * [定义](#定义)
+        * [红黑树的插入](#红黑树的插入)
+        * [红黑树的删除](#红黑树的删除)
+        * [红黑树的常用的旋转操作](#红黑树的常用的旋转操作)
+        * [main.c](#mainc-1)
+        * [rbtree.h](#rbtreeh)
+        * [rbtree.c](#rbtreec)
+        * [queue.h](#queueh)
+        * [queue.c](#queuec)
 * [Heap](#heap)
     * [Binary Heap（二叉堆）](#binary-heap二叉堆)
     * [Leftist Heap（左式堆）](#leftist-heap左式堆)
+        * [说明](#说明-2)
     * [Skew Heap（斜堆）](#skew-heap斜堆)
     * [Binomial Queue（二项队列）](#binomial-queue二项队列)
+        * [说明](#说明-3)
 * [Hash Table](#hash-table)
     * [SeparateChaining](#separatechaining)
+        * [main.c](#mainc-2)
+        * [hash_table.h](#hash_tableh)
+        * [hash_table.c](#hash_tablec)
+        * [linked_list.h](#linked_listh)
+        * [linked_list_type.h](#linked_list_typeh)
+        * [linked_list.c](#linked_listc)
     * [OpenAddressing](#openaddressing)
 * [Stack, Queue](#stack-queue)
     * [Stack](#stack)
@@ -51,6 +89,9 @@ Content
         * [用链表实现](#用链表实现)
     * [Queue](#queue)
         * [用数组实现](#用数组实现-1)
+            * [main.c](#mainc-3)
+            * [queue.h](#queueh-1)
+            * [queue.c](#queuec-1)
         * [用链表实现](#用链表实现-1)
 
 <!-- vim-markdown-toc -->
@@ -68,7 +109,7 @@ References
 -   <https://www.bigocheatsheet.com/>
 -   <https://mp.weixin.qq.com/s/VQN5pQAAwi3Zwn-vcsu-3w>
 
-### 分治算法的运行时间
+### 分治算法的时间复杂度
 
 方程 $ T(N) = aT(N / b) + \Theta(N^{k}) $ 的解为
 
@@ -104,14 +145,19 @@ $$
 
 ```c
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 void insertionSort(int* array, int n);
 
-static int checkArrayOrder(const int* array, int n);
+// ## debug
+#include <time.h>
+#define ARRAY_SIZE (10000 * 10)
+
+static void testInsertionSort();
+static int checkArrayOrder(int* array, int n);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 void insertionSort(int* array, int n) {
     int temp;
@@ -129,7 +175,7 @@ void insertionSort(int* array, int n) {
     }
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             return -1;
@@ -139,14 +185,14 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -154,7 +200,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -163,7 +209,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testInsertionSort() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -181,7 +227,10 @@ int main() {
         fprintf(stderr, "checkRet = %d\n", checkRet);
         exit(EXIT_FAILURE);
     }
+}
 
+int main() {
+    testInsertionSort();
     return 0;
 }
 ```
@@ -190,10 +239,7 @@ int main() {
 
 ```c
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 void selectionSort(int* array, int n);
 
@@ -203,7 +249,16 @@ static inline void swap(int* a, int* b) {
     *b = temp;
 }
 
-static int checkArrayOrder(const int* array, int n);
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 10)
+
+static void testSelectionSort();
+static int checkArrayOrder(int* array, int n);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 void selectionSort(int* array, int n) {
     int minIndex;
@@ -220,7 +275,7 @@ void selectionSort(int* array, int n) {
     }
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             return -1;
@@ -230,14 +285,14 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -245,7 +300,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -254,7 +309,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testSelectionSort() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -272,7 +327,10 @@ int main() {
         fprintf(stderr, "checkRet = %d\n", checkRet);
         exit(EXIT_FAILURE);
     }
+}
 
+int main() {
+    testSelectionSort();
     return 0;
 }
 ```
@@ -281,10 +339,7 @@ int main() {
 
 ```c
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 void bubbleSort(int* array, int n);
 
@@ -294,7 +349,16 @@ static inline void swap(int* a, int* b) {
     *b = temp;
 }
 
-static int checkArrayOrder(const int* array, int n);
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 10)
+
+static void testBubbleSort();
+static int checkArrayOrder(int* array, int n);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 void bubbleSort(int* array, int n) {
     // 从后向前冒泡
@@ -307,7 +371,7 @@ void bubbleSort(int* array, int n) {
     }
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             return -1;
@@ -317,14 +381,14 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -332,7 +396,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -341,7 +405,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testBubbleSort() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -359,7 +423,10 @@ int main() {
         fprintf(stderr, "checkRet = %d\n", checkRet);
         exit(EXIT_FAILURE);
     }
+}
 
+int main() {
+    testBubbleSort();
     return 0;
 }
 ```
@@ -369,16 +436,22 @@ int main() {
 ```c
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 void mergeSort(int* array, int n);
 
 static void mSort(int* array, int* tmpArray, int left, int right);
 static void merge(int* array, int* tmpArray, int leftPos, int rightPos, int rightEnd);
 
-static int checkArrayOrder(const int* array, int n);
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 10)
+
+static void testMergeSort();
+static int checkArrayOrder(int* array, int n);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 void mergeSort(int* array, int n) {
     int* tmpArray = malloc(n * sizeof(int));
@@ -436,7 +509,7 @@ static void mSort(int* array, int* tmpArray, int left, int right) {
     merge(array, tmpArray, left, center + 1, right);
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             return -1;
@@ -446,14 +519,14 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -461,7 +534,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -470,7 +543,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testMergeSort() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -488,7 +561,10 @@ int main() {
         fprintf(stderr, "checkRet = %d\n", checkRet);
         exit(EXIT_FAILURE);
     }
+}
 
+int main() {
+    testMergeSort();
     return 0;
 }
 ```
@@ -497,10 +573,7 @@ int main() {
 
 ```c
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 void quickSort(int* array, int n);
 
@@ -514,7 +587,16 @@ static void qSort(int* array, int left, int right);
 static int median3(int* array, int left, int right);
 static void insertionSort(int* array, int n);
 
-static int checkArrayOrder(const int* array, int n);
+// ## debug
+#include <time.h>
+#define ARRAY_SIZE (10000 * 10)
+
+static void testQuickSort();
+static int checkArrayOrder(int* array, int n);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
+
 
 void quickSort(int* array, int n) {
     qSort(array, 0, n - 1);
@@ -592,7 +674,7 @@ static void insertionSort(int* array, int n) {
     }
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             return -1;
@@ -602,14 +684,14 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -617,7 +699,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -626,7 +708,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testQuickSort() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -644,7 +726,10 @@ int main() {
         fprintf(stderr, "checkRet = %d\n", checkRet);
         exit(EXIT_FAILURE);
     }
+}
 
+int main() {
+    testQuickSort();
     return 0;
 }
 ```
@@ -653,14 +738,19 @@ int main() {
 
 ```c
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 void shellSort(int* array, int n);
 
-static int checkArrayOrder(const int* array, int n);
+// ## debug
+#include <time.h>
+#define ARRAY_SIZE (10000 * 10)
+
+static void testShellSort();
+static int checkArrayOrder(int* array, int n);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 void shellSort(int* array, int n) {
     for (int increment = n / 2; increment > 0; increment /= 2) {
@@ -682,7 +772,7 @@ void shellSort(int* array, int n) {
     }
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             return -1;
@@ -692,14 +782,14 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-void printArray(int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -707,7 +797,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -716,7 +806,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testShellSort() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -735,6 +825,10 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
+}
+
+int main() {
+    testShellSort();
     return 0;
 }
 ```
@@ -744,9 +838,6 @@ int main() {
 ```c
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 void heapSort(int* array, int n);
 
@@ -758,8 +849,17 @@ static inline void swap(int* a, int* b) {
 
 static void adjustDown(int nonLeafNodeNum, int* heap, int heapSize);
 
-static int checkMaxHeap(const int* array, int n);
-static int checkArrayOrder(const int* array, int n);
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 10)
+
+static void testHeapSort();
+static int checkArrayOrder(int* array, int n);
+static int checkMaxHeap(int* array, int n);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 // 从小到大排序
 void heapSort(int* array, int n) {
@@ -830,7 +930,7 @@ void adjustDown(int nonLeafNodeNum, int* heap, int heapSize) {
     }
 }
 
-static int checkMaxHeap(const int* array, int n) {
+static int checkMaxHeap(int* array, int n) {
     int curPos = 1;
     int leftChildPos = 2 * curPos;
     int rightChildPos;
@@ -854,7 +954,7 @@ static int checkMaxHeap(const int* array, int n) {
     return 0;
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             return -1;
@@ -864,14 +964,14 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -879,7 +979,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -888,7 +988,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testHeapSort() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -906,7 +1006,10 @@ int main() {
         fprintf(stderr, "checkRet = %d\n", checkRet);
         exit(EXIT_FAILURE);
     }
+}
 
+int main() {
+    testHeapSort();
     return 0;
 }
 ```
@@ -925,6 +1028,7 @@ int main() {
 
 ```c
 /***
+
 ### 该程序可以改进的地方
 
 1. 可用 [0, K) 个叶子。
@@ -943,43 +1047,49 @@ int main() {
 #include <limits.h>
 #include <stdbool.h>
 #include <string.h>
-#include <time.h>
 
 // K 路合并
 #define K 5
 #define MAX INT_MAX
-// 取上限
-#define ARRAY_SIZE (((10000 * 10) - 1) / K + 1)
 
 // [1, K] 个叶子结点
 int leaves[K + 1];
 // [1, K - 1] 个非叶子结点
 int successTree[K];
 
-struct List {
+struct List;
+typedef struct ListStruct* List;
+
+struct ListStruct {
     int count;
     int* data;
 };
 
-void successTreeSort(struct List* mergedList, struct List* listArray);
+void successTreeSort(List mergedList, List listArray);
 
 // ### 胜者树的相关函数
 static void adjustToRoot(int leaveIndex);
 static void adjustNode(int nodeNum);
-static void initSuccessTree(struct List* listArray);
+static void initSuccessTree(List listArray);
 
 // ### list 相关的函数
-static inline void listPush(const int* element, struct List* listPtr);
-static inline int listPop(struct List* listPtr);
-static inline bool listIsEmpty(const struct List* listPtr);
+static inline void listPush(int element, List listPtr);
+static inline int listPop(List listPtr);
+static inline bool listIsEmpty(List listPtr);
 
+// ## debug
+#include <time.h>
+// 取上限
+#define ARRAY_SIZE (((10000 * 10) - 1) / K + 1)
+
+static void testSuccessTreeSort();
 static int checkSuccessTree();
-static int checkArrayOrder(const int* array, int n);
+static int checkArrayOrder(int* array, int n);
+static void printArray(int* array, int n);
 static void insertionSort(int* array, int n);
-static void printArray(const int* array, int n);
 
 // listArray 放置已排序的多条数组，mergedList 是合并后的数组。
-void successTreeSort(struct List* mergedList, struct List* listArray) {
+void successTreeSort(List mergedList, List listArray) {
     // ### initSuccessTree
     initSuccessTree(listArray);
 
@@ -987,7 +1097,7 @@ void successTreeSort(struct List* mergedList, struct List* listArray) {
     int runNum = K;
     while (runNum > 0) {
         rootIndex = successTree[1];
-        listPush(&leaves[rootIndex], mergedList);
+        listPush(leaves[rootIndex], mergedList);
         if (!listIsEmpty(&listArray[rootIndex])) {
             leaves[rootIndex] = listPop(&listArray[rootIndex]);
         } else {
@@ -1038,7 +1148,7 @@ static void adjustNode(int nodeNum) {
     successTree[nodeNum] = leaves[leftChildIndex] < leaves[rightChildIndex] ? leftChildIndex : rightChildIndex;
 }
 
-static void initSuccessTree(struct List* listArray) {
+static void initSuccessTree(List listArray) {
     for (int i = 1; i <= K; i++) {
         leaves[i] = listPop(&listArray[i]);
     }
@@ -1049,15 +1159,15 @@ static void initSuccessTree(struct List* listArray) {
 
 }
 
-static inline void listPush(const int* element, struct List* listPtr) {
-    listPtr->data[listPtr->count++] = *element;
+static inline void listPush(int element, List listPtr) {
+    listPtr->data[listPtr->count++] = element;
 }
 
-static inline int listPop(struct List* listPtr) {
+static inline int listPop(List listPtr) {
     return listPtr->data[--listPtr->count];
 }
 
-static inline bool listIsEmpty(const struct List* listPtr) {
+static inline bool listIsEmpty(List listPtr) {
     return listPtr->count == 0 ? true : false;
 }
 
@@ -1101,7 +1211,7 @@ static int checkSuccessTree() {
     return 0;
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             return -1;
@@ -1127,7 +1237,7 @@ static void insertionSort(int* array, int n) {
     }
 }
 
-static void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
@@ -1155,7 +1265,7 @@ static void testSuccessTreeSort() {
     // ### 初始化 listArray, mergedList
     // #### 为 listArray 分配内存
     // listArray[0] 不使用
-    struct List* listArray = malloc(sizeof(struct List) * (K + 1));
+    List listArray = malloc(sizeof(struct ListStruct) * (K + 1));
     if (!listArray) {
         fprintf(stderr, "No space for listArray\n");
         exit(EXIT_FAILURE);
@@ -1171,7 +1281,7 @@ static void testSuccessTreeSort() {
     }
 
     // #### 为 mergedList 分配内存
-    struct List* mergedList = malloc(sizeof(struct List));
+    List mergedList = malloc(sizeof(struct ListStruct));
     if (!mergedList) {
         fprintf(stderr, "No space for mergedList\n");
         exit(EXIT_FAILURE);
@@ -1193,7 +1303,7 @@ static void testSuccessTreeSort() {
     for (int j = 1; j <= K; j++) {
         insertionSort(array[j], ARRAY_SIZE);
         for (int k = ARRAY_SIZE - 1; k >= 0; k--) {
-            listPush(&array[j][k], &listArray[j]);
+            listPush(array[j][k], &listArray[j]);
         }
         printArray(listArray[j].data, listArray[j].count);
     }
@@ -1261,41 +1371,48 @@ int main() {
 #include <limits.h>
 #include <stdbool.h>
 #include <string.h>
-#include <time.h>
 
 // K 路合并
 #define K 5
 #define MIN INT_MIN
 #define MAX INT_MAX
-// 取上限
-#define ARRAY_SIZE (((10000 * 10) - 1) / K + 1)
 
 // [1, K] 个叶子结点
 int leaves[K + 1];
 // [1, K - 1] 个非叶子结点
 int loserTree[K];
 
-struct List {
+struct List;
+typedef struct ListStruct* List;
+
+struct ListStruct {
     int count;
     int* data;
 };
 
-void loserTreeSort(struct List* mergedList, struct List* listArray);
+void loserTreeSort(List mergedList, List listArray);
 
 static void adjustToRoot(int leaveIndex);
-static void initloserTree(struct List* listArray);
+static void initloserTree(List listArray);
 
-static inline void listPush(const int* element, struct List* listPtr);
-static inline int listPop(struct List* listPtr);
-static inline bool listIsEmpty(const struct List* listPtr);
+static inline void listPush(int element, List listPtr);
+static inline int listPop(List listPtr);
+static inline bool listIsEmpty(List listPtr);
 
+// ## debug
+#include <time.h>
+
+// 取上限
+#define ARRAY_SIZE (((10000 * 10) - 1) / K + 1)
+
+static void testLoserTreeSort();
 static int checkLoserTree(int* winnerIdx, int rootNum);
-static int checkArrayOrder(const int* array, int n);
+static int checkArrayOrder(int* array, int n);
 
 static void insertionSort(int* array, int n);
-static void printArray(const int* array, int n);
+static void printArray(int* array, int n);
 
-void loserTreeSort(struct List* mergedList, struct List* listArray) {
+void loserTreeSort(List mergedList, List listArray) {
     // ### initSuccessTree
     initloserTree(listArray);
 
@@ -1303,7 +1420,7 @@ void loserTreeSort(struct List* mergedList, struct List* listArray) {
     int runNum = K;
     while (runNum > 0) {
         winnerIndex = loserTree[0];
-        listPush(&leaves[winnerIndex], mergedList);
+        listPush(leaves[winnerIndex], mergedList);
         if (!listIsEmpty(&listArray[winnerIndex])) {
             leaves[winnerIndex] = listPop(&listArray[winnerIndex]);
         } else {
@@ -1337,7 +1454,7 @@ static void adjustToRoot(int leaveIndex) {
     loserTree[0] = winnerLeaveIndex;
 }
 
-static void initloserTree(struct List* listArray) {
+static void initloserTree(List listArray) {
     leaves[0] = MIN;
     for (int i = 1; i <= K; i++) {
         leaves[i] = listPop(&listArray[i]);
@@ -1353,15 +1470,15 @@ static void initloserTree(struct List* listArray) {
 
 }
 
-static inline void listPush(const int* element, struct List* listPtr) {
-    listPtr->data[listPtr->count++] = *element;
+static inline void listPush(int element, List listPtr) {
+    listPtr->data[listPtr->count++] = element;
 }
 
-static inline int listPop(struct List* listPtr) {
+static inline int listPop(List listPtr) {
     return listPtr->data[--listPtr->count];
 }
 
-static inline bool listIsEmpty(const struct List* listPtr) {
+static inline bool listIsEmpty(List listPtr) {
     return listPtr->count == 0 ? true : false;
 }
 
@@ -1409,7 +1526,7 @@ static int checkLoserTree(int* winnerIdx, int rootNum) {
     return 0;
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             return -1;
@@ -1435,7 +1552,7 @@ static void insertionSort(int* array, int n) {
     }
 }
 
-static void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
@@ -1459,11 +1576,11 @@ clock_t getTime() {
     return t;
 }
 
-void testLoserTreeSort() {
+static void testLoserTreeSort() {
     // ### 初始化 listArray, mergedList
     // #### 为 listArray 分配内存
     // listArray[0] 不使用
-    struct List* listArray = malloc(sizeof(struct List) * (K + 1));
+    List listArray = malloc(sizeof(struct ListStruct) * (K + 1));
     if (!listArray) {
         fprintf(stderr, "No space for listArray\n");
         exit(EXIT_FAILURE);
@@ -1479,7 +1596,7 @@ void testLoserTreeSort() {
     }
 
     // #### 为 mergedList 分配内存
-    struct List* mergedList = malloc(sizeof(struct List));
+    List mergedList = malloc(sizeof(struct ListStruct));
     if (!mergedList) {
         fprintf(stderr, "No space for mergedList\n");
         exit(EXIT_FAILURE);
@@ -1501,7 +1618,7 @@ void testLoserTreeSort() {
     for (int j = 1; j <= K; j++) {
         insertionSort(array[j], ARRAY_SIZE);
         for (int k = ARRAY_SIZE - 1; k >= 0; k--) {
-            listPush(&array[j][k], &listArray[j]);
+            listPush(array[j][k], &listArray[j]);
         }
         printArray(listArray[j].data, listArray[j].count);
     }
@@ -1549,16 +1666,19 @@ int main() {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+void countingSort(int* array, int n);
+
+// ## debug
 #include <time.h>
 
 // 内存至少 ARRAY_SIZE * 4B
 #define ARRAY_SIZE (10000 * 100)
 
-void countingSort(int* array, int n);
+static void testCountingSort();
+static int checkArrayOrder(int* array, int n);
 
-static int checkArrayOrder(const int* array, int n);
-
-static void printArray(const int* array, int n);
+static void printArray(int* array, int n);
 static void genRandomNums(int* outArray, int n, int lower, int upper);
 static clock_t getTime();
 
@@ -1600,7 +1720,7 @@ void countingSort(int* array, int n) {
     free(countingArray);
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             // debug
@@ -1612,7 +1732,7 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-static void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
@@ -1636,7 +1756,7 @@ static clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testCountingSort() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
     /* printArray(array, ARRAY_SIZE); */
@@ -1655,6 +1775,10 @@ int main() {
     /*     fprintf(stderr, "checkRet = %d\n", checkRet); */
     /*     exit(EXIT_FAILURE); */
     /* } */
+}
+
+int main() {
+    testCountingSort();
 
     return 0;
 }
@@ -1668,29 +1792,34 @@ int main() {
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
 
-#define ARRAY_SIZE (10000 * 10)
 // 假设数列均匀分布，每个桶可能放置数字的个数
 #define BUCKET_DEFAULT_INCREMENT 10
 
-struct bucket {
+struct BucketStruct;
+typedef struct BucketStruct* Bucket;
+
+struct BucketStruct {
     int count;
     int* data;
 };
 
 void bucketSort(int* array, int n);
 
-static inline void bucketPush(const int* element, struct bucket* bucketPtr);
-static inline const int* bucketPop(struct bucket* bucketPtr);
-static inline bool bucketIsEmpty(const struct bucket* bucketPtr);
-static inline void bucketInsertionSort(struct bucket* bucketPtr);
+static inline void bucketPush(int element, Bucket bucket);
+static inline int bucketPop(Bucket bucket);
+static inline bool bucketIsEmpty(Bucket bucket);
+static inline void bucketInsertionSort(Bucket bucket);
 
 static void insertionSort(int* array, int n);
 
-static int checkArrayOrder(const int* array, int n);
+// ## debug
+#include <time.h>
 
-static void printArray(const int* array, int n);
+#define ARRAY_SIZE (10000 * 10)
+static int checkArrayOrder(int* array, int n);
+
+static void printArray(int* array, int n);
 static void genRandomNums(int* outArray, int n, int lower, int upper);
 static clock_t getTime();
 
@@ -1718,21 +1847,29 @@ void bucketSort(int* array, int n) {
     int bucketSize = n;
 
     // #### 桶的数量
-    struct bucket* bucketList = malloc(sizeof(struct bucket) * bucketCount);
+    Bucket* bucketList = malloc(sizeof(Bucket) * bucketCount);
     if (!bucketList) {
         fprintf(stderr, "No space for bucketList!\n");
         exit(EXIT_FAILURE);
     }
+    for (int i = 0; i < bucketCount; i++) {
+        bucketList[i] = malloc(sizeof(struct BucketStruct));
+        if (!bucketList[i]) {
+            fprintf(stderr, "No space for bucketList!\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
     for (int j = 0; j < bucketCount; j++) {
         // 为桶分配内存
-        bucketList[j].data = malloc(sizeof(int) * bucketSize);
-        if (!bucketList[j].data) {
+        bucketList[j]->data = malloc(sizeof(int) * bucketSize);
+        if (!bucketList[j]->data) {
             fprintf(stderr, "No space for bucketList.data!\n");
             exit(EXIT_FAILURE);
         }
 
         // 初始化桶
-        bucketList[j].count = 0;
+        bucketList[j]->count = 0;
     }
 
     // ### 将数字放入桶内
@@ -1740,7 +1877,7 @@ void bucketSort(int* array, int n) {
         for (int p = 1; p <= bucketCount; p++) {
             // 有可能数等于 `min + p * increment`
             if (array[m] <= min + p * increment) {
-                bucketPush(&array[m], &bucketList[p - 1]);
+                bucketPush(array[m], bucketList[p - 1]);
                 break;
             }
         }
@@ -1748,38 +1885,41 @@ void bucketSort(int* array, int n) {
 
     // ### 排序每个桶
     for (int p = 0; p < bucketCount; p++) {
-        bucketInsertionSort(&bucketList[p]);
+        bucketInsertionSort(bucketList[p]);
     }
 
     // ### 将结果放到数组
     int arrayIndex = 0;
     for (int q = 0; q < bucketCount; q++) {
-        while (!bucketIsEmpty(&bucketList[q])) {
-            array[arrayIndex++] = *bucketPop(&bucketList[q]);
+        while (!bucketIsEmpty(bucketList[q])) {
+            array[arrayIndex++] = bucketPop(bucketList[q]);
         }
     }
 
     // ### 回收内存
     for (int k = 0; k < bucketCount; k++) {
-        free(bucketList[k].data);
+        free(bucketList[k]->data);
+    }
+    for (int m = 0; m < bucketCount; m++) {
+        free(bucketList[m]);
     }
     free(bucketList);
 }
 
-static inline void bucketPush(const int* element, struct bucket* bucketPtr) {
-    bucketPtr->data[bucketPtr->count++] = *element;
+static inline void bucketPush(int element, Bucket bucket) {
+    bucket->data[bucket->count++] = element;
 }
 
-static inline const int* bucketPop(struct bucket* bucketPtr) {
-    return &bucketPtr->data[--bucketPtr->count];
+static inline int bucketPop(Bucket bucket) {
+    return bucket->data[--bucket->count];
 }
 
-static inline bool bucketIsEmpty(const struct bucket* bucketPtr) {
-    return bucketPtr->count == 0 ? true : false;
+static inline bool bucketIsEmpty(Bucket bucket) {
+    return bucket->count == 0 ? true : false;
 }
 
-static inline void bucketInsertionSort(struct bucket* bucketPtr) {
-    insertionSort(bucketPtr->data, bucketPtr->count);
+static inline void bucketInsertionSort(Bucket bucket) {
+    insertionSort(bucket->data, bucket->count);
 }
 
 static void insertionSort(int* array, int n) {
@@ -1798,7 +1938,7 @@ static void insertionSort(int* array, int n) {
     }
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             // debug
@@ -1810,7 +1950,7 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-static void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
@@ -1862,9 +2002,6 @@ int main() {
 ```c
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 // 只能是 10
 #define BUCKET_COUNT 10
@@ -1872,12 +2009,18 @@ int main() {
 void radixSort(int* array, int n);
 
 static void radixSortWithExp(int* array, int n, int exp);
-static int getMaxExp(const int* array, int n);
-static inline int getBucketIndex(const int* element, int exp);
+static int getMaxExp(int* array, int n);
+static inline int getBucketIndex(int element, int exp);
 
-static int checkArrayOrder(const int* array, int n);
+// ## debug
+#include <time.h>
 
-static void printArray(const int* array, int n);
+#define ARRAY_SIZE (10000 * 10)
+
+static void testRadixSort();
+static int checkArrayOrder(int* array, int n);
+
+static void printArray(int* array, int n);
 static void genRandomNums(int* outArray, int n, int lower, int upper);
 static clock_t getTime();
 
@@ -1904,7 +2047,7 @@ static void radixSortWithExp(int* array, int n, int exp) {
 
     // 记录每个桶包含的数的数量
     for (int i = 0; i < n; i++) {
-        bucketPos[getBucketIndex(&array[i], exp)]++;
+        bucketPos[getBucketIndex(array[i], exp)]++;
     }
 
     // 计算 bucketPos（桶是从数组后向前使用。如果是从小到大排序，从先大的数放入桶底。）
@@ -1915,7 +2058,7 @@ static void radixSortWithExp(int* array, int n, int exp) {
     // ### 从 9 到 0 桶且从桶底到桶顶遍历。这样就可以将大的数放入桶底。
     int bucketIndex;
     for (int k = n - 1; k >= 0; k--) {
-        bucketIndex = getBucketIndex(&array[k], exp);
+        bucketIndex = getBucketIndex(array[k], exp);
         bucketData[--bucketPos[bucketIndex]] = array[k];
     }
 
@@ -1932,7 +2075,7 @@ static void radixSortWithExp(int* array, int n, int exp) {
 // exp == 1: 表示对个位排序
 // exp == 10: 表示对十位排序
 // exp == 100: 表示对百位排序
-static int getMaxExp(const int* array, int n) {
+static int getMaxExp(int* array, int n) {
     // ### 找出最大值
     int max = array[0];
     for (int i = 1; i < n; i++) {
@@ -1950,11 +2093,11 @@ static int getMaxExp(const int* array, int n) {
     return exp;
 }
 
-static inline int getBucketIndex(const int* element, int exp) {
-    return (*element / exp) % 10;
+static inline int getBucketIndex(int element, int exp) {
+    return (element / exp) % 10;
 }
 
-static int checkArrayOrder(const int* array, int n) {
+static int checkArrayOrder(int* array, int n) {
     for (int i = 1; i < n; i++) {
         if (array[i - 1] > array[i]) {
             // debug
@@ -1966,7 +2109,7 @@ static int checkArrayOrder(const int* array, int n) {
     return 0;
 }
 
-static void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
@@ -1990,7 +2133,7 @@ static clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testRadixSort() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -2009,6 +2152,10 @@ int main() {
     /*     exit(EXIT_FAILURE); */
     /* } */
 
+}
+
+int main() {
+    testRadixSort();
     return 0;
 }
 ```
@@ -2026,9 +2173,6 @@ List
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 typedef int ElementType;
 
@@ -2043,10 +2187,10 @@ struct Node {
 };
 
 // 在 position 之后插入
-void linkedListInsert(const ElementType* elementPtr, Position position, List list);
-void linkedListDelete(const ElementType* elementPtr, List list);
-Position linkedListFind(const ElementType* elementPtr, List list);
-Position linkedListFindPrevious(const ElementType* elementPtr, List list);
+void linkedListInsert(ElementType element, Position position, List list);
+void linkedListDelete(ElementType element, List list);
+Position linkedListFind(ElementType element, List list);
+Position linkedListFindPrevious(ElementType element, List list);
 List linkedListCreate();
 void linkedListDestroy(List list);
 List linkedListEmpty(List list);
@@ -2057,25 +2201,31 @@ inline bool linkedListIsEmpty(List list) {
 
 static size_t linkedListSize(List list);
 
-static void printArray(const int* array, int n);
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 10)
+
+static void testLinkedList();
+static void printArray(int* array, int n);
 static void genRandomNums(int* outArray, int n, int lower, int upper);
 static clock_t getTime();
 
 // list 暂时不用
-void linkedListInsert(const ElementType* elementPtr, Position position, List list) {
+void linkedListInsert(ElementType element, Position position, List list) {
     Position newNode = malloc(sizeof(struct Node));
     if (!newNode) {
         fprintf(stderr, "No space for creating a node");
         exit(EXIT_FAILURE);
     }
-    newNode->element = *elementPtr;
+    newNode->element = element;
 
     newNode->next = position->next;
     position->next = newNode;
 }
 
-void linkedListDelete(const ElementType* elementPtr, List list) {
-    Position prePos = linkedListFindPrevious(elementPtr, list);
+void linkedListDelete(ElementType element, List list) {
+    Position prePos = linkedListFindPrevious(element, list);
     // 找到了
     if (prePos) {
         Position curPos = prePos->next;
@@ -2084,10 +2234,10 @@ void linkedListDelete(const ElementType* elementPtr, List list) {
     }
 }
 
-Position linkedListFind(const ElementType* elementPtr, List list) {
+Position linkedListFind(ElementType element, List list) {
     Position curPos = list->next;
     while (curPos) {
-        if (curPos->element == *elementPtr) {
+        if (curPos->element == element) {
             return curPos;
         }
         curPos = curPos->next;
@@ -2097,10 +2247,10 @@ Position linkedListFind(const ElementType* elementPtr, List list) {
 }
 
 // 如果找不到则返回 NULL
-Position linkedListFindPrevious(const ElementType* elementPtr, List list) {
+Position linkedListFindPrevious(ElementType element, List list) {
     Position prePos = list;
     while (prePos->next) {
-        if (prePos->next->element == *elementPtr) {
+        if (prePos->next->element == element) {
             return prePos;
         }
 
@@ -2154,7 +2304,7 @@ static size_t linkedListSize(List list) {
     return size;
 }
 
-void printLinkedList(List list) {
+static void printLinkedList(List list) {
     Position curPos = list->next;
     while (curPos) {
         printf("%d\t", curPos->element);
@@ -2163,14 +2313,14 @@ void printLinkedList(List list) {
     printf("\n");
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -2178,7 +2328,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -2187,7 +2337,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testLinkedList() {
     ElementType array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -2195,14 +2345,14 @@ int main() {
     List list = linkedListCreate();
     start = getTime();
     for (int i = 0; i < ARRAY_SIZE; i++) {
-        linkedListInsert(&array[i], list, list);
+        linkedListInsert(array[i], list, list);
     }
     printf("size of list: %lu\n", linkedListSize(list));
 
     int increment = (ARRAY_SIZE - 1) / 2 + 1;
     for (int k = 0; k < increment; k++) {
         for (int j = k; j < ARRAY_SIZE; j += increment) {
-            linkedListDelete(&array[j], list);
+            linkedListDelete(array[j], list);
         }
     }
     end = getTime();
@@ -2212,7 +2362,10 @@ int main() {
     printf("duration = %lfs\n", (double) duration);
 
     linkedListDestroy(list);
+}
 
+int main() {
+    testLinkedList();
     return 0;
 }
 ```
@@ -2224,20 +2377,14 @@ int main() {
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 typedef int ElementType;
 
 struct Node;
 struct LinkedList;
 typedef struct Node* PtrToNode;
-typedef const struct Node* ConstPtrToNode;
 typedef PtrToNode Position;
-typedef ConstPtrToNode ConstPosition;
 typedef struct LinkedList* List;
-typedef const struct LinkedList* ConstList;
 
 struct Node {
     ElementType element;
@@ -2250,29 +2397,40 @@ struct LinkedList {
 };
 
 // 在 position 之后插入
-void linkedListInsert(const ElementType* elementPtr, Position position, List list);
-void linkedListDelete(const ElementType* elementPtr, List list);
-Position linkedListFind(const ElementType* elementPtr, List list);
+void linkedListInsert(ElementType element, Position position, List list);
+void linkedListDelete(ElementType element, List list);
+Position linkedListFind(ElementType element, List list);
 // 如果找不到则返回 NULL。如果在第一个节点中，则返回第一个节点。
-Position linkedListFindPrevious(const ElementType* elementPtr, List list);
+Position linkedListFindPrevious(ElementType element, List list);
 List linkedListCreate();
 void linkedListDestroy(List list);
 List linkedListEmpty(List list);
 
-inline bool linkedListIsEmpty(ConstList list) {
+inline bool linkedListIsEmpty(List list) {
     return !list->size;
 }
 
-static size_t linkedListSize(ConstList list);
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 10)
+
+static void testLinkedList();
+static void printLinkedList(List list);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
+
+static size_t linkedListSize(List list);
 
 // list 暂时不用
-void linkedListInsert(const ElementType* elementPtr, Position position, List list) {
+void linkedListInsert(ElementType element, Position position, List list) {
     Position newNode = malloc(sizeof(struct Node));
     if (!newNode) {
         fprintf(stderr, "No space for creating a node");
         exit(EXIT_FAILURE);
     }
-    newNode->element = *elementPtr;
+    newNode->element = element;
 
     if (position) {
         newNode->next = position->next;
@@ -2284,8 +2442,8 @@ void linkedListInsert(const ElementType* elementPtr, Position position, List lis
     list->size++;
 }
 
-void linkedListDelete(const ElementType* elementPtr, List list) {
-    Position prePos = linkedListFindPrevious(elementPtr, list);
+void linkedListDelete(ElementType element, List list) {
+    Position prePos = linkedListFindPrevious(element, list);
 
     // ### 找不到
     if (!prePos) {
@@ -2306,10 +2464,10 @@ void linkedListDelete(const ElementType* elementPtr, List list) {
     list->size--;
 }
 
-Position linkedListFind(const ElementType* elementPtr, List list) {
+Position linkedListFind(ElementType element, List list) {
     Position curPos = list->theList;
     while (curPos) {
-        if (curPos->element == *elementPtr) {
+        if (curPos->element == element) {
             return curPos;
         }
         curPos = curPos->next;
@@ -2318,19 +2476,19 @@ Position linkedListFind(const ElementType* elementPtr, List list) {
     return NULL;
 }
 
-Position linkedListFindPrevious(const ElementType* elementPtr, List list) {
+Position linkedListFindPrevious(ElementType element, List list) {
     if (!list->theList) {
         return NULL;
     }
 
     // 如果在第一个 node 内
-    if (list->theList->element == *elementPtr) {
+    if (list->theList->element == element) {
         return (Position) -1;
     }
 
     Position prePos = list->theList;
     while (prePos->next) {
-        if (prePos->next->element == *elementPtr) {
+        if (prePos->next->element == element) {
             return prePos;
         }
 
@@ -2378,12 +2536,12 @@ List linkedListEmpty(List list) {
     return list;
 }
 
-static size_t linkedListSize(ConstList list) {
+static size_t linkedListSize(List list) {
     return list->size;
 }
 
-void printLinkedList(ConstList list) {
-    ConstPosition curPos = list->theList;
+static void printLinkedList(List list) {
+    Position curPos = list->theList;
     while (curPos) {
         printf("%d\t", curPos->element);
         curPos = curPos->next;
@@ -2391,14 +2549,14 @@ void printLinkedList(ConstList list) {
     printf("\n");
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -2406,7 +2564,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -2415,7 +2573,8 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testLinkedList() {
+
     ElementType array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -2423,14 +2582,14 @@ int main() {
     List list = linkedListCreate();
     start = getTime();
     for (int i = 0; i < ARRAY_SIZE; i++) {
-        linkedListInsert(&array[i], list->theList, list);
+        linkedListInsert(array[i], list->theList, list);
     }
     printf("size of list: %lu\n", linkedListSize(list));
 
     int increment = (ARRAY_SIZE - 1) / 2 + 1;
     for (int k = 0; k < increment; k++) {
         for (int j = k; j < ARRAY_SIZE; j += increment) {
-            linkedListDelete(&array[j], list);
+            linkedListDelete(array[j], list);
         }
     }
     end = getTime();
@@ -2441,10 +2600,15 @@ int main() {
     printf("duration = %lfs\n", (double) duration);
 
     linkedListDestroy(list);
+}
+
+int main() {
+    testLinkedList();
 
     return 0;
 }
 ```
+
 #### Double Linked List
 
 ```c
@@ -2453,9 +2617,6 @@ int main() {
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 typedef int ElementType;
 
@@ -2471,11 +2632,11 @@ struct Node {
 };
 
 // 在 position 之后插入
-void doubleLinkedListInsertAfter(const ElementType* elementPtr, Position position, List list);
+void doubleLinkedListInsertAfter(ElementType element, Position position, List list);
 // 在 position 之前插入
-void doubleLinkedListInsertPrev(const ElementType* elementPtr, Position position, List list);
-void doubleLinkedListDelete(const ElementType* elementPtr, List list);
-Position doubleLinkedListFind(const ElementType* elementPtr, List list);
+void doubleLinkedListInsertPrev(ElementType element, Position position, List list);
+void doubleLinkedListDelete(ElementType element, List list);
+Position doubleLinkedListFind(ElementType element, List list);
 List doubleLinkedListCreate();
 void doubleLinkedListDestroy(List list);
 List doubleLinkedListEmpty(List list);
@@ -2484,15 +2645,25 @@ inline bool doubleLinkedListIsEmpty(List list) {
     return list->next == NULL;
 }
 
-static size_t doubleLinkedListSize(List list);
+// ## debug
+#include <time.h>
 
-void doubleLinkedListInsertAfter(const ElementType* elementPtr, Position position, List list) {
+#define ARRAY_SIZE (10000 * 10)
+
+static void testDoubleLinkedList();
+static size_t doubleLinkedListSize(List list);
+static void printLinkedList(List list);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
+
+void doubleLinkedListInsertAfter(ElementType element, Position position, List list) {
     Position newNode = malloc(sizeof(struct Node));
     if (!newNode) {
         fprintf(stderr, "No space for creating a node");
         exit(EXIT_FAILURE);
     }
-    newNode->element = *elementPtr;
+    newNode->element = element;
 
     newNode->next = position->next;
     if (position->next) {
@@ -2502,7 +2673,7 @@ void doubleLinkedListInsertAfter(const ElementType* elementPtr, Position positio
     newNode->prev = position;
 }
 
-void doubleLinkedListInsertPrev(const ElementType* elementPtr, Position position, List list) {
+void doubleLinkedListInsertPrev(ElementType element, Position position, List list) {
     if (!position->prev) {
         fprintf(stderr, "position is header!\n");
         exit(EXIT_FAILURE);
@@ -2513,7 +2684,7 @@ void doubleLinkedListInsertPrev(const ElementType* elementPtr, Position position
         fprintf(stderr, "No space for creating a node");
         exit(EXIT_FAILURE);
     }
-    newNode->element = *elementPtr;
+    newNode->element = element;
 
     newNode->prev = position->prev;
     position->prev->next = newNode;
@@ -2521,8 +2692,8 @@ void doubleLinkedListInsertPrev(const ElementType* elementPtr, Position position
     position->prev = newNode;
 }
 
-void doubleLinkedListDelete(const ElementType* elementPtr, List list) {
-    Position curPos = doubleLinkedListFind(elementPtr, list);
+void doubleLinkedListDelete(ElementType element, List list) {
+    Position curPos = doubleLinkedListFind(element, list);
     // 找到了
     if (curPos) {
         Position prePos = curPos->prev;
@@ -2537,10 +2708,10 @@ void doubleLinkedListDelete(const ElementType* elementPtr, List list) {
     }
 }
 
-Position doubleLinkedListFind(const ElementType* elementPtr, List list) {
+Position doubleLinkedListFind(ElementType element, List list) {
     Position curPos = list->next;
     while (curPos) {
-        if (curPos->element == *elementPtr) {
+        if (curPos->element == element) {
             return curPos;
         }
         curPos = curPos->next;
@@ -2584,7 +2755,7 @@ List doubleLinkedListEmpty(List list) {
     return list;
 }
 
-size_t doubleLinkedListSize(List list) {
+static size_t doubleLinkedListSize(List list) {
     size_t size = 0;
     Position curPos = list->next;
     while (curPos) {
@@ -2595,7 +2766,7 @@ size_t doubleLinkedListSize(List list) {
     return size;
 }
 
-void printLinkedList(List list) {
+static void printLinkedList(List list) {
     Position curPos = list->next;
     while (curPos) {
         printf("%d\t", curPos->element);
@@ -2604,14 +2775,14 @@ void printLinkedList(List list) {
     printf("\n");
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -2619,7 +2790,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -2628,7 +2799,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testDoubleLinkedList() {
     ElementType array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -2636,14 +2807,14 @@ int main() {
     List list = doubleLinkedListCreate();
     start = getTime();
     for (int i = 0; i < ARRAY_SIZE; i++) {
-        doubleLinkedListInsertAfter(&array[i], list, list);
+        doubleLinkedListInsertAfter(array[i], list, list);
     }
     printf("size of list: %lu\n", doubleLinkedListSize(list));
 
     int increment = (ARRAY_SIZE - 1) / 2 + 1;
     for (int k = 0; k < increment; k++) {
         for (int j = k; j < ARRAY_SIZE; j += increment) {
-            doubleLinkedListDelete(&array[j], list);
+            doubleLinkedListDelete(array[j], list);
         }
     }
     end = getTime();
@@ -2653,6 +2824,10 @@ int main() {
     printf("duration = %lfs\n", (double) duration);
 
     doubleLinkedListDestroy(list);
+}
+
+int main() {
+    testDoubleLinkedList();
 
     return 0;
 }
@@ -2666,9 +2841,6 @@ int main() {
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 typedef int ElementType;
 
@@ -2684,11 +2856,11 @@ struct Node {
 };
 
 // 在 position 之后插入
-void cirLinkedListInsertAfter(const ElementType* elementPtr, Position position, List list);
+void cirLinkedListInsertAfter(ElementType element, Position position, List list);
 // 在 position 之前插入
-void cirLinkedListInsertPrev(const ElementType* elementPtr, Position position, List list);
-void cirLinkedListDelete(const ElementType* elementPtr, List list);
-Position cirLinkedListFind(const ElementType* elementPtr, List list);
+void cirLinkedListInsertPrev(ElementType element, Position position, List list);
+void cirLinkedListDelete(ElementType element, List list);
+Position cirLinkedListFind(ElementType element, List list);
 List cirLinkedListCreate();
 void cirLinkedListDestroy(List list);
 List cirLinkedListEmpty(List list);
@@ -2697,15 +2869,25 @@ inline bool cirLinkedListIsEmpty(List list) {
     return list->next == list;
 }
 
-static size_t cirLinkedListSize(List list);
+// ## debug
+#include <time.h>
 
-void cirLinkedListInsertAfter(const ElementType* elementPtr, Position position, List list) {
+#define ARRAY_SIZE (10000 * 10)
+
+static void testCirLinkedList();
+static size_t cirLinkedListSize(List list);
+static void printLinkedList(List list);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
+
+void cirLinkedListInsertAfter(ElementType element, Position position, List list) {
     Position newNode = malloc(sizeof(struct Node));
     if (!newNode) {
         fprintf(stderr, "No space for creating a node");
         exit(EXIT_FAILURE);
     }
-    newNode->element = *elementPtr;
+    newNode->element = element;
 
     newNode->next = position->next;
     position->next->prev = newNode;
@@ -2713,7 +2895,7 @@ void cirLinkedListInsertAfter(const ElementType* elementPtr, Position position, 
     newNode->prev = position;
 }
 
-void cirLinkedListInsertPrev(const ElementType* elementPtr, Position position, List list) {
+void cirLinkedListInsertPrev(ElementType element, Position position, List list) {
     if (!position->prev) {
         fprintf(stderr, "position is header!\n");
         exit(EXIT_FAILURE);
@@ -2724,7 +2906,7 @@ void cirLinkedListInsertPrev(const ElementType* elementPtr, Position position, L
         fprintf(stderr, "No space for creating a node");
         exit(EXIT_FAILURE);
     }
-    newNode->element = *elementPtr;
+    newNode->element = element;
 
     newNode->prev = position->prev;
     position->prev->next = newNode;
@@ -2732,8 +2914,8 @@ void cirLinkedListInsertPrev(const ElementType* elementPtr, Position position, L
     position->prev = newNode;
 }
 
-void cirLinkedListDelete(const ElementType* elementPtr, List list) {
-    Position curPos = cirLinkedListFind(elementPtr, list);
+void cirLinkedListDelete(ElementType element, List list) {
+    Position curPos = cirLinkedListFind(element, list);
     // 找到了
     if (curPos) {
         Position prePos = curPos->prev;
@@ -2745,10 +2927,10 @@ void cirLinkedListDelete(const ElementType* elementPtr, List list) {
     }
 }
 
-Position cirLinkedListFind(const ElementType* elementPtr, List list) {
+Position cirLinkedListFind(ElementType element, List list) {
     Position curPos = list->next;
     while (curPos != list) {
-        if (curPos->element == *elementPtr) {
+        if (curPos->element == element) {
             return curPos;
         }
         curPos = curPos->next;
@@ -2807,7 +2989,7 @@ static size_t cirLinkedListSize(List list) {
     return size;
 }
 
-void printLinkedList(List list) {
+static void printLinkedList(List list) {
     Position curPos = list->next;
     while (curPos != list) {
         printf("%d\t", curPos->element);
@@ -2816,14 +2998,14 @@ void printLinkedList(List list) {
     printf("\n");
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -2831,7 +3013,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -2840,7 +3022,7 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testCirLinkedList() {
     ElementType array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
@@ -2848,14 +3030,14 @@ int main() {
     List list = cirLinkedListCreate();
     start = getTime();
     for (int i = 0; i < ARRAY_SIZE; i++) {
-        cirLinkedListInsertAfter(&array[i], list, list);
+        cirLinkedListInsertAfter(array[i], list, list);
     }
     printf("size of list: %lu\n", cirLinkedListSize(list));
 
     int increment = (ARRAY_SIZE - 1) / 2 + 1;
     for (int k = 0; k < increment; k++) {
         for (int j = k; j < ARRAY_SIZE; j += increment) {
-            cirLinkedListDelete(&array[j], list);
+            cirLinkedListDelete(array[j], list);
         }
     }
     end = getTime();
@@ -2865,6 +3047,10 @@ int main() {
     printf("duration = %lfs\n", (double) duration);
 
     cirLinkedListDestroy(list);
+}
+
+int main() {
+    testCirLinkedList();
 
     return 0;
 }
@@ -2886,7 +3072,6 @@ typedef PtrToNode Position;
 
 struct Tree;
 typedef struct TreeStruct* Tree;
-typedef const struct TreeStruct* ConstTree;
 
 struct Node {
     ElementType element;
@@ -2899,18 +3084,18 @@ struct TreeStruct {
 };
 
 // 作为 Position 的第一个儿子插入
-void treeInsert(const ElementType* elementPtr, Position position, Tree tree);
+void treeInsert(ElementType element, Position position, Tree tree);
 // void treeDelete(Position position, Tree tree);
-// Position treeFind(const ElementType* elementPtr, Tree tree);
+// Position treeFind(ElementType element, Tree tree);
 void treePrint(Position theTree);
 
-void treeInsert(const ElementType* elementPtr, Position position, Tree tree) {
+void treeInsert(ElementType element, Position position, Tree tree) {
     Position newNode = malloc(sizeof(struct Node));
     if (!newNode) {
         fprintf(stderr, "No space for creating newNode!\n");
         exit(EXIT_FAILURE);
     }
-    newNode->element = *elementPtr;
+    newNode->element = element;
     newNode->firstChild = NULL;
 
     // ### 作为第一个儿子插入
@@ -2942,10 +3127,7 @@ void treePrint(Position theTree) {
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <stdbool.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 typedef int ElementType;
 
@@ -2968,10 +3150,15 @@ BinSearchTree bstMakeEmpty(BinSearchTree binSearchTree);
 static Position bstFindMin(BinSearchTree binSearchTree);
 static Position bstFindMax(BinSearchTree binSearchTree);
 
-static void printBst(BinSearchTree binSearchTree);
-static int checkBst(BinSearchTree binSearchTree);
+// ## debug
+#include <time.h>
+#define ARRAY_SIZE (10000 * 10)
 
-static void printArray(const int* array, int n);
+static void testBst();
+static int checkBst(BinSearchTree binSearchTree);
+static void printBst(BinSearchTree binSearchTree);
+
+static void printArray(int* array, int n);
 static void genRandomNums(int* outArray, int n, int lower, int upper);
 static clock_t getTime();
 
@@ -3130,7 +3317,7 @@ static int checkBst(BinSearchTree binSearchTree) {
     return 0;
 }
 
-static void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
@@ -3154,7 +3341,7 @@ static clock_t getTime() {
     return t;
 }
 
-void testBst() {
+static void testBst() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
     /* printArray(array, ARRAY_SIZE); */
@@ -3209,10 +3396,7 @@ int main() {
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <stdbool.h>
-
-#define ARRAY_SIZE (10000 * 1)
 
 typedef int ElementType;
 
@@ -3242,9 +3426,18 @@ static inline Position avlTreeDoubleRotateWithLeft(Position k3);
 static inline Position avlTreeDoubleRotateWithRight(Position k3);
 static inline int max(int a, int b);
 
+// debug
+#include <time.h>
+#define ARRAY_SIZE (10000 * 1)
+
+static void testAvlTree();
+static int checkAvlTree(AvlTree avlTree);
 static void printAvlTreeInOrder(AvlTree avlTree);
 static void printAvlTree(AvlTree avlTree);
-static int checkAvlTree(AvlTree avlTree);
+
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 AvlTree avlTreeInsert(ElementType element, AvlTree avlTree) {
     if (!avlTree) {
@@ -3515,14 +3708,14 @@ static int checkAvlTree(AvlTree avlTree) {
     return 0;
 }
 
-void printArray(int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -3530,7 +3723,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -3594,9 +3787,6 @@ int main() {
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 1)
 
 typedef int ElementType;
 
@@ -3623,6 +3813,20 @@ static Position splayTreeFindMax(SplayTree splayTree);
 
 static int checkSplayTree(SplayTree splayTree);
 static void printSplayTree(SplayTree splayTree);
+
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 1)
+
+static void testSplayTree();
+static int checkSplayTree(SplayTree splayTree);
+static void printSplayTreeInOrder(SplayTree splayTree);
+static void printSplayTree(SplayTree splayTree);
+
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 Position splayTreeSplay(ElementType element, SplayTree splayTree) {
     if (!splayTree || element == splayTree->element) {
@@ -3825,14 +4029,14 @@ static int checkSplayTree(SplayTree splayTree) {
     return 0;
 }
 
-void printArray(int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -3840,7 +4044,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -3849,7 +4053,7 @@ clock_t getTime() {
     return t;
 }
 
-void testSplayTree() {
+static void testSplayTree() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
     /* printArray(array, ARRAY_SIZE); */
@@ -3900,26 +4104,24 @@ int main() {
 
 `B` 是 balance 的简称。
 
-```c
-/************************************************************************************
-### References
+#### References
 
 -   <https://www.geeksforgeeks.org/introduction-of-b-tree-2/>
 -   <https://www.geeksforgeeks.org/insert-operation-in-b-tree/>
 -   <https://www.geeksforgeeks.org/delete-operation-in-b-tree/>
 
-### Btree 性质
+#### Btree 性质
 
 [两种流行的定义](https://stackoverflow.com/a/45826413)
 [多种定义](https://www.zhihu.com/question/19836260)
 [wiki](https://en.wikipedia.org/wiki/B-tree#Definition)
 
-> 一个用阶来描述 `min <= children <= max` 而另一个用最小度数。  
+> 一个用阶来描述 `min <= children <= max` 而另一个用最小度数。<br>
 > 它们的区别是，`CLRS Degree (Degree)` 对应的阶只能是偶数。
 
 *internal node（内部结点）：非叶子结点。*
 
-#### Knuth's Definition
+##### Knuth's Definition
 
 设 Btree 的阶（Order）为 M。
 
@@ -3931,7 +4133,7 @@ int main() {
 4. 左儿子的 key < key < 右儿子的 key。
 5. 所有的叶子结点都出现在同一层次上，并且不带信息。
 
-#### CLRS（算法导论）
+##### CLRS（算法导论）
 
 *对 Knuth 的改进。*
 
@@ -3945,12 +4147,12 @@ int main() {
 4. 左儿子的 key <= key <= 右儿子的 key。
 5. 所有的叶子结点都有同样的深度，与树的高度相同。
 
-### 操作
+#### 操作
 
-如何保持叶子节点在同一深度:  
+如何保持叶子节点在同一深度:<br>
 > 插入满时，分裂。 删除时，key < t 时，合并。所以不会造成左右儿子深度不一。
 
-#### 三个基本的操作
+##### 三个基本的操作
 
 -   分裂
 
@@ -3968,55 +4170,51 @@ int main() {
 
     -   向左兄弟借
 
-        设 curChild = childs[idx], 则 prevChild = childs[idx - 1]。所以有 prevChild <= keys[idx - 1] <= curChild。  
+        设 curChild = childs[idx], 则 prevChild = childs[idx - 1]。所以有 prevChild <= keys[idx - 1] <= curChild。<br>
         curChild 右移空出 childs[0], keys[0]。 keys[idx - 1] 和 prevChild 最右的儿子补入。再将 prevChild 最右的 key 插入到 keys[idx - 1]。
 
     -   向右兄弟借
 
         与`向左兄弟借`同理。
 
-#### 插入的递归操作
+##### 插入的递归操作
 
-前提本节点不满。  
+前提本节点不满。<br>
 如果本节点是叶子结点，则插入。如果不是叶子则向儿子插入。如果儿子是满的则分裂儿子再插入。所以最终结果是优先向儿子插入（最终插入到叶子）。
 
 *如果本节点为 root 时，先分裂 root 再插入。*
 
-#### 删除的递归操作：
+##### 删除的递归操作：
 
 前提是，如果本节点不是根节点则 `keyCount >= t`，如果是根节点则 `keyCount >= 1`。
 
-如果要删除的 key 在本节点：  
-> 如果本节点是叶子结点则直接删除。  
+如果要删除的 key 在本节点：<br>
+> 如果本节点是叶子结点则直接删除。<br>
 > 如果不是叶子结点，且左右儿子的 `keyCount >= t`，则将左儿子的最大 key 或右儿子的最小 key 复制到本节点，再删除左或右儿子复制的 key。这过程类似二叉查找树的删除。
 
 *如果本节点是 root, 则 keyCount 为 0 时，将第一个儿子作为 root。*
 
-如果要删除的 key 不在本节点：  
+如果要删除的 key 不在本节点：<br>
 > 找到 key 可能所在的 child。如果儿子节点的 `keyCount == t - 1` 则填充儿子，再删除儿子。
 
-##### 填充操作：
+###### 填充操作：
 
 前提是，本节点 `keyCount == t - 1`。
 
-如果兄弟 `keyCount >=t`，则向其借一个 key。  
+如果兄弟 `keyCount >=t`，则向其借一个 key。<br>
 如果兄弟 `keyCount == t - 1`，则与兄弟合并。
 
-### 说明
+#### 说明
 
 以下的例子是 CLRS（算法导论）的 BTree
 
 1. 叶子结点的 childs 不初始化为 NULL。
 2. 左儿子的 key <= key <= 右儿子的 key。
 
-*********************************************************************************/
-
+```c
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 1)
 
 typedef int KeyType;
 
@@ -4066,12 +4264,18 @@ static bool btreeNodeIsFull(BTreeNode btreeNode);
 static KeyType btreeNodeGetMin(BTreeNode btreeNode);
 static KeyType btreeNodeGetMax(BTreeNode btreeNode);
 
+// debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 1)
+
+static void testBTree();
 static void traverseBTree(BTree btree);
 static void traverseBTreeNode(BTreeNode btreeNode, int depth);
 static int checkBTree(BTree btree);
 static int checkBTreeNode(BTreeNode btreeNode);
 
-static void printArray(const int* array, int n);
+static void printArray(int* array, int n);
 static void genRandomNums(int* outArray, int n, int lower, int upper);
 static clock_t getTime();
 
@@ -4522,7 +4726,7 @@ static int checkBTreeNode(BTreeNode btreeNode) {
     return 0;
 }
 
-static void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
@@ -4595,23 +4799,33 @@ int main() {
 
 ### Huffman Tree（哈夫曼树）
 
+#### refer:
+
+-   <https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/>
+
+#### 说明
+
+构造 huffman 树的步骤：
+
+> 建立一个堆，其节点是一个一棵树。初始时，用每个数建立一棵树，所以每棵树只有一个节点，然后将每个棵的插入堆中。<br>
+> 在堆中弹出两个最小频率的根节点的树，合并两棵树，并产生一个新的根节点，然后将合并后的树的根节点插入堆中。直到堆中只有一个堆节点。剩下的堆节点就是 huffman tree。
+
+#### main.c
+
 ```c
-// ### refer:
-// https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
+#include "huffman_tree.h"
 
-// ### 说明
-// 建立一个堆，其节点是一个一棵树。初始时，用每个数建立一棵树，所以每棵树只有一个节点，然后将每个棵的插入堆中。
-// 构造 huffman 树的步骤：
-//      在堆中弹出两个最小频率的根节点的树，合并两棵树，并产生一个新的根节点，然后将合并后的树的根节点插入堆中。直到堆中只有一个堆节点。剩下的堆节点就是 huffman tree。
+int main() {
+    testHuffmanTree();
+    return 0;
+}
+```
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <limits.h>
-#include <time.h>
+#### huffman_tree.h
 
-#define NONLEAF_DATA '$'
-#define STR_SIZE 2
+```c
+#ifndef _HUFFMAN_TREE_H
+#define _HUFFMAN_TREE_H
 
 struct HuffmanTreeNode;
 struct HeapStruct;
@@ -4619,49 +4833,42 @@ typedef struct HuffmanTreeNode* PtrToHuffmanTreeNode;
 typedef PtrToHuffmanTreeNode HuffmanTree;
 typedef int FreqSize;
 
-// ### BinHeap
-#define ARRAY_SIZE (26 + 26)
-#define BIN_HEAP_MIN_DATA (INT_MIN)
-
-typedef struct HeapStruct *BinHeap;
-typedef HuffmanTree ElementType;
-typedef int Position;
-
-struct HuffmanTreeNode {
-    char data;
-    FreqSize freq;
-    PtrToHuffmanTreeNode leftChild, rightChild;
-};
-
-struct HeapStruct {
-    int capacity;
-    int size;
-    ElementType* elements;
-};
-
 HuffmanTree huffmanTreeBuild(char* datas, FreqSize* freqs, int n);
 void huffmanTreeDestroy(HuffmanTree huffmanTree);
+
+// debug
+void testHuffmanTree();
+
+#endif
+```
+
+#### huffman_tree.c
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#include "binheap.h"
+#include "huffman_tree.h"
+
+#define NONLEAF_DATA '$'
+
 static HuffmanTree huffmanTreeMerge(HuffmanTree huffmanTree1, HuffmanTree huffmanTree2);
 
-static bool huffmanTreeIsLeaf(HuffmanTree huffmanTree);
+
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (26 + 26)
+
 static void printHuffmanTreeCodes(HuffmanTree huffmanTree, int* array, int top);
+static bool huffmanTreeIsLeaf(HuffmanTree huffmanTree);
 
-// ### BinHeap
-void binHeapInsert(ElementType element, BinHeap binHeap);
-ElementType binHeapDeleteMin(BinHeap binHeap);
-BinHeap binHeapInitialize(int capacity);
-void binHeapDestroy(BinHeap binHeap);
-ElementType binHeapFindMin(BinHeap binHeap);
-
-inline bool binHeapIsEmpty(BinHeap binHeap) {
-    return !binHeap->size;
-}
-
-inline bool binHeapIsFull(BinHeap binHeap) {
-    return binHeap->size + 1 == binHeap->capacity;
-}
-
-static void printBinHeap(BinHeap binHeap);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static void genRandomChars(char* outArray, size_t n, char lower, char upper);
+static clock_t getTime();
 
 HuffmanTree huffmanTreeBuild(char* datas, FreqSize* freqs, int n) {
     if (n < 0) {
@@ -4670,7 +4877,7 @@ HuffmanTree huffmanTreeBuild(char* datas, FreqSize* freqs, int n) {
     }
 
     BinHeap binHeap = binHeapInitialize(n + 1);
-    ElementType newNode;
+    HuffmanTree newNode;
     for (int i = 0; i < n; i++) {
         newNode = malloc(sizeof(struct HuffmanTreeNode));
         if (!newNode) {
@@ -4758,7 +4965,111 @@ static void printHuffmanTreeCodes(HuffmanTree huffmanTree, int* prefix, int top)
     }
 }
 
-void binHeapInsert(ElementType element, BinHeap binHeap) {
+static void printArray(int* array, int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d\t", array[i]);
+    }
+    printf("\n");
+}
+
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
+    srand(time(0));
+    int tmpUpper = upper - lower + 1;
+    for (int i = 0; i < n; i++) {
+        outArray[i] = rand() % tmpUpper + lower;
+    }
+}
+
+static void genRandomChars(char* outArray, size_t n, char lower, char upper) {
+    srand(time(0));
+    int tmpUpper = upper - lower + 1;
+    int j;
+    for (size_t i = 0; i < n; i++) {
+        outArray[i] = (char) (rand() % tmpUpper + lower);
+    }
+}
+
+static clock_t getTime() {
+    clock_t t = clock();
+    if (t == (clock_t)-1) {
+        fprintf(stderr, "clock() failed\n");
+        exit(EXIT_FAILURE);
+    }
+    return t;
+}
+
+void testHuffmanTree() {
+    char datas[ARRAY_SIZE];
+    for (int i = 0; i < 26; i++) {
+        datas[i] = 'A' + i;
+        datas[26 + i] = 'a' + i;
+    }
+    FreqSize freqs[ARRAY_SIZE];
+    genRandomNums(freqs, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
+
+    HuffmanTree huffmanTree = huffmanTreeBuild(datas, freqs, ARRAY_SIZE);
+    int prefix[ARRAY_SIZE];
+    printHuffmanTreeCodes(huffmanTree, prefix, 0);
+}
+```
+
+#### binheap.h
+
+```c
+#ifndef _BINHEAP_H
+#define _BINHEAP_H
+
+#include <limits.h>
+#include <stdbool.h>
+#include "huffman_tree.h"
+
+typedef HuffmanTree BinHeapElementType;
+
+typedef struct HeapStruct *BinHeap;
+typedef int Position;
+
+struct HuffmanTreeNode {
+    char data;
+    FreqSize freq;
+    PtrToHuffmanTreeNode leftChild, rightChild;
+};
+
+struct HeapStruct {
+    int capacity;
+    int size;
+    BinHeapElementType* elements;
+};
+
+void binHeapInsert(BinHeapElementType element, BinHeap binHeap);
+BinHeapElementType binHeapDeleteMin(BinHeap binHeap);
+BinHeap binHeapInitialize(int capacity);
+void binHeapDestroy(BinHeap binHeap);
+BinHeapElementType binHeapFindMin(BinHeap binHeap);
+
+inline bool binHeapIsEmpty(BinHeap binHeap) {
+    return !binHeap->size;
+}
+
+inline bool binHeapIsFull(BinHeap binHeap) {
+    return binHeap->size + 1 == binHeap->capacity;
+}
+
+#endif
+```
+
+#### binheap.c
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "binheap.h"
+
+#define BIN_HEAP_MIN_DATA (INT_MIN)
+
+static void printBinHeap(BinHeap binHeap);
+
+void binHeapInsert(BinHeapElementType element, BinHeap binHeap) {
     if (binHeapIsFull(binHeap)) {
         fprintf(stderr, "BinHeap is full!\n");
         exit(EXIT_FAILURE);
@@ -4777,17 +5088,17 @@ void binHeapInsert(ElementType element, BinHeap binHeap) {
     binHeap->elements[curPos] = element;
 }
 
-ElementType binHeapDeleteMin(BinHeap binHeap) {
+BinHeapElementType binHeapDeleteMin(BinHeap binHeap) {
     if (binHeapIsEmpty(binHeap)) {
         fprintf(stderr, "BinHeap is empty!\n");
         exit(EXIT_FAILURE);
     }
 
     // 只用于返回
-    ElementType minElement = binHeap->elements[1];
+    BinHeapElementType minElement = binHeap->elements[1];
 
     // 因为删除了堆顶，所以用最后一个节点补上
-    ElementType lastElement = binHeap->elements[binHeap->size--];
+    BinHeapElementType lastElement = binHeap->elements[binHeap->size--];
 
     // 上移较小的儿子，直至叶子结点
     Position curPos = 1;
@@ -4820,7 +5131,7 @@ BinHeap binHeapInitialize(int capacity) {
         exit(EXIT_FAILURE);
     }
 
-    binHeap->elements = malloc(sizeof(ElementType) * capacity);
+    binHeap->elements = malloc(sizeof(BinHeapElementType) * capacity);
     if (!binHeap->elements) {
         fprintf(stderr, "No space for creating binHeap->elements!\n");
         exit(EXIT_FAILURE);
@@ -4845,39 +5156,860 @@ void binHeapDestroy(BinHeap binHeap) {
     free(binHeap);
 }
 
-ElementType binHeapFindMin(BinHeap binHeap) {
+BinHeapElementType binHeapFindMin(BinHeap binHeap) {
     if (binHeapIsEmpty(binHeap)) {
         fprintf(stderr, "BinHeap is empty!\n");
         exit(EXIT_FAILURE);
     }
     return binHeap->elements[1];
 }
+```
 
-void printArray(int* array, int n) {
+### Red-black tree
+
+#### References
+
+-   [彻底理解红黑树](https://www.jianshu.com/p/a9c064d38a92)
+-   <https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/?ref=rp>
+-   <https://en.wikipedia.org/wiki/Red%E2%80%93black_tree>
+
+#### 红黑树的定义
+
+[ref](https://zh.wikipedia.org/zh-hans/%E7%BA%A2%E9%BB%91%E6%A0%91)
+
+红黑树是每个节点都带有颜色属性的二叉搜索树，颜色为红色或黑色。在二叉搜索树强制一般要求以外，对于任何有效的红黑树我们增加了如下的额外要求：
+
+1.  节点是红色或黑色。
+2.  根是黑色。
+3.  所有叶子都是黑色（叶子是NIL节点）。
+4.  每个红色节点必须有两个黑色的子节点。（从每个叶子到根的所有路径上不能有两个连续的红色节点。）
+5.  从任一节点到其每个叶子的所有简单路径都包含相同数目的黑色节点。
+
+总结:
+
+> 如果父节点是红色则其两个儿子一定是黑色。因此，不能有连续的两个红色节点。<br>
+> 如果父节点是黑色则其儿子的颜色可能任意色。比如：红红，黑黑，红黑。
+
+#### 二叉搜索树与红黑树的插入与删除
+
+红黑树的插入与删除与二叉搜索树一样，不过是多了平衡调整。
+
+#### 定义
+
+*为了方便描述，有了这些定义*
+
+1.  Nil（NULL）节点为黑色节点
+2.  当前平衡点 N, N 的兄弟 S, SL, SR 为 S 的左右树。P 为 N 的父节点，GP 为祖父节点。
+3.  h(A -> B -> Nil): 为路径 A -> B -> Nil 的黑色节点数量。
+4.  h(树)：表示 h(root -> Nil)。
+5.  D 为删除的节点。
+
+#### 红黑树的插入
+
+新插入的节点都是红色的
+
+> 因为红色节点不会破坏树（包含所有子树）的平衡（从任一节点到其每个叶子的所有简单路径都包含相同数目的黑色节点），而插入黑色节点会破坏树（包含所有子树）的平衡。遇到“红红节点”的情况时，只是局部（一部分子树）调整即可。
+>
+> 插入节点与其父节点为红色时，才要调整红黑树。
+
+[情形3. 父红-叔红](https://www.jianshu.com/p/96e652ccf720)根节点是否会变为红色？
+
+> 递归时，当 N 为根节点时会调用“情形1. N为根节点（父节点为NULL）”的调整方法。所以会将根节点涂黑。
+
+#### 红黑树的删除
+
+和平衡二叉搜索树一样，删除的节点一定子树中，最大或最小的一个节点是一个叶子节点。所以该节点最多只有一个儿子。<br>
+只有一个子节点时，删除节点只能是黑色，其子节点为红色，否则无法满足红黑树的性质了。反之，删除的节点是红色时，则该节点一定是一个叶子节点。
+
+1.  如果删除的节点是红色的，则直接删除即可，因为补上的节点（Nil）黑色的。
+2.  如果删除的节点是黑色时，才需要平衡调整。
+
+    1.  当删除的节点有一个儿子时，则儿子一定是红色的，所以将补上的红色儿子涂黑即可达到平衡。
+    2.  当删除的节点是一个叶子节点时，补上的节点是一个 Nil 节点。这时树就不平衡了，所以补上的节点成为当前平衡点（N）。平衡的方向是，方法一：因为删除之后，会有 `h(N) -= 1, h(P) -= 1, h(GP) -= 1, h(GGP) -= 1, ...`，将它们其一个加 1 即可。方法二：使 `h(S) -= 1`，且 D 的 P 为黑色，然后 P 成为新的平衡点 N，此时 N 相当上删除之后补上的点，符合递归的条件。（因为递归的原因，在调整阶段，当 N 节点为黑色时，N 节点的儿子是任意的。）
+
+#### 红黑树的常用的旋转操作
+
+*旋转能使树保持二叉搜索树的特性。*
+
+Root' 表示旋转后的树的根节点。
+
+1.  当 X(B), XL(B), XR(R)。X 左旋，X 与 XR 互换颜色。XL, XR 的子树的父节点不会由从黑变红。且 h(X' 的左子树) == h(X' 的右子树), h(XR' 左子树) = h(XR' 的右子树), h(Root') 不变。Root' 颜色不变。
+2.  当 N(B), P, S(B), SL(R), N 是 P 的右儿子。P 右旋，P 和 S 交换颜色，SL 变黑。N, S, SL 的子树的父节点颜色不会从黑变红。h(P' 的左子树) == h(P' 的右子树)，h(S' 的左子树) = h(S' 的右子树)，h(Root') 不变。Root' 的颜色不变。
+
+#### main.c
+
+```c
+#include "rbtree.h"
+
+int main() {
+    testRBTree();
+    return 0;
+}
+```
+
+#### rbtree.h
+
+```c
+#ifndef _RBTREE_H
+#define _RBTREE_H
+
+typedef int ElementType;
+
+enum Color {RED, BLACK};
+enum Side {LEFT, RIGHT};
+
+struct RBTreeNodeStruct;
+struct RBTreeStruct;
+
+typedef struct RBTreeNodeStruct* PtrToRBTreeNode;
+typedef PtrToRBTreeNode RBTreeNode;
+typedef PtrToRBTreeNode Position;
+
+typedef struct RBTreeStruct* RBTree;
+
+struct RBTreeNodeStruct {
+    ElementType element;
+    enum Color color;
+    RBTreeNode parent, leftChild, rightChild;
+};
+
+struct RBTreeStruct {
+    RBTreeNode root;
+};
+
+RBTree rbtreeCreate();
+void rbtreeDestroy(RBTree rbtree);
+void rbtreeInsert(ElementType element, RBTree rbtree);
+void rbtreeDelete(ElementType element, RBTree rbtree);
+
+// debug
+void testRBTree();
+
+#endif
+```
+
+#### rbtree.c
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#include "rbtree.h"
+
+static void rbtreeFixInsertion(RBTreeNode newNode, RBTree rbtree);
+static void rbtreeFixDeletion(RBTreeNode parent, enum Side side, RBTree rbtree);
+
+static void rbtreeDeleteNode(RBTreeNode node, RBTree rbtree);
+static void rbtreeFixDeletionBlackBlack(RBTreeNode parent, enum Side side, RBTree rbtree);
+static void rbtreeLeftRotate(RBTreeNode node, RBTree rbtree);
+static void rbtreeRightRotate(RBTreeNode node, RBTree rbtree);
+static RBTreeNode rbtreeSearch(ElementType element, RBTree rbtree);
+static RBTreeNode rbtreeFindRepalcingNode(RBTreeNode node, RBTree rbtree);
+static void rbtreeDestroyNodes(RBTreeNode node);
+static RBTreeNode rbtreeFindMin(RBTreeNode node);
+static RBTreeNode rbtreeFindMax(RBTreeNode node);
+
+static RBTreeNode rbtreeNodeCreate(ElementType element);
+static void rbtreeNodeDestroy(RBTreeNode node);
+static inline bool rbtreeNodeIsBlack(RBTreeNode node);
+static inline bool rbTreeNodeIsRed(RBTreeNode node);
+static inline bool rbtreeNodeIsRoot(RBTreeNode node);
+static inline bool rbtreeNodeIsOnLeft(RBTreeNode node);
+static inline bool rbtreeNodeIsOnRight(RBTreeNode node);
+static inline void rbtreeNodeSwapColor(RBTreeNode node1, RBTreeNode node2);
+static inline RBTreeNode rbtreeNodeSibling(RBTreeNode node);
+static inline RBTreeNode rbtreeNodeGrandparent(RBTreeNode node);
+static inline RBTreeNode rbtreeNodeUncle(RBTreeNode node);
+static inline enum Side rbtreeNodeSide(RBTreeNode node);
+
+// ## debug RedBlackTree
+#include "time.h"
+#include "queue.h"
+
+// ### 为了打印红黑树
+# define NIL_ELEMENT (0)
+# define LEVEL_SEPARATOR_ELEMENT (-1)
+
+# define ARRAY_SIZE (10000 * 10)
+// # define ARRAY_SIZE (12)
+
+static int checkRBTree(RBTree rbtree);
+static int checkRBTreeSubTree(RBTreeNode node);
+static int hOfRBTree(RBTreeNode node);
+static void traverseBTree(RBTree rbtree);
+static void printArray(int* array, int n);
+static clock_t getTime();
+static void genRandomNumsNotSame(int* outArray, int n, int lower, int upper);
+
+RBTree rbtreeCreate() {
+    RBTree rbtree = malloc(sizeof(RBTreeNode));
+    if (!rbtree) {
+        fprintf(stderr, "No space for rbtree!\n");
+        exit(EXIT_FAILURE);
+    }
+    rbtree->root = NULL;
+
+    return rbtree;
+}
+
+void rbtreeDestroy(RBTree rbtree) {
+    if (!rbtree || !rbtree->root) {
+        return;
+    }
+
+    rbtreeDestroyNodes(rbtree->root);
+
+    free(rbtree);
+}
+
+static void rbtreeDestroyNodes(RBTreeNode node) {
+    if (!node) {
+        return;
+    }
+
+    rbtreeDestroyNodes(node->leftChild);
+    rbtreeDestroyNodes(node->rightChild);
+    free(node);
+}
+
+void rbtreeInsert(ElementType element, RBTree rbtree) {
+    // ### 插入值
+    RBTreeNode newNode = rbtreeNodeCreate(element);
+
+    if (!rbtree->root) {
+        rbtree->root = newNode;
+        newNode->color = BLACK;
+        return;
+    }
+
+    RBTreeNode tmpNode = rbtreeSearch(element, rbtree);
+    // 不允许插入相同的值
+    if (tmpNode->element == element) {
+        rbtreeNodeDestroy(newNode);
+        return;
+    }
+
+    // ### 插入节点
+    newNode->parent = tmpNode;
+    if (newNode->element < tmpNode->element) {
+        tmpNode->leftChild = newNode;
+    } else {
+        tmpNode->rightChild = newNode;
+    }
+
+    // ### 调整插入后的树
+    rbtreeFixInsertion(newNode, rbtree);
+}
+
+void rbtreeDelete(ElementType element, RBTree rbtree) {
+    RBTreeNode tmpNode = rbtreeSearch(element, rbtree);
+    if (tmpNode && (tmpNode->element == element)) {
+        rbtreeDeleteNode(tmpNode, rbtree);
+    }
+}
+
+static void rbtreeFixInsertion(RBTreeNode newNode, RBTree rbtree) {
+    // ### newNode 是根节点
+    if (rbtreeNodeIsRoot(newNode)) {
+        newNode->color = BLACK;
+        return;
+    }
+
+    RBTreeNode parent = newNode->parent;
+
+    // ## 父节点是黑色的
+    if (rbtreeNodeIsBlack(parent)) {
+        return;
+    }
+
+    // ## 父节点是红色的
+    RBTreeNode grandparent = rbtreeNodeGrandparent(newNode);
+    RBTreeNode uncle = rbtreeNodeUncle(newNode);
+
+    if (rbTreeNodeIsRed(uncle)) {
+        // ### 父红叔红
+        grandparent->color = RED;
+        parent->color = BLACK;
+        uncle->color = BLACK;
+        rbtreeFixInsertion(grandparent, rbtree);
+    } else {
+        // ### 父红叔黑
+        if (rbtreeNodeIsOnLeft(parent)) {
+            if (rbtreeNodeIsOnLeft(newNode)) {
+                // #### 父左 N 左
+                rbtreeRightRotate(grandparent, rbtree);
+                rbtreeNodeSwapColor(grandparent, parent);
+            } else {
+                // #### 父左 N 左
+                rbtreeLeftRotate(parent, rbtree);
+                rbtreeFixInsertion(parent, rbtree);
+            }
+        } else {
+            if (rbtreeNodeIsOnLeft(newNode)) {
+                // #### 父右 N 左
+                rbtreeRightRotate(parent, rbtree);
+                rbtreeFixInsertion(parent, rbtree);
+            } else {
+                // #### 父右 N 右
+                rbtreeLeftRotate(grandparent, rbtree);
+                rbtreeNodeSwapColor(grandparent, parent);
+            }
+        }
+    }
+}
+
+// 二叉搜索树的删除是可以用递归实现的，但根据分析，红黑树的 delete 很难用递归实现，所以用非递归实现。
+static void rbtreeDeleteNode(RBTreeNode node, RBTree rbtree) {
+    if (!node) {
+        return;
+    }
+
+    RBTreeNode replacingNode = rbtreeFindRepalcingNode(node, rbtree);
+
+    // 只有一个根节点的情况，否则不可能是 `replacingNode == rbtree->root`
+    if (replacingNode == rbtree->root) {
+        rbtreeNodeDestroy(replacingNode);
+        rbtree->root = NULL;
+        return;
+    }
+
+    /* 以下，replacingNode 不是根节点 */
+
+    // ### 删除节点前，先保存 replacingNode 的 parent, side 和 color，以便进行删除和删除调整。
+    RBTreeNode parent = replacingNode->parent;
+    enum Side side;
+    if (rbtreeNodeIsOnLeft(replacingNode)) {
+        side = LEFT;
+    } else {
+        side = RIGHT;
+    }
+
+    enum Color color = replacingNode->color;
+
+    // ### replacingNode element 替换 node element
+    node->element = replacingNode->element;
+
+    // ## 先以平衡二叉树的方法删除 replacingNode, 再判断是否要平衡调整
+    if (!replacingNode->leftChild && !replacingNode->rightChild) {
+        // ### replaceNode 是叶子节点
+        if (side == LEFT) {
+            parent->leftChild = NULL;
+        } else {
+            parent->rightChild = NULL;
+        }
+
+        rbtreeNodeDestroy(replacingNode);
+    } else {
+        // ### 只有一个儿子。直接删除 replacingNode。
+        if (replacingNode->rightChild) {
+            replacingNode->rightChild->parent = parent;
+            if (side == LEFT) {
+                parent->leftChild = replacingNode->rightChild;
+            } else {
+                parent->rightChild = replacingNode->rightChild;
+            }
+        } else {
+            replacingNode->leftChild->parent = parent;
+            if (side == LEFT) {
+                parent->leftChild = replacingNode->leftChild;
+            } else {
+                parent->rightChild = replacingNode->leftChild;
+            }
+        }
+
+        rbtreeNodeDestroy(replacingNode);
+    }
+
+    // ## 进行删除调整
+    if (color == BLACK) {
+        rbtreeFixDeletion(parent, side, rbtree);
+    }
+}
+
+// parent 为当前平衡点 N 的 parent, side 表示平衡点在 parent 的左边还是右边
+static void rbtreeFixDeletion(RBTreeNode parent, enum Side side, RBTree rbtree) {
+    if (!parent) {
+        return;
+    }
+
+    RBTreeNode node;
+    RBTreeNode sibling;
+    if (side == LEFT) {
+        node = parent->leftChild;
+        sibling = parent->rightChild;
+    } else {
+        node = parent->rightChild;
+        sibling = parent->leftChild;
+    }
+
+    // ### 被删除的节点只有一个儿子的, 则其子节点必是红色的, 将其置为黑即可。
+    if (node) {
+        node->color = BLACK;
+        return;
+    }
+
+    // ### 被删除的节点是叶子节点。
+    rbtreeFixDeletionBlackBlack(parent, side, rbtree);
+}
+
+// 前提：当前平衡点 node 是黑的。
+static void rbtreeFixDeletionBlackBlack(RBTreeNode parent, enum Side side, RBTree rbtree) {
+    // ### base case
+    // node 为根节点, 无需操作
+    if(!parent) {
+        return;
+    }
+
+    /* 以下，node 不为根节点 */
+
+    // ### 找到 sibling
+    RBTreeNode sibling;
+    if (side == LEFT) {
+        sibling = parent->rightChild;
+    } else {
+        sibling = parent->leftChild;
+    }
+
+    // 因为 h(S) - h(N) = 1，node 是黑的，parent 不空，所以 sibling 不为空。
+    if (rbTreeNodeIsRed(sibling)) {
+        // ## 兄红
+        if (rbtreeNodeIsOnLeft(sibling)) {
+            // ### 兄红-兄左
+            rbtreeRightRotate(parent, rbtree);
+            rbtreeNodeSwapColor(parent, sibling);
+            rbtreeFixDeletionBlackBlack(parent, RIGHT, rbtree);
+        } else {
+            // ### 兄红-兄右
+            rbtreeLeftRotate(parent, rbtree);
+            rbtreeNodeSwapColor(parent, sibling);
+            rbtreeFixDeletionBlackBlack(parent, LEFT, rbtree);
+        }
+    } else {
+        // ## 兄黑
+        if (rbtreeNodeIsBlack(sibling->leftChild) && rbtreeNodeIsBlack(sibling->rightChild)) {
+            if (rbTreeNodeIsRed(parent)) {
+                // ### 兄黑-兄的儿子全黑-父红
+                rbtreeNodeSwapColor(parent, sibling);
+            } else {
+                // ### 兄黑-兄的儿子全黑-父黑
+                sibling->color = RED;
+                rbtreeFixDeletionBlackBlack(parent->parent, rbtreeNodeSide(parent), rbtree);
+            }
+        } else {
+            if (rbtreeNodeIsOnLeft(sibling)) {
+                if (rbTreeNodeIsRed(sibling->leftChild)) {
+                    // ### 兄黑-兄的儿子节点不全黑，兄左，SL 红
+                    rbtreeRightRotate(parent, rbtree);
+                    rbtreeNodeSwapColor(parent, sibling);
+                    sibling->leftChild->color = BLACK;
+                } else {
+                    // ### 兄黑-兄的儿子节点不全黑，兄左，SL 黑
+                    RBTreeNode siblingRightChild = sibling->rightChild;
+                    rbtreeLeftRotate(sibling, rbtree);
+                    rbtreeNodeSwapColor(sibling, siblingRightChild);
+                    rbtreeFixDeletionBlackBlack(parent, side, rbtree);
+                }
+            } else {
+                if (rbTreeNodeIsRed(sibling->rightChild)) {
+                    // ### 兄黑-兄的儿子节点不全黑，兄右，SR 红
+                    rbtreeLeftRotate(parent, rbtree);
+                    rbtreeNodeSwapColor(parent, sibling);
+                    sibling->rightChild->color = BLACK;
+                } else {
+                    // ### 兄黑-兄的儿子节点不全黑，兄右，SR 黑
+                    RBTreeNode siblingLeftChild = sibling->leftChild;
+                    rbtreeRightRotate(sibling, rbtree);
+                    rbtreeNodeSwapColor(sibling, siblingLeftChild);
+                    rbtreeFixDeletionBlackBlack(parent, side, rbtree);
+                }
+            }
+        }
+    }
+}
+
+// 右儿子不能为空。如果 node 是 root 时，会更新 root。
+static void rbtreeLeftRotate(RBTreeNode node, RBTree rbtree) {
+    RBTreeNode parent = node->parent;
+    RBTreeNode rightChild = node->rightChild;
+
+    // ### 更新父节点的连接
+    if (node == rbtree->root) {
+        rbtree->root = rightChild;
+    }
+
+    // ### 重定位 node 和 rightChild 的 leftChild 之间的指针
+    node->rightChild = rightChild->leftChild;
+    if (rightChild->leftChild) {
+        rightChild->leftChild->parent = node;
+    }
+    // ### 重定位 node 和 rightChild 之间的指针
+    rightChild->leftChild = node;
+    node->parent = rightChild;
+
+    // ### 重定位 parent 和 right 之间的指针
+    rightChild->parent = parent;
+    if (parent) {
+        if (node == parent->leftChild) {
+            parent->leftChild = rightChild;
+        } else {
+            parent->rightChild = rightChild;
+        }
+    }
+}
+
+// 左儿子不能为空。如果 node 是 root 时，会更新 root。
+static void rbtreeRightRotate(RBTreeNode node, RBTree rbtree) {
+    RBTreeNode parent = node->parent;
+    RBTreeNode leftChild = node->leftChild;
+
+    // ### 更新父节点的连接
+    if (node == rbtree->root) {
+        rbtree->root = leftChild;
+    }
+
+    // ### 重位 node 和 leftChild 的 rightChild 之间的指针
+    node->leftChild = leftChild->rightChild;
+    if (leftChild->rightChild) {
+        leftChild->rightChild->parent = node;
+    }
+    // ### 重位 node 和 leftChild 之间的指针
+    leftChild->rightChild = node;
+    node->parent = leftChild;
+
+    // ### 重位 parent 和 leftChild 之间的指针
+    leftChild->parent = parent;
+    if (parent) {
+        if (node == parent->leftChild) {
+            parent->leftChild = leftChild;
+        } else {
+            parent->rightChild = leftChild;
+        }
+    }
+}
+
+ // 如果 element 相等则返回该节点。如果找不到则返回能作为插入的节点的父亲的节点。如果 root 为空则返回 NULL。
+static RBTreeNode rbtreeSearch(ElementType element, RBTree rbtree) {
+    RBTreeNode cur = rbtree->root;
+    while (cur) {
+        if (element < cur->element) {
+            if (cur->leftChild) {
+                cur = cur->leftChild;
+            } else {
+                break;
+            }
+        } else if (element > cur->element) {
+            if (cur->rightChild) {
+                cur = cur->rightChild;
+            } else {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+
+    return cur;
+}
+
+// node 不为空。返回的节点不为空。有可能返回 node 自己。
+static RBTreeNode rbtreeFindRepalcingNode(RBTreeNode node, RBTree rbtree) {
+    // ### 是叶子
+    if (!node->leftChild && !node->rightChild) {
+        return node;
+    }
+
+    // ### 有两个儿子时，返回右边子树的最小节点
+    if (node->leftChild && node->rightChild) {
+        RBTreeNode cur = node->rightChild;
+        while (cur->leftChild) {
+            cur = cur->leftChild;
+        }
+        return cur;
+    }
+
+    // ### 只有一个儿子
+    if (node->leftChild) {
+        return node->leftChild;
+    } else {
+        return node->rightChild;
+    }
+}
+
+static RBTreeNode rbtreeFindMin(RBTreeNode node) {
+    RBTreeNode cur = node;
+    while (cur->leftChild) {
+        cur = cur->leftChild;
+    }
+
+    return cur;
+}
+
+static RBTreeNode rbtreeFindMax(RBTreeNode node) {
+    RBTreeNode cur = node;
+    while (cur->rightChild) {
+        cur = cur->rightChild;
+    }
+
+    return cur;
+}
+
+static RBTreeNode rbtreeNodeCreate(ElementType element) {
+    RBTreeNode newNode = malloc(sizeof(struct RBTreeNodeStruct));
+    if (!newNode) {
+        fprintf(stderr, "No space for newNode!\n");
+        exit(EXIT_FAILURE);
+    }
+    newNode->element = element;
+    // 默认颜色为红色
+    newNode->color = RED;
+    newNode->leftChild = newNode->rightChild = newNode->parent = NULL;
+
+    return newNode;
+}
+
+static void rbtreeNodeDestroy(RBTreeNode node) {
+    free(node);
+}
+
+static inline bool rbTreeNodeIsRed(RBTreeNode node) {
+    return node && node->color == RED;
+}
+
+static inline bool rbtreeNodeIsBlack(RBTreeNode node) {
+    // return !node || node->color == BLACK;
+    return !rbTreeNodeIsRed(node);
+}
+
+static inline bool rbtreeNodeIsRoot(RBTreeNode node) {
+    return node->parent == NULL;
+}
+
+// 判断 node 是否在其父亲的左边
+static inline bool rbtreeNodeIsOnLeft(RBTreeNode node) {
+    return node == node->parent->leftChild;
+}
+
+static inline bool rbtreeNodeIsOnRight(RBTreeNode node) {
+    return node == node->parent->rightChild;
+}
+
+static inline void rbtreeNodeSwapColor(RBTreeNode node1, RBTreeNode node2) {
+    enum Color tmpColor = node1->color;
+    node1->color = node2->color;
+    node2->color = tmpColor;
+}
+
+static inline RBTreeNode rbtreeNodeSibling(RBTreeNode node) {
+    if (rbtreeNodeIsOnLeft(node)) {
+        return node->parent->rightChild;
+    } else {
+        return node->parent->leftChild;
+    }
+}
+
+static inline RBTreeNode rbtreeNodeGrandparent(RBTreeNode node) {
+    return node->parent->parent;
+}
+
+static inline RBTreeNode rbtreeNodeUncle(RBTreeNode node) {
+    RBTreeNode grandparent = node->parent->parent;
+
+    if (rbtreeNodeIsOnLeft(node->parent)) {
+        return grandparent->rightChild;
+    } else {
+        return grandparent->leftChild;
+    }
+}
+
+// 为了使 node 为 root 时也能运行，root 节点是在父亲左边的（随便定一个位置）。
+static inline enum Side rbtreeNodeSide(RBTreeNode node) {
+    if (!node->parent) {
+        return LEFT;
+    }
+
+    if (rbtreeNodeIsOnLeft(node)) {
+        return LEFT;
+    } else {
+        return RIGHT;
+    }
+}
+
+// node 可以作为红黑树的子树。所以 node（子树根节点） 为红黑无所谓。
+int checkRBTreeSubTree(RBTreeNode node) {
+    // Nil 节点
+    if (!node) {
+        return 0;
+    }
+
+    // ## 二叉搜索树的条件
+    if (node->leftChild) {
+        if (node->element < rbtreeFindMax(node->leftChild)->element) {
+            return -3;
+        }
+    }
+
+    if (node->rightChild) {
+        if (node->element > rbtreeFindMin(node->rightChild)->element) {
+            return -4;
+        }
+    }
+
+    // ## 红黑树的条件
+    // 不能是“红红”
+    if (rbTreeNodeIsRed(node)) {
+        if (rbTreeNodeIsRed(node->leftChild)) {
+            return -5;
+        }
+        if (rbTreeNodeIsRed(node->rightChild)) {
+            return -6;
+        }
+    }
+
+    // 左右子树的 h 相同
+    if (hOfRBTree(node->leftChild) != hOfRBTree(node->rightChild)) {
+        return -7;
+    }
+
+    // 左右子树是红黑树
+    int ret = checkRBTreeSubTree(node->leftChild);
+    if (ret) {
+        return -8;
+    }
+    ret = checkRBTreeSubTree(node->rightChild);
+    if (ret) {
+        return -9;
+    }
+
+    return 0;
+}
+
+// node 不一定是根节点。返回 node 到叶子节点的路径的黑色节点数
+static int hOfRBTree(RBTreeNode node) {
+    if (!node) {
+        return 1;
+    }
+
+    if (!node->leftChild) {
+        if (rbTreeNodeIsRed(node)) {
+            return 1;
+        } else {
+            return 2;
+        }
+    } else {
+        if (node->color == BLACK) {
+            return 1 + hOfRBTree(node->leftChild);
+        } else {
+            return hOfRBTree(node->leftChild);
+        }
+
+    }
+}
+
+int checkRBTree(RBTree rbtree) {
+    if (!rbtree->root) {
+        return -1;
+    }
+
+    // 根节点是黑色的
+    if (rbtree->root->color != BLACK) {
+        return -2;
+    }
+
+    int ret = checkRBTreeSubTree(rbtree->root);
+
+    return ret;
+}
+
+// 为了方便打印，测试时不会加入 `LEVEL_SEPARATOR_ELEMENT`, `NIL_ELEMENT`
+static void printNode(RBTreeNode node) {
+    if (node) {
+        // 不打印 LEVEL_SEPARATOR_ELEMENT 节点
+        if (node->element == LEVEL_SEPARATOR_ELEMENT) {
+            return;
+        }
+
+        printf("%d:", node->element);
+        if (rbtreeNodeIsBlack(node)) {
+            printf("B:");
+        } else {
+            printf("R:");
+        }
+        printf("[%d, %d]", node->leftChild ? node->leftChild->element : NIL_ELEMENT, node->rightChild ? node->rightChild->element : NIL_ELEMENT);
+    } else {
+        printf("%d", NIL_ELEMENT);
+    }
+}
+
+// 层序遍历红黑树
+// LEVEL_SEPARATOR_ELEMENT 是树的层分隔符。
+static void traverseBTree(RBTree rbtree) {
+    if (!rbtree || !rbtree->root) {
+        return;
+    }
+
+    Queue queue = queueCreate(ARRAY_SIZE);
+    queueEnqueue(rbtree->root, queue);
+    RBTreeNode levelSeparatorNode = rbtreeNodeCreate(LEVEL_SEPARATOR_ELEMENT);
+    queueEnqueue(levelSeparatorNode, queue);
+
+    RBTreeNode cur;
+    while (!queueIsEmpty(queue)) {
+        cur = queueDequeue(queue);
+
+        printNode(cur);
+        printf("\t");
+
+        if (cur) {
+            if (cur->element != LEVEL_SEPARATOR_ELEMENT) {
+                queueEnqueue(cur->leftChild, queue);
+                queueEnqueue(cur->rightChild, queue);
+            } else {
+                printf("\n");
+
+                // 如果 cur 是层分隔符节点，且还有节点有 queue 中，则插入层分隔符（防止死循环）
+                if (queueSize(queue)) {
+                    queueEnqueue(levelSeparatorNode, queue);
+                }
+            }
+        }
+    }
+
+    rbtreeNodeDestroy(levelSeparatorNode);
+}
+
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNumsNotSame(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
-    for (int i = 0; i < n; i++) {
-        outArray[i] = rand() % tmpUpper + lower;
+    int tmp;
+    int i = 0;
+    bool isSame = false;
+    while (i < n) {
+        tmp = rand() % tmpUpper + lower;
+        for (int j = 0; j <= i; j++) {
+            if (tmp == outArray[j]) {
+                isSame = true;
+                break;
+            }
+        }
+        if (isSame) {
+            isSame = false;
+            continue;
+        }
+
+        outArray[i] = tmp;
+        i++;
     }
 }
 
-void genRandomChars(char* outArray, size_t n, char lower, char upper) {
-    srand(time(0));
-    int tmpUpper = upper - lower + 1;
-    int j;
-    for (size_t i = 0; i < n; i++) {
-        outArray[i] = (char) (rand() % tmpUpper + lower);
-    }
-}
-
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -4886,25 +6018,193 @@ clock_t getTime() {
     return t;
 }
 
-void testHuffmanTree() {
-    char datas[ARRAY_SIZE];
-    for (int i = 0; i < 26; i++) {
-        datas[i] = 'A' + i;
-        datas[26 + i] = 'a' + i;
+void testRBTree() {
+    ElementType array[ARRAY_SIZE];
+    genRandomNumsNotSame(array, ARRAY_SIZE, 1, ARRAY_SIZE * 100);
+    printArray(array, ARRAY_SIZE);
+
+    clock_t start, end, duration;
+
+    RBTree rbtree = rbtreeCreate();
+
+    start = getTime();
+
+    // ### 插入
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        rbtreeInsert(array[i], rbtree);
     }
-    FreqSize freqs[ARRAY_SIZE];
-    genRandomNums(freqs, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
 
-    HuffmanTree huffmanTree = huffmanTreeBuild(datas, freqs, ARRAY_SIZE);
-    int prefix[ARRAY_SIZE];
-    printHuffmanTreeCodes(huffmanTree, prefix, 0);
+    int ret = checkRBTree(rbtree);
+    if (ret < 0) {
+        fprintf(stderr, "checkRBTreeSubTree ret is %d!\n", ret);
+        exit(EXIT_FAILURE);
+    }
+
+    traverseBTree(rbtree);
+
+    // ### 删除
+    for (int j = ARRAY_SIZE / 2; j >= 0; j--) {
+        rbtreeDelete(array[j], rbtree);
+    }
+    for (int k = ARRAY_SIZE / 2 + 1; k < ARRAY_SIZE; k++) {
+        rbtreeDelete(array[k], rbtree);
+    }
+    end = getTime();
+
+    rbtreeDestroy(rbtree);
+
+    // 取上限
+    duration = ((end - start) - 1) / CLOCKS_PER_SEC + 1;
+    printf("duration = %lfs\n", (double) duration);
+}
+```
+
+#### queue.h
+
+```c
+#ifndef _QUEUE_H
+#define _QUEUE_H
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#include "rbtree.h"
+
+typedef RBTreeNode QueueElementType;
+
+struct QueueStruct {
+    int capacity;
+    int size;
+    int front;
+    int rear;
+    QueueElementType* data;
+};
+
+typedef struct QueueStruct* Queue;
+
+void queueEnqueue(QueueElementType element, Queue queue);
+QueueElementType queueDequeue(Queue queue);
+Queue queueCreate(int capacity);
+void queueDestroy(Queue queue);
+void queueEmpty(Queue queue);
+
+inline bool queueIsEmpty(Queue queue) {
+    return queue->size == 0;
 }
 
-int main() {
-    testHuffmanTree();
-    return 0;
+inline QueueElementType queueFront(Queue queue) {
+    if (queueIsEmpty(queue)) {
+        fprintf(stderr, "The queue is empty!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return queue->data[queue->front];
 }
 
+inline QueueElementType queueBack(Queue queue) {
+    if (queueIsEmpty(queue)) {
+        fprintf(stderr, "The queue is empty!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return queue->data[queue->rear];
+}
+
+inline int queueSize(Queue queue) {
+    return queue->size;
+}
+
+#endif
+```
+
+#### queue.c
+
+```c
+// ### 说明
+// 有 size 字段
+#include "queue.h"
+
+static inline bool queueIsFull(Queue queue);
+static inline int queueSucc(int index, Queue queue);
+
+void queueEnqueue(QueueElementType element, Queue queue) {
+    if (queueIsFull(queue)) {
+        int newCapacity = queue->capacity * 2;
+        QueueElementType* newData = malloc(sizeof(QueueElementType) * newCapacity);
+        if (!newData) {
+            fprintf(stderr, "No space for newData!\n");
+            exit(EXIT_FAILURE);
+        }
+
+        int qsize = queueSize(queue);
+        for (int i = 0; i < qsize; i++) {
+            newData[i] = queueDequeue(queue);
+        }
+        free(queue->data);
+        queue->data = newData;
+        queue->capacity = newCapacity;
+        queue->front = 0;
+        queue->size = qsize;
+        queue->rear = queue->size - 1;
+    }
+
+    queue->rear = queueSucc(queue->rear, queue);
+    queue->data[queue->rear] = element;
+    queue->size++;
+}
+
+QueueElementType queueDequeue(Queue queue) {
+    if (queueIsEmpty(queue)) {
+        fprintf(stderr, "The queue is empty!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    QueueElementType frontElement = queueFront(queue);
+    queue->front = queueSucc(queue->front, queue);
+    queue->size--;
+    return frontElement;
+}
+
+void queueEmpty(Queue queue) {
+    queue->size = 0;
+    queue->rear = 0;
+    queue->front = 1;
+}
+
+Queue queueCreate(int capacity) {
+    Queue queue = malloc(sizeof(struct QueueStruct));
+    if (!queue) {
+        fprintf(stderr, "No space for creating queue!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    queue->data = malloc(sizeof(QueueElementType) * capacity);
+    if (!queue->data) {
+        fprintf(stderr, "No space for queue data!\n");
+        exit(EXIT_FAILURE);
+    }
+    queue->capacity = capacity;
+
+    queueEmpty(queue);
+    return queue;
+}
+
+void queueDestroy(Queue queue) {
+    free(queue->data);
+    free(queue);
+}
+
+static inline bool queueIsFull(Queue queue) {
+    return queue->size == queue->capacity;
+}
+
+static inline int queueSucc(int index, Queue queue) {
+    if (++index == queue->capacity) {
+        index = 0;
+    }
+    return index;
+}
 ```
 
 Heap
@@ -4914,12 +6214,8 @@ Heap
 ```c
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <limits.h>
 #include <stdbool.h>
-
-#define ARRAY_SIZE (10000 * 10)
-#define MIN_DATA (INT_MIN)
 
 typedef int ElementType;
 struct HeapStruct;
@@ -4947,8 +6243,19 @@ inline bool binHeapIsFull(BinHeap binHeap) {
     return binHeap->size + 1 == binHeap->capacity;
 }
 
-static void printBinHeap(BinHeap binHeap);
+#define MIN_DATA (INT_MIN)
+
+// ## debug
+#include <time.h>
+#define ARRAY_SIZE (10000 * 10)
+
+static void testBinHeap();
 static int checkBinHeap(BinHeap binHeap);
+static void printBinHeap(BinHeap binHeap);
+
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 void binHeapInsert(ElementType element, BinHeap binHeap) {
     if (binHeapIsFull(binHeap)) {
@@ -5076,14 +6383,14 @@ static int checkBinHeap(BinHeap binHeap) {
     return 0;
 }
 
-void printArray(int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -5091,7 +6398,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -5100,7 +6407,7 @@ clock_t getTime() {
     return t;
 }
 
-void testBinHeap() {
+static void testBinHeap() {
     int array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 100, ARRAY_SIZE + 999);
     /* printArray(array, ARRAY_SIZE); */
@@ -5147,20 +6454,22 @@ int main() {
 
 ### Leftist Heap（左式堆）
 
-```c
-// ### 说明
-// 左式堆：对于堆中的每一个节点，其左儿子的零路径长至少与右儿子的零路径长一样大。具有堆的性质。
-// 零路径长：具有 2 个儿子，Npl(2) = 1; 0 个或 1 个儿子的节点的 Npl(0 | 1) = 0; Npl(NULL) = -1 。 leftistHeap->Npl = leftistHeap->Right->Npl + 1 。
-// 两个左式堆合并的操作：堆顶最小的堆的右子树与另一个堆合并。
-// 插入：即两个堆合并
-// 删除Min：即一个堆的左右子树合并
+#### 说明
 
+左式堆：对于堆中的每一个节点，其左儿子的零路径长至少与右儿子的零路径长一样大。具有堆的性质。
+
+零路径长：具有 2 个儿子，Npl(2) = 1; 0 个或 1 个儿子的节点的 Npl(0 | 1) = 0; Npl(NULL) = -1 。 leftistHeap->Npl = leftistHeap->Right->Npl + 1 。
+
+两个左式堆合并的操作：堆顶最小的堆的右子树与另一个堆合并。
+
+插入：即两个堆合并
+
+删除Min：即一个堆的左右子树合并
+
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
-
-#define ARRAY_SIZE (1000 * 10)
 
 typedef int ElementType;
 
@@ -5192,8 +6501,20 @@ inline bool leftistHeapIsEmpty(LeftistHeap leftistHeap) {
 static LeftistHeap leftistHeapMerge(LeftistHeap leftistHeap1, LeftistHeap leftistHeap2);
 static LeftistHeap leftistHeapMerge1(LeftistHeap leftistHeap1, LeftistHeap leftistHeap2);
 static void leftistHeapSwapChildren(LeftistHeap leftistHeap);
+
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (1000 * 10)
+
+static void testLeftistHeap();
 static int checkLeftistHeap(LeftistHeap leftistHeap);
 static void printLeftistHeap(LeftistHeap leftistHeap);
+static void printLeftistHeap1(LeftistHeap leftistHeap);
+
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 LeftistHeap leftistHeapInsert(ElementType element, LeftistHeap leftistHeap) {
     PtrToNode newNode = malloc(sizeof(struct TreeNode));
@@ -5340,14 +6661,14 @@ static int checkLeftistHeap(LeftistHeap leftistHeap) {
     return 0;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -5355,7 +6676,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -5420,9 +6741,6 @@ int main() {
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
-
-#define ARRAY_SIZE (1000 * 10)
 
 typedef int ElementType;
 
@@ -5453,8 +6771,20 @@ inline bool skewHeapIsEmpty(SkewHeap skewHeap) {
 static SkewHeap skewHeapMerge(SkewHeap skewHeap1, SkewHeap skewHeap2);
 static SkewHeap skewHeapMerge1(SkewHeap skewHeap1, SkewHeap skewHeap2);
 static void skewHeapSwapChildren(SkewHeap skewHeap);
+
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (1000 * 10)
+
+static void testSkewHeap();
 static int checkSkewHeap(SkewHeap skewHeap);
 static void printSkewHeap(SkewHeap skewHeap);
+static void printSkewHeap1(SkewHeap skewHeap);
+
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 SkewHeap skewHeapInsert(ElementType element, SkewHeap skewHeap) {
     PtrToNode newNode = malloc(sizeof(struct TreeNode));
@@ -5573,14 +6903,14 @@ static int checkSkewHeap(SkewHeap skewHeap) {
     return 0;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -5588,7 +6918,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -5647,20 +6977,19 @@ int main() {
 
 ### Binomial Queue（二项队列）
 
-```c
-// ### 说明
-// 二项队列由多个二项树组成
-// 二项树的上一层小于等于下一层。即父节点小于等于其所有后裔。二项树的节点数：B0 = 1， B1 = 2, B3 = 4, ... , Bn = 2 * Bn-1 。
-// 插入和删除都用合并实现
+#### 说明
 
+二项队列由多个二项树组成
+
+二项树的上一层小于等于下一层。即父节点小于等于其所有后裔。二项树的节点数：B0 = 1， B1 = 2, B3 = 4, ... , Bn = 2 * Bn-1 。
+
+插入和删除都用合并实现
+
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <limits.h>
-#include <time.h>
-
-#define ARRAY_SIZE (1000 * 10)
-#define MAX_ELEMENT INT_MAX
 
 typedef int ElementType;
 
@@ -5694,12 +7023,25 @@ static int binQueueCalCapacity(int treeCount);
 
 static BinTree binTreeCombine(BinTree binTree1, BinTree binTree2);
 static void binTreeDestroy(BinTree binTree);
+
+#define MAX_ELEMENT INT_MAX
+
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (1000 * 10)
+
+static void testBinQueue();
+static int checkBinQueue(BinQueue binQueue);
+static void printBinQueue(BinQueue binQueue);
+static int checkBinTree(BinTree binTree);
+static void printBinTree(BinTree binTree);
+static void printBinTree1(BinTree binTree);
 static int binTreeSize();
 
-static void printBinQueue(BinQueue binQueue);
-static void printBinTree(BinTree binTree);
-static int checkBinQueue(BinQueue binQueue);
-static int checkBinTree(BinTree binTree);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
 // 合并之后，为了 destroy, 会将 binQueue2 的所有二项树置为空。
 BinQueue binQueueMerge(BinQueue binQueue1, BinQueue binQueue2) {
@@ -6039,14 +7381,14 @@ static int binTreeSize(BinTree binTree) {
     return size;
 }
 
-void printArray(int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -6054,7 +7396,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -6113,160 +7455,168 @@ int main() {
 
 Hash Table
 ---
+
 ### SeparateChaining
 
 解决冲突的方法是分离链接法，是将散列到同一值的所有元素保留到一个链表中。
 
+#### main.c
+
 ```c
-// ### 说明
-// 链表保留头节点
+#include "hash_table.h"
 
-#include <stdio.h>
-#include <stdbool.h>
+int main() {
+    testHashTable();
+    return 0;
+}
+```
+
+#### hash_table.h
+
+```c
+#ifndef _HASH_TABLE_H
+#define _HASH_TABLE_H
+
 #include <stdlib.h>
-#include <time.h>
-#include <string.h>
 
-// log 10000 * 10 / log 26 = 3.5
-#define KEY_SIZE (4 + 1)
-#define KEY_COUNT (10000 * 10)
+#include "linked_list_type.h"
 
-#define TABLE_SIZE (KEY_COUNT * 2)
-
-struct Element;
-struct ListNode;
-struct HashTbl;
-
-typedef struct Element ElementType;
-
-typedef struct ListNode *Position;
-typedef Position List;
-
-typedef struct HashTbl *HashTable;
+typedef char* KeyType;
 typedef size_t Index;
 typedef Index TableSize;
 
-struct Element {
-    char data[KEY_SIZE];
-};
+struct HashTableStruct;
+typedef struct HashTableStruct *HashTable;
 
-struct ListNode {
-    ElementType element;
-    Position next;
-};
-
-struct HashTbl {
+struct HashTableStruct {
     TableSize tableSize;
     List* theListArray;
 };
 
-inline ElementType elementCreate(const char* str) {
-    ElementType element;
-    strncpy(element.data, str, KEY_SIZE - 1);
-    element.data[KEY_SIZE - 1] = '\0';
-    return element;
-}
-
-inline bool elementsAreEqual(const ElementType* elementPtrA, const ElementType* elementPtrB) {
-    return !strncmp(elementPtrA->data, elementPtrB->data, KEY_SIZE - 1);
-}
-
-void hashTableInsert(const ElementType* keyPtr, HashTable hashTable);
-void hashTableDelete(const ElementType* keyPtr, HashTable hashTable);
-Position hashTableFind(const ElementType* keyPtr, HashTable hashTable);
+void hashTableInsert(KeyType key, HashTable hashTable);
+void hashTableDelete(KeyType key, HashTable hashTable);
+Position hashTableFind(KeyType key, HashTable hashTable);
 HashTable hashTableCreate(TableSize tableSize);
 void hashTableDestroy(HashTable hashTable);
+KeyType hashTableRetrieve(Position position, HashTable hashTable);
 
-void linkedListInsert(const ElementType* elementPtr, Position position, List list);
-void linkedListDelete(const ElementType* elementPtr, List list);
-Position linkedListFind(const ElementType* elementPtr, List list);
-Position linkedListFindPrevious(const ElementType* elementPtr, List list);
-List linkedListCreate();
-void linkedListDestroy(List list);
-List linkedListEmpty(List list);
+// debug
+void testHashTable();
 
-inline bool linkedListIsEmpty(List list) {
-    return list->next == NULL;
+#endif
+```
+
+#### hash_table.c
+
+```c
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#include "linked_list.h"
+#include "hash_table.h"
+
+#define KEY_SIZE (4 + 1)
+
+static inline bool areEqual(KeyType keyA, KeyType keyB) {
+    return !strncmp(keyA, keyB, KEY_SIZE - 1);
 }
 
-inline ElementType linkedListRetrieve(Position position) {
-    return position->element;
-}
+static Index hashTableHash(KeyType key, TableSize tableSize);
+static List hashTableGetList(KeyType key, HashTable hashTable);
+static Position hashTableFindList(KeyType key, List list);
 
-static Index hashTableHash(const ElementType* keyPtr, TableSize tableSize);
-static size_t linkedListSize(List list);
-static void printLinkedList(List list);
+// ## debug
+#include <time.h>
+
+// log (10000 * 10) / log 26 = 3.5
+#define KEY_COUNT (10000 * 10)
+
+#define TABLE_SIZE (KEY_COUNT * 2)
+
+// void testHashTable();
 static void printHashTable(HashTable hashTable);
+static void printLinkedList(List list);
 
-static Index hashTableHash(const ElementType* keyPtr, TableSize tableSize) {
-    TableSize hashVal = 0;
+static void printStrArrays(char (*array)[KEY_SIZE], size_t n);
+static void genRandomStrings(char (*outArray)[KEY_SIZE], size_t n, char lower, char upper);
+static clock_t getTime();
 
-    TableSize dataIndex = 0;
-    while (keyPtr->data[dataIndex] != '\0') {
-        hashVal += (hashVal << 5) + keyPtr->data[dataIndex++];
+static Index hashTableHash(KeyType key, TableSize tableSize) {
+    int hashVal = 0;
+
+    int i = 0;
+    while (key[i] != '\0') {
+        hashVal += (hashVal << 5) + key[i++];
     }
     return hashVal % tableSize;
 }
 
+static List hashTableGetList(KeyType key, HashTable hashTable) {
+    return hashTable->theListArray[hashTableHash(key, hashTable->tableSize)];
+}
+
 // 不存放相同的 key
-void hashTableInsert(const ElementType* keyPtr, HashTable hashTable) {
-    Position pos = hashTableFind(keyPtr, hashTable);
+void hashTableInsert(KeyType key, HashTable hashTable) {
+    Position pos = hashTableFind(key, hashTable);
     if (pos) {
         return;
     }
 
-    Position newNode = malloc(sizeof(struct ListNode));
-    if (!newNode) {
-        fprintf(stderr, "No space for newNode!\n");
+    // ### copy key
+    KeyType newkey = malloc(KEY_SIZE);
+    if (!newkey) {
+        fprintf(stderr, "No space for newkey!\n");
         exit(EXIT_FAILURE);
     }
-    newNode->element = *keyPtr;
+    strncpy(newkey, key, KEY_SIZE - 1);
+    newkey[KEY_SIZE - 1] = '\0';
 
-    List list = hashTable->theListArray[hashTableHash(keyPtr, hashTable->tableSize)];
-
-    linkedListInsert(keyPtr, list, list);
+    // ### insert key to LinkedList
+    List list = hashTableGetList(newkey, hashTable);
+    // 插入到链表头
+    linkedListInsert(newkey, list, list);
 }
 
-Position hashTableFind(const ElementType* keyPtr, HashTable hashTable) {
-    Position pos = linkedListFind(keyPtr, hashTable->theListArray[hashTableHash(keyPtr, hashTable->tableSize)]);
-    if (pos) {
-        return pos;
-    }
+Position hashTableFind(KeyType key, HashTable hashTable) {
+    List list = hashTableGetList(key, hashTable);
 
-    return NULL;
+    // ### 查找 key 在链表中的位置
+    return hashTableFindList(key, list);
 }
 
 HashTable hashTableCreate(TableSize tableSize) {
-    HashTable hashTable = malloc(sizeof(struct HashTbl));
+    HashTable hashTable = malloc(sizeof(struct HashTableStruct));
     if (!hashTable) {
         fprintf(stderr, "No space for hashTable!\n");
         exit(EXIT_FAILURE);
     }
     hashTable->tableSize = tableSize;
 
-    // ### 创建 Lists
-    // 创建指向 lists 数组
+    // ### 创建 theListArray
+    // #### 创建指向 List 的数组
     hashTable->theListArray = malloc(sizeof(List) * hashTable->tableSize);
     if (!hashTable->theListArray) {
         fprintf(stderr, "No space for hashTable->theListArray!\n");
         exit(EXIT_FAILURE);
     }
 
-    // #### 分配表头
+    // #### 为 theListArray 数组中的 List 创建链表头
     for (Index i = 0; i < hashTable->tableSize; i++) {
-        hashTable->theListArray[i] = malloc(sizeof(struct ListNode));
-        if (!hashTable->theListArray[i]) {
-            fprintf(stderr, "No space for hashTable->theListArray[i]!\n");
-            exit(EXIT_FAILURE);
-        }
-        hashTable->theListArray[i]->next = NULL;
+        hashTable->theListArray[i] = linkedListCreate();
     }
 
     return hashTable;
 }
 
-void hashTableDelete(const ElementType* keyPtr, HashTable hashTable) {
-    linkedListDelete(keyPtr, hashTable->theListArray[hashTableHash(keyPtr, hashTable->tableSize)]);
+void hashTableDelete(KeyType key, HashTable hashTable) {
+    List list = hashTableGetList(key, hashTable);
+    Position pos = hashTableFindList(key, list);
+    if (pos) {
+        KeyType key = pos->element;
+        linkedListDelete(pos->element, list);
+        free(key);
+    }
 }
 
 void hashTableDestroy(HashTable hashTable) {
@@ -6275,52 +7625,228 @@ void hashTableDestroy(HashTable hashTable) {
         exit(EXIT_FAILURE);
     }
 
+    List list;
+    Position cur;
     for (Index i = 0; i < hashTable->tableSize; i++) {
-        linkedListDestroy(hashTable->theListArray[i]);
+        list = hashTable->theListArray[i];
+        // ### 销毁链表的数据
+        cur = list->next;
+        while (cur) {
+            free(cur->element);
+        }
+        // ### 销毁链表
+        linkedListDestroy(list);
     }
+    // ### 销毁 hashTable
     free(hashTable);
 }
 
-// list 暂时不用
-void linkedListInsert(const ElementType* elementPtr, Position position, List list) {
-    Position newNode = malloc(sizeof(struct ListNode));
+KeyType hashTableRetrieve(Position position, HashTable hashTable) {
+    return position->element;
+}
+
+static Position hashTableFindList(KeyType key, List list) {
+    Position cur = list->next;
+    while (cur) {
+        if (areEqual(key, cur->element)) {
+            break;
+        } else {
+            cur = cur->next;
+        }
+    }
+
+    return cur;
+}
+
+static void printLinkedList(List list) {
+    if (!list) {
+        fprintf(stderr, "list is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Position curPos = list->next;
+    while (curPos) {
+        printf("%s\t", curPos->element);
+        curPos = curPos->next;
+    }
+    printf("\n");
+}
+
+static void printHashTable(HashTable hashTable) {
+    if (!hashTable) {
+        fprintf(stderr, "hashTable is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    for (Index i = 0; i < hashTable->tableSize; i++) {
+        if (hashTable->theListArray[i]->next) {
+            printf("theListArray[%ld]: ", i);
+            printLinkedList(hashTable->theListArray[i]);
+        }
+    }
+}
+
+static void printStrArrays(char (*array)[KEY_SIZE], size_t n) {
+    for (size_t i = 0; i < n; i++) {
+        printf("%s\t", array[i]);
+    }
+    printf("\n");
+}
+
+static void genRandomStrings(char (*outArray)[KEY_SIZE], size_t n, char lower, char upper) {
+    srand(time(0));
+    int tmpUpper = upper - lower + 1;
+    int j;
+    for (size_t i = 0; i < n; i++) {
+        for (j = 0; j < KEY_SIZE - 1; j++) {
+            outArray[i][j] = (char) (rand() % tmpUpper + lower);
+        }
+        outArray[i][j] = '\0';
+    }
+}
+
+static clock_t getTime() {
+    clock_t t = clock();
+    if (t == (clock_t)-1) {
+        fprintf(stderr, "clock() failed\n");
+        exit(EXIT_FAILURE);
+    }
+    return t;
+}
+
+void testHashTable() {
+    char keyArray[KEY_COUNT][KEY_SIZE];
+    genRandomStrings(keyArray, KEY_COUNT, 'A', 'Z');
+    /* printStrArrays(keyArray, KEY_COUNT); */
+
+    HashTable hashTable = hashTableCreate(TABLE_SIZE);
+
+    clock_t start, end, duration;
+    start = getTime();
+    for (Index i = 0; i < KEY_COUNT; i++) {
+        hashTableInsert(keyArray[i], hashTable);
+    }
+    printf("hashTable:\n");
+    printHashTable(hashTable);
+
+    bool isSame = true;
+    Position pos;
+    for (Index j = 0; j < KEY_COUNT; j++) {
+        if (!(pos = hashTableFind(keyArray[j], hashTable))) {
+            isSame = false;
+            break;
+        }
+    }
+    printf("isSame: %d\n", isSame);
+
+    for (Index k = 0; k < KEY_COUNT; k++) {
+        hashTableDelete(keyArray[k], hashTable);
+    }
+    end = getTime();
+    printf("hashTable:\n");
+    printHashTable(hashTable);
+    // 取上限
+    duration = ((end - start) - 1) / CLOCKS_PER_SEC + 1;
+    printf("duration = %lfs\n", (double) duration);
+
+    hashTableDestroy(hashTable);
+}
+```
+
+#### linked_list.h
+
+```c
+// ### 说明
+// 链表保留头节点
+
+#ifndef _LINKED_LIST_H
+#define _LINKED_LIST_H
+
+#include <stdlib.h>
+#include "linked_list_type.h"
+
+// 在 position 之后插入
+void linkedListInsert(LinkedListElementType element, Position position, List list);
+void linkedListDelete(LinkedListElementType element, List list);
+Position linkedListFind(LinkedListElementType element, List list);
+Position linkedListFindPrevious(LinkedListElementType element, List list);
+List linkedListCreate();
+void linkedListDestroy(List list);
+List linkedListEmpty(List list);
+
+inline bool linkedListIsEmpty(List list) {
+    return list->next == NULL;
+}
+
+#endif
+```
+
+#### linked_list_type.h
+
+```c
+#ifndef _LINKED_LIST_TYPE_H
+#define _LINKED_LIST_TYPE_H
+
+// typedef KeyType LinkedListElementType;
+typedef char* LinkedListElementType;
+
+struct Node;
+typedef struct Node* PtrToNode;
+typedef PtrToNode Position;
+typedef PtrToNode List;
+
+struct Node {
+    LinkedListElementType element;
+    Position next;
+};
+
+#endif
+```
+
+#### linked_list.c
+
+```c
+#include <stdio.h>
+#include <stdbool.h>
+
+#include "linked_list.h"
+
+void linkedListInsert(LinkedListElementType element, Position position, List list) {
+    Position newNode = malloc(sizeof(struct Node));
     if (!newNode) {
         fprintf(stderr, "No space for creating a node");
         exit(EXIT_FAILURE);
     }
-    newNode->element = *elementPtr;
+    newNode->element = element;
 
     newNode->next = position->next;
     position->next = newNode;
 }
 
-void linkedListDelete(const ElementType* elementPtr, List list) {
-    Position prevPos = linkedListFindPrevious(elementPtr, list);
-
-    if (prevPos) {
-        Position curPos = prevPos->next;
-        prevPos->next = curPos->next;
+void linkedListDelete(LinkedListElementType element, List list) {
+    Position prePos = linkedListFindPrevious(element, list);
+    // 找到了
+    if (prePos) {
+        Position curPos = prePos->next;
+        prePos->next = curPos->next;
         free(curPos);
     }
 }
 
-Position linkedListFind(const ElementType* elementPtr, List list) {
-    Position curPos = list->next;
-    while (curPos) {
-        if (elementsAreEqual(&curPos->element, elementPtr)) {
-            return curPos;
-        }
-        curPos = curPos->next;
+Position linkedListFind(LinkedListElementType element, List list) {
+    Position pos = linkedListFindPrevious(element, list);
+    if (pos) {
+        return pos->next;
+    } else {
+        return NULL;
     }
-
-    return curPos;
 }
 
 // 如果找不到则返回 NULL
-Position linkedListFindPrevious(const ElementType* elementPtr, List list) {
+Position linkedListFindPrevious(LinkedListElementType element, List list) {
     Position prePos = list;
     while (prePos->next) {
-        if (elementsAreEqual(&prePos->next->element, elementPtr)) {
+        if (prePos->next->element == element) {
             return prePos;
         }
 
@@ -6331,7 +7857,7 @@ Position linkedListFindPrevious(const ElementType* elementPtr, List list) {
 }
 
 List linkedListCreate() {
-    List list = malloc(sizeof(struct ListNode));
+    List list = malloc(sizeof(struct Node));
     if (!list) {
         fprintf(stderr, "No space for creating list!\n");
         exit(EXIT_FAILURE);
@@ -6362,121 +7888,6 @@ List linkedListEmpty(List list) {
     }
     return list;
 }
-
-static size_t linkedListSize(List list) {
-    size_t size = 0;
-    Position curPos = list->next;
-    while (curPos) {
-        size++;
-        curPos = curPos->next;
-    }
-
-    return size;
-}
-
-static void printLinkedList(List list) {
-    if (!list) {
-        fprintf(stderr, "list is NULL!\n");
-        exit(EXIT_FAILURE);
-    }
-
-    Position curPos = list->next;
-    while (curPos) {
-        printf("%s\t", curPos->element.data);
-        curPos = curPos->next;
-    }
-    printf("\n");
-}
-
-static void printHashTable(HashTable hashTable) {
-    if (!hashTable) {
-        fprintf(stderr, "hashTable is NULL!\n");
-        exit(EXIT_FAILURE);
-    }
-
-    for (Index i = 0; i < hashTable->tableSize; i++) {
-        if (hashTable->theListArray[i]->next) {
-            printf("theListArray[%d]: ", i);
-            printLinkedList(hashTable->theListArray[i]);
-        }
-    }
-}
-
-void printStrArrays(char (*array)[KEY_SIZE], size_t n) {
-    for (size_t i = 0; i < n; i++) {
-        printf("%s\t", array[i]);
-    }
-    printf("\n");
-}
-
-void genRandomStrings(char (*outArray)[KEY_SIZE], size_t n, char lower, char upper) {
-    srand(time(0));
-    int tmpUpper = upper - lower + 1;
-    int j;
-    for (size_t i = 0; i < n; i++) {
-        for (j = 0; j < KEY_SIZE - 1; j++) {
-            outArray[i][j] = (char) (rand() % tmpUpper + lower);
-        }
-        outArray[i][j] = '\0';
-    }
-}
-
-clock_t getTime() {
-    clock_t t = clock();
-    if (t == (clock_t)-1) {
-        fprintf(stderr, "clock() failed\n");
-        exit(EXIT_FAILURE);
-    }
-    return t;
-}
-
-// main.c
-void TestHashTable() {
-    char strArrays[KEY_COUNT][KEY_SIZE];
-    genRandomStrings(strArrays, KEY_COUNT, 'A', 'Z');
-    /* printStrArrays(strArrays, KEY_COUNT); */
-    ElementType elementArray[KEY_COUNT];
-    for (Index x = 0; x < KEY_COUNT; x++) {
-        elementArray[x] = elementCreate(strArrays[x]);
-    }
-
-    HashTable hashTable = hashTableCreate(TABLE_SIZE);
-
-    clock_t start, end, duration;
-    start = getTime();
-    for (Index i = 0; i < KEY_COUNT; i++) {
-        hashTableInsert(&elementArray[i], hashTable);
-    }
-    /* printf("hashTable:\n"); */
-    /* printHashTable(hashTable); */
-
-    bool isSame = true;
-    Position pos;
-    for (Index j = 0; j < KEY_COUNT; j++) {
-        if (!(pos = hashTableFind(&elementArray[j], hashTable))) {
-            isSame = false;
-            break;
-        }
-    }
-    printf("isSame: %d\n", isSame);
-
-    for (Index k = 0; k < KEY_COUNT; k++) {
-        hashTableDelete(&elementArray[k], hashTable);
-    }
-    end = getTime();
-    /* printf("hashTable:\n"); */
-    /* printHashTable(hashTable); */
-    // 取上限
-    duration = ((end - start) - 1) / CLOCKS_PER_SEC + 1;
-    printf("duration = %lfs\n", (double) duration);
-
-    hashTableDestroy(hashTable);
-}
-
-int main() {
-    TestHashTable();
-    return 0;
-}
 ```
 
 ### OpenAddressing
@@ -6484,112 +7895,113 @@ int main() {
 解决冲突的方法是开放定址法。有一个冲突解决方程，自变量是冲突次数，`(散列值 + 因变量) mod TableSize` 是将要插入的位置。
 
 ```c
-// ### 说明
-// 用平方探测法
-// 删除用惰性删除
-
-#include <stdio.h>
+// ## head
 #include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-#include <time.h>
 
-#define KEY_SIZE (4 + 1)
-#define KEY_COUNT (10000 * 10)
-// 如果用平方探测，当表大小是素数，那么当表至少有一半为空时，总能插入一个新的元素。
-#define TABLE_SIZE (KEY_COUNT * 2)
+typedef char* KeyType;
 
-enum EntryStatusStruct;
-struct Element;
-struct HashEntry;
-struct HashTbl;
+typedef size_t Index;
+typedef Index TableSize;
+typedef Index Position;
 
-typedef enum EntryStatusStruct EntryStatus;
-typedef struct Element ElementType;
-typedef struct HashEntry Cell;
-typedef struct HashTbl *HashTable;
-typedef size_t TableSize;
-typedef TableSize Position;
+enum EntryStatusEnum;
+struct HashEntryStruct;
+struct HashTableStruct;
 
-struct Element {
-    char data[KEY_SIZE];
-};
+typedef enum EntryStatusEnum EntryStatus;
+typedef struct HashEntryStruct Cell;
+typedef struct HashTableStruct *HashTable;
 
-enum EntryStatusStruct {
+enum EntryStatusEnum {
     empty,
     legitimate,
     deleted
 };
 
-struct HashEntry {
-    ElementType element;
+struct HashEntryStruct {
+    KeyType key;
     EntryStatus status;
 };
 
-struct HashTbl {
-    TableSize tableSize;
+struct HashTableStruct {
+    TableSize capacity;
     TableSize size;
     Cell *theCellArray;
 };
 
-inline ElementType elementCreate(const char* str) {
-    ElementType element;
-    strncpy(element.data, str, KEY_SIZE - 1);
-    element.data[KEY_SIZE - 1] = '\0';
-    return element;
-}
-
-inline bool elementsAreEqual(const ElementType* elementPtrA, const ElementType* elementPtrB) {
-    return !strncmp(elementPtrA->data, elementPtrB->data, KEY_SIZE - 1);
-}
-
-inline char* elementRetrieve(ElementType* elementPtr) {
-    return elementPtr->data;
-}
-
-// 找到 key（包含 deleted key），如果没有找到则返回 key 可以插入的位置。注意：调用此函数会 rehash。
-Position hashTableFind(const ElementType* keyPtr, HashTable hashTable);
-void hashTableInsert(const ElementType* keyPtr, HashTable hashTable);
-void hashTableDelete(const ElementType* keyPtr, HashTable hashTable);
-HashTable hashTableCreate(TableSize tableSize);
+void hashTableInsert(KeyType key, HashTable hashTable);
+void hashTableDelete(KeyType key, HashTable hashTable);
+Position hashTableFind(KeyType key, HashTable hashTable);
+HashTable hashTableCreate(TableSize capacity);
 void hashTableDestroy(HashTable hashTable);
+KeyType hashTableRetrieve(Position position, HashTable hashTable);
 
-static Position hashTableHash(const ElementType* keyPtr, TableSize tableSize);
-static void hashTableReHash(HashTable hashTable);
-static void printHashTable(HashTable hashTable);
+// ## body
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
 
-inline Position hashTableDetect(TableSize collisionNum) {
+#define KEY_SIZE (4 + 1)
+
+static inline bool areEqual(KeyType keyA, KeyType keyB) {
+    return !strncmp(keyA, keyB, KEY_SIZE - 1);
+}
+
+static inline Position hashTableDetect(TableSize collisionNum) {
     return collisionNum * collisionNum;
 }
 
-inline ElementType hashTableRetrieve(Position position, HashTable hashTable) {
-    return hashTable->theCellArray[position].element;
-}
+static Position hashTableHash(KeyType key, TableSize capacity);
+static void hashTableReHash(HashTable hashTable);
+static void printHashTable(HashTable hashTable);
 
-static void printStrArrays(const char (*array)[KEY_SIZE], size_t n);
+// ### debug
+#include <time.h>
+
+#define KEY_COUNT (10000 * 10)
+// 如果用平方探测，当表大小是素数，那么当表至少有一半为空时，总能插入一个新的元素。
+#define TABLE_SIZE (KEY_COUNT * 2)
+
+static void testHashTable();
+static void printStrArrays(char (*array)[KEY_SIZE], size_t n);
 static void genRandomStrings(char (*outArray)[KEY_SIZE], size_t n, char lower, char upper);
 static clock_t getTime();
 
-static Position hashTableHash(const ElementType* keyPtr, TableSize tableSize) {
-    TableSize hashVal = 0;
+void hashTableInsert(KeyType key, HashTable hashTable) {
+    Position pos = hashTableFind(key, hashTable);
+    if (hashTable->theCellArray[pos].status != legitimate) {
+        KeyType newkey = malloc(KEY_SIZE);
+        if (!newkey) {
+            fprintf(stderr, "No space for newkey!\n");
+            exit(EXIT_FAILURE);
+        }
+        strncpy(newkey, key, KEY_SIZE - 1);
+        newkey[KEY_SIZE - 1] = '\0';
+        hashTable->theCellArray[pos].key = newkey;
 
-    TableSize dataIndex = 0;
-    while (keyPtr->data[dataIndex] != '\0') {
-        hashVal += (hashVal << 5) + keyPtr->data[dataIndex++];
+        hashTable->theCellArray[pos].status = legitimate;
+        hashTable->size++;
     }
-    return hashVal % tableSize;
 }
 
-Position hashTableFind(const ElementType* keyPtr, HashTable hashTable) {
-    Position curPos = hashTableHash(keyPtr, hashTable->tableSize);
+void hashTableDelete(KeyType key, HashTable hashTable) {
+    Position pos = hashTableFind(key, hashTable);
+    if (hashTable->theCellArray[pos].status == legitimate) {
+        hashTable->theCellArray[pos].status = deleted;
+        hashTable->size--;
+    }
+}
+
+Position hashTableFind(KeyType key, HashTable hashTable) {
+    Position curPos = hashTableHash(key, hashTable->capacity);
     TableSize collisionNum = 0;
 
     Position firstPos = curPos;
     int firstPosCount = 0;
     while (hashTable->theCellArray[curPos].status != empty \
-            && !elementsAreEqual(&hashTable->theCellArray[curPos].element, keyPtr)) {
+            && !areEqual(hashTable->theCellArray[curPos].key, key)) {
         collisionNum++;
-        curPos = (firstPos + hashTableDetect(collisionNum)) % hashTable->tableSize;
+        curPos = (firstPos + hashTableDetect(collisionNum)) % hashTable->capacity;
         if (curPos == firstPos) {
             firstPosCount++;
         }
@@ -6597,7 +8009,7 @@ Position hashTableFind(const ElementType* keyPtr, HashTable hashTable) {
             hashTableReHash(hashTable);
 
             // 继续 find
-            curPos = hashTableFind(keyPtr, hashTable);
+            curPos = hashTableFind(key, hashTable);
             break;
         }
     }
@@ -6605,72 +8017,76 @@ Position hashTableFind(const ElementType* keyPtr, HashTable hashTable) {
     return curPos;
 }
 
-// 不插入重复的 key
-void hashTableInsert(const ElementType* keyPtr, HashTable hashTable) {
-    Position pos = hashTableFind(keyPtr, hashTable);
-    if (hashTable->theCellArray[pos].status != legitimate) {
-        hashTable->theCellArray[pos].element = *keyPtr;
-        hashTable->theCellArray[pos].status = legitimate;
-        hashTable->size++;
-    }
-}
-
-void hashTableDelete(const ElementType* keyPtr, HashTable hashTable) {
-    Position pos = hashTableFind(keyPtr, hashTable);
-    if (hashTable->theCellArray[pos].status == legitimate) {
-        hashTable->theCellArray[pos].status = deleted;
-        hashTable->size--;
-    }
-}
-
-// 不知是不是 bug，声明为 inline 时，编译器无法找到该函数。
-void hashTableDestroy(HashTable hashTable) {
-    free(hashTable->theCellArray);
-    free(hashTable);
-}
-
-HashTable hashTableCreate(TableSize tableSize) {
-    HashTable hashTable = malloc(sizeof(struct HashTbl));
+HashTable hashTableCreate(TableSize capacity) {
+    HashTable hashTable = malloc(sizeof(struct HashTableStruct));
     if (!hashTable) {
         fprintf(stderr, "No space for creating hashTable!\n");
         exit(EXIT_FAILURE);
     }
-    hashTable->theCellArray = malloc(sizeof(struct HashEntry) * tableSize);
+    hashTable->theCellArray = malloc(sizeof(struct HashEntryStruct) * capacity);
     if (!hashTable->theCellArray) {
         fprintf(stderr, "No space for creating hashTable->theCellArray!\n");
         exit(EXIT_FAILURE);
     }
 
-    hashTable->tableSize = tableSize;
+    hashTable->capacity = capacity;
     hashTable->size = 0;
-    for (Position i = 0; i < tableSize; i++) {
+    for (Position i = 0; i < capacity; i++) {
         hashTable->theCellArray[i].status = empty;
     }
 
     return hashTable;
 }
 
+void hashTableDestroy(HashTable hashTable) {
+    for (Position i = 0; i < hashTable->capacity; i++) {
+        if (hashTable->theCellArray[i].status != empty) {
+            free(hashTable->theCellArray[i].key);
+        }
+    }
+    free(hashTable->theCellArray);
+    free(hashTable);
+}
+
+KeyType hashTableRetrieve(Position position, HashTable hashTable) {
+    return hashTable->theCellArray[position].key;
+}
+
+static Position hashTableHash(KeyType key, TableSize capacity) {
+    TableSize hashVal = 0;
+
+    TableSize dataIndex = 0;
+    while (key[dataIndex] != '\0') {
+        hashVal += (hashVal << 5) + key[dataIndex++];
+    }
+    return hashVal % capacity;
+}
+
 static void hashTableReHash(HashTable hashTable) {
     Cell* oldCellArray = hashTable->theCellArray;
-    TableSize oldTableSize = hashTable->tableSize;
+    TableSize oldCapacity = hashTable->capacity;
 
-    TableSize newTableSize = hashTable->tableSize * 2;
-    Cell* newCellArray = malloc(sizeof(struct HashEntry) * newTableSize);
+    TableSize newCapacity = hashTable->capacity * 2;
+    Cell* newCellArray = malloc(sizeof(struct HashEntryStruct) * newCapacity);
     if (!newCellArray) {
         fprintf(stderr, "No space for newCellArray!\n");
         exit(EXIT_FAILURE);
     }
-    for (Position i; i < newTableSize; i++) {
+    for (Position i; i < newCapacity; i++) {
         newCellArray->status = empty;
     }
-    hashTable->tableSize = newTableSize;
+    hashTable->capacity = newCapacity;
     hashTable->size = 0;
     hashTable->theCellArray = newCellArray;
 
-    for (Position i = 0; i < oldTableSize; i++) {
+    for (Position i = 0; i < oldCapacity; i++) {
         // 不保留 deleted
         if (oldCellArray[i].status == legitimate) {
-            hashTableInsert(&oldCellArray[i].element, hashTable);
+            hashTableInsert(oldCellArray[i].key, hashTable);
+        }
+
+        if (oldCellArray[i].status != empty) {
+            free(oldCellArray[i].key);
         }
     }
     free(oldCellArray);
@@ -6678,17 +8094,17 @@ static void hashTableReHash(HashTable hashTable) {
 
 static void printHashTable(HashTable hashTable) {
     printf("Num\t\t\tElement\t\t\tInfo\n");
-    for (Position i = 0; i < hashTable->tableSize; i++) {
+    for (Position i = 0; i < hashTable->capacity; i++) {
         if (hashTable->theCellArray[i].status == legitimate) {
-            printf("%lu\t\t\t%s\t\t\t%s\n", i, elementRetrieve(&hashTable->theCellArray[i].element), "legitimate");
+            printf("%lu\t\t\t%s\t\t\t%s\n", i, hashTable->theCellArray[i].key, "legitimate");
         } else if (hashTable->theCellArray[i].status == deleted) {
-            printf("%lu\t\t\t%s\t\t\t%s\n", i, elementRetrieve(&hashTable->theCellArray[i].element), "deleted");
+            printf("%lu\t\t\t%s\t\t\t%s\n", i, hashTable->theCellArray[i].key, "deleted");
         } else {    // empty
         }
     }
 }
 
-static void printStrArrays(const char (*array)[KEY_SIZE], size_t n) {
+static void printStrArrays(char (*array)[KEY_SIZE], size_t n) {
     for (size_t i = 0; i < n; i++) {
         printf("%s\t", array[i]);
     }
@@ -6717,42 +8133,37 @@ static clock_t getTime() {
 }
 
 static void testHashTable() {
-    char strArrays[KEY_COUNT][KEY_SIZE];
-    genRandomStrings(strArrays, KEY_COUNT, 'A', 'Z');
-    /* printStrArrays(strArrays, KEY_COUNT); */
-    ElementType elementArray[KEY_COUNT];
-    for (Position x = 0; x < KEY_COUNT; x++) {
-        elementArray[x] = elementCreate(strArrays[x]);
-    }
+    char keyArray[KEY_COUNT][KEY_SIZE];
+    genRandomStrings(keyArray, KEY_COUNT, 'A', 'Z');
+    /* printStrArrays(keyArray, KEY_COUNT); */
 
-    /* HashTable hashTable = hashTableCreate(TABLE_SIZE); */
+    // HashTable hashTable = hashTableCreate(TABLE_SIZE);
     HashTable hashTable = hashTableCreate(2);
 
     clock_t start, end, duration;
     start = getTime();
-    for (Position i = 0; i < KEY_COUNT; i++) {
-        hashTableInsert(&elementArray[i], hashTable);
+    for (Index i = 0; i < KEY_COUNT; i++) {
+        hashTableInsert(keyArray[i], hashTable);
     }
-    /* printf("hashTable:\n"); */
-    /* printHashTable(hashTable); */
+    printf("hashTable:\n");
+    printHashTable(hashTable);
 
     bool isSame = true;
     Position pos;
-    for (Position j = 0; j < KEY_COUNT; j++) {
-        pos = hashTableFind(&elementArray[j], hashTable);
-        if (hashTable->theCellArray[pos].status != legitimate) {
+    for (Index j = 0; j < KEY_COUNT; j++) {
+        if (!(pos = hashTableFind(keyArray[j], hashTable))) {
             isSame = false;
             break;
         }
     }
     printf("isSame: %d\n", isSame);
 
-    for (Position k = 0; k < KEY_COUNT; k++) {
-        hashTableDelete(&elementArray[k], hashTable);
+    for (Index k = 0; k < KEY_COUNT; k++) {
+        hashTableDelete(keyArray[k], hashTable);
     }
     end = getTime();
-    /* printf("hashTable:\n"); */
-    /* printHashTable(hashTable); */
+    printf("hashTable:\n");
+    printHashTable(hashTable);
     // 取上限
     duration = ((end - start) - 1) / CLOCKS_PER_SEC + 1;
     printf("duration = %lfs\n", (double) duration);
@@ -6774,108 +8185,119 @@ Stack, Queue
 #### 用数组实现
 
 ```c
-#include <stdio.h>
+// ## head
 #include <stdbool.h>
-#include <stdlib.h>
-#include <time.h>
-
-#define ARRAY_SIZE (10000 * 10)
 
 typedef int ElementType;
 
-struct Stack {
+struct Stack;
+typedef struct StackStruct* Stack;
+
+struct StackStruct {
     int capacity;
     int size;
     ElementType* data;
 };
 
-void stackPush(const ElementType* elementPtr, struct Stack* stackPtr);
-ElementType stackPop(struct Stack* stackPtr);
-struct Stack* stackCreate(int capacity);
-void stackDestroy(struct Stack* stackPtr);
-ElementType stackTop(struct Stack* stackPtr);
+void stackPush(ElementType element, Stack stack);
+ElementType stackPop(Stack stack);
+Stack stackCreate(int capacity);
+void stackDestroy(Stack stack);
+ElementType stackTop(Stack stack);
 
-inline bool stackIsEmpty(struct Stack* stackPtr) {
-    return stackPtr->size == 0;
+inline bool stackIsEmpty(Stack stack) {
+    return stack->size == 0;
 }
 
-static inline int stackSize(struct Stack* stackPtr);
+// ## body
+#include <stdio.h>
+#include <stdlib.h>
 
-struct Stack* stackCreate(int capacity) {
-    struct Stack* stackPtr = malloc(sizeof(struct Stack));
-    if (!stackPtr) {
+// ### debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 10)
+
+static inline int stackSize(Stack stack);
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
+
+Stack stackCreate(int capacity) {
+    Stack stack = malloc(sizeof(struct StackStruct));
+    if (!stack) {
         fprintf(stderr, "No space for creating stack\n");
         exit(EXIT_FAILURE);
     }
 
-    stackPtr->data = malloc(sizeof(ElementType) * capacity);
-    if (!stackPtr->data) {
+    stack->data = malloc(sizeof(ElementType) * capacity);
+    if (!stack->data) {
         fprintf(stderr, "No space for stack data\n");
         exit(EXIT_FAILURE);
     }
 
-    stackPtr->size = 0;
-    stackPtr->capacity = capacity;
+    stack->size = 0;
+    stack->capacity = capacity;
 
-    return stackPtr;
+    return stack;
 }
 
-void stackDestroy(struct Stack* stackPtr) {
-    free(stackPtr->data);
-    free(stackPtr);
+void stackDestroy(Stack stack) {
+    free(stack->data);
+    free(stack);
 }
 
-void stackPush(const ElementType* elementPtr, struct Stack* stackPtr) {
-    if (stackPtr->size == stackPtr->capacity) {
-        stackPtr->capacity = stackPtr->size * 2;
-        ElementType* newData = malloc(sizeof(ElementType) * stackPtr->capacity);
+void stackPush(ElementType element, Stack stack) {
+    if (stack->size == stack->capacity) {
+        stack->capacity = stack->size * 2;
+        ElementType* newData = malloc(sizeof(ElementType) * stack->capacity);
         if (!newData) {
             fprintf(stderr, "No space for newData\n");
             exit(EXIT_FAILURE);
         }
 
-        for (int i = 0; i < stackPtr->size; i++) {
-            newData[i] = stackPtr->data[i];
+        for (int i = 0; i < stack->size; i++) {
+            newData[i] = stack->data[i];
         }
-        free(stackPtr->data);
-        stackPtr->data = newData;
+        free(stack->data);
+        stack->data = newData;
     }
 
-    stackPtr->data[stackPtr->size++] = *elementPtr;
+    stack->data[stack->size++] = element;
 }
 
-ElementType stackPop(struct Stack* stackPtr) {
-    if (stackPtr->size <= 0) {
+ElementType stackPop(Stack stack) {
+    if (stack->size <= 0) {
         fprintf(stderr, "Stack is empty!\n");
         exit(EXIT_FAILURE);
     }
 
-    ElementType topElement = stackTop(stackPtr);
-    stackPtr->size--;
+    ElementType topElement = stackTop(stack);
+    stack->size--;
     return topElement;
 }
 
-ElementType stackTop(struct Stack* stackPtr) {
-    if (!stackPtr->size) {
+ElementType stackTop(Stack stack) {
+    if (!stack->size) {
         fprintf(stderr, "Stack is empty!\n");
         exit(EXIT_FAILURE);
     }
 
-    return stackPtr->data[stackPtr->size - 1];
+    return stack->data[stack->size - 1];
 }
 
-static inline int stackSize(struct Stack* stackPtr) {
-    return stackPtr->size;
+static inline int stackSize(Stack stack) {
+    return stack->size;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -6883,7 +8305,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -6892,24 +8314,24 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testStack() {
     ElementType array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
     clock_t start, end, duration;
-    struct Stack* stackPtr = stackCreate(20);
+    Stack stack = stackCreate(20);
     start = getTime();
     for (int i = 0; i < ARRAY_SIZE; i++) {
-        stackPush(&array[i], stackPtr);
+        stackPush(array[i], stack);
     }
-    printf("size of stack: %d\n", stackSize(stackPtr));
+    printf("size of stack: %d\n", stackSize(stack));
 
     ElementType tmpArray[ARRAY_SIZE];
     for (int j = 0; j < ARRAY_SIZE; j++) {
-        tmpArray[j] = stackPop(stackPtr);
+        tmpArray[j] = stackPop(stack);
     }
     end = getTime();
-    printf("size of stack: %d\n", stackSize(stackPtr));
+    printf("size of stack: %d\n", stackSize(stack));
     // 取上限
     duration = ((end - start) - 1) / CLOCKS_PER_SEC + 1;
     printf("duration = %lfs\n", (double) duration);
@@ -6923,7 +8345,11 @@ int main() {
     }
     printf("isSame: %d\n", isSame);
 
-    stackDestroy(stackPtr);
+    stackDestroy(stack);
+}
+
+int main() {
+    testStack();
 
     return 0;
 
@@ -6936,92 +8362,108 @@ int main() {
 // ### 说明
 // 链表保留头节点
 
-#include <stdio.h>
+// ## head
 #include <stdlib.h>
 #include <stdbool.h>
+
+typedef int ElementType;
+
+struct NodeStruct;
+typedef struct NodeStruct* Node;
+typedef Node Stack;
+
+struct NodeStruct {
+    ElementType element;
+    Node next;
+};
+
+void stackPush(ElementType element, Stack stack);
+ElementType stackPop(Stack stack);
+Stack stackCreate();
+void stackDestroy(Stack stack);
+void stackEmpty(Stack stack);
+ElementType stackTop(Stack stack);
+
+inline bool stackIsEmpty(Stack stack) {
+    return stack->next == NULL;
+}
+
+// ## body
+#include <stdio.h>
+
+// ### debug
 #include <time.h>
 
 #define ARRAY_SIZE (10000 * 10)
 
-typedef int ElementType;
+static void testStack();
+static int stackSize(Stack stack);
 
-struct Node {
-    ElementType element;
-    struct Node* next;
-};
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
-struct Node* stackCreate();
-void stackDestroy(struct Node* stackPtr);
-void stackEmpty(struct Node* stackPtr);
-ElementType stackTop(const struct Node* stackPtr);
-
-inline bool stackIsEmpty(const struct Node* stackPtr) {
-    return stackPtr->next == NULL;
-}
-
-inline void stackPush(const ElementType* elementPtr, struct Node* stackPtr) {
-    struct Node* newNodePtr = malloc(sizeof(struct Node));
+void stackPush(ElementType element, Stack stack) {
+    Node newNodePtr = malloc(sizeof(struct NodeStruct));
     if (!newNodePtr) {
         fprintf(stderr, "No space for newNode!\n");
         exit(EXIT_FAILURE);
     }
-    newNodePtr->element = *elementPtr;
+    newNodePtr->element = element;
 
-    newNodePtr->next = stackPtr->next;
-    stackPtr->next = newNodePtr;
+    newNodePtr->next = stack->next;
+    stack->next = newNodePtr;
 }
 
-inline ElementType stackPop(struct Node* stackPtr) {
-    if (stackIsEmpty(stackPtr)) {
+ElementType stackPop(Stack stack) {
+    if (stackIsEmpty(stack)) {
         fprintf(stderr, "The stack is empty!\n");
         exit(EXIT_FAILURE);
     }
 
-    struct Node* tmpNodePtr = stackPtr->next;
-    stackPtr->next = tmpNodePtr->next;
+    Node tmpNodePtr = stack->next;
+    stack->next = tmpNodePtr->next;
 
     ElementType element = tmpNodePtr->element;
     free(tmpNodePtr);
     return element;
 }
 
-static int stackSize(const struct Node* stackPtr);
-
-struct Node* stackCreate() {
-    struct Node* stackPtr = malloc(sizeof(struct Node));
-    if (!stackPtr) {
+Stack stackCreate() {
+    Stack stack = malloc(sizeof(struct NodeStruct));
+    if (!stack) {
         fprintf(stderr, "No space for creating stack!\n");
         exit(EXIT_FAILURE);
     }
-    stackPtr->next = NULL;
+    stack->next = NULL;
 
-    return stackPtr;
+    return stack;
 }
 
-void stackDestroy(struct Node* stackPtr) {
-    stackEmpty(stackPtr);
-    free(stackPtr);
+void stackDestroy(Stack stack) {
+    stackEmpty(stack);
+    free(stack);
 }
 
-void stackEmpty(struct Node* stackPtr) {
-    struct Node* tmpNodePtr = stackPtr->next;
+void stackEmpty(Stack stack) {
+    Node tmpNodePtr = stack->next;
     while (tmpNodePtr) {
-        stackPtr->next = tmpNodePtr->next;
+        stack->next = tmpNodePtr->next;
         free(tmpNodePtr);
     }
 }
 
-ElementType stackTop(const struct Node* stackPtr) {
-    if (stackIsEmpty(stackPtr)) {
+ElementType stackTop(Stack stack) {
+    if (stackIsEmpty(stack)) {
         fprintf(stderr, "The stack is empty!\n");
         exit(EXIT_FAILURE);
     }
-    return stackPtr->next->element;
+    return stack->next->element;
 }
 
-static int stackSize(const struct Node* stackPtr) {
+static int stackSize(Stack stack) {
     int size = 0;
-    const struct Node* tmpNodePtr = stackPtr;
+    Stack tmpNodePtr = stack;
     while ((tmpNodePtr = tmpNodePtr->next)) {
         size++;
     }
@@ -7029,14 +8471,14 @@ static int stackSize(const struct Node* stackPtr) {
     return size;
 }
 
-void printArray(int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -7044,7 +8486,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -7053,24 +8495,24 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
+static void testStack() {
     ElementType array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
     clock_t start, end, duration;
-    struct Node* stackPtr = stackCreate();
+    Stack stack = stackCreate();
     start = getTime();
     for (int i = 0; i < ARRAY_SIZE; i++) {
-        stackPush(&array[i], stackPtr);
+        stackPush(array[i], stack);
     }
-    printf("size of stack: %d\n", stackSize(stackPtr));
+    printf("size of stack: %d\n", stackSize(stack));
 
     ElementType tmpArray[ARRAY_SIZE];
     for (int j = 0; j < ARRAY_SIZE; j++) {
-        tmpArray[j] = stackPop(stackPtr);
+        tmpArray[j] = stackPop(stack);
     }
     end = getTime();
-    printf("size of stack: %d\n", stackSize(stackPtr));
+    printf("size of stack: %d\n", stackSize(stack));
     // 取上限
     duration = ((end - start) - 1) / CLOCKS_PER_SEC + 1;
     printf("duration = %lfs\n", (double) duration);
@@ -7084,7 +8526,11 @@ int main() {
     }
     printf("isSame: %d\n", isSame);
 
-    stackDestroy(stackPtr);
+    stackDestroy(stack);
+}
+
+int main() {
+    testStack();
 
     return 0;
 }
@@ -7094,146 +8540,183 @@ int main() {
 
 #### 用数组实现
 
+##### main.c
+
 ```c
-// ### 说明
-// 有 size 字段
+#include "queue.h"
+
+int main() {
+    testQueue();
+    return 0;
+}
+```
+
+##### queue.h
+
+```c
+#ifndef _QUEUE_H
+#define _QUEUE_H
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <time.h>
 
-#define ARRAY_SIZE (10000 * 10)
+typedef int QueueElementType;
 
-typedef int ElementType;
-
-struct Queue {
+struct QueueStruct {
     int capacity;
     int size;
     int front;
     int rear;
-    ElementType* data;
+    QueueElementType* data;
 };
 
-void queueEnqueue(const ElementType* elementPtr, struct Queue* queuePtr);
-ElementType queueDequeue(struct Queue* queuePtr);
-struct Queue* queueCreate(int capacity);
-void queueDestroy(struct Queue* queuePtr);
-void queueEmpty(struct Queue* queuePtr);
+typedef struct QueueStruct* Queue;
 
-inline bool queueIsEmpty(const struct Queue* queuePtr) {
-    return queuePtr->size == 0;
+void queueEnqueue(QueueElementType element, Queue queue);
+QueueElementType queueDequeue(Queue queue);
+Queue queueCreate(int capacity);
+void queueDestroy(Queue queue);
+void queueEmpty(Queue queue);
+
+inline bool queueIsEmpty(Queue queue) {
+    return queue->size == 0;
 }
 
-inline ElementType queueFront(struct Queue* queuePtr) {
-    if (queueIsEmpty(queuePtr)) {
+inline QueueElementType queueFront(Queue queue) {
+    if (queueIsEmpty(queue)) {
         fprintf(stderr, "The queue is empty!\n");
         exit(EXIT_FAILURE);
     }
 
-    return queuePtr->data[queuePtr->front];
+    return queue->data[queue->front];
 }
 
-inline ElementType queueBack(struct Queue* queuePtr) {
-    if (queueIsEmpty(queuePtr)) {
+inline QueueElementType queueBack(Queue queue) {
+    if (queueIsEmpty(queue)) {
         fprintf(stderr, "The queue is empty!\n");
         exit(EXIT_FAILURE);
     }
 
-    return queuePtr->data[queuePtr->rear];
+    return queue->data[queue->rear];
 }
 
-static inline bool queueIsFull(const struct Queue* queuePtr);
-static inline int queueSucc(int index, struct Queue* queuePtr);
+inline int queueSize(Queue queue) {
+    return queue->size;
+}
 
-static int queueSize(const struct Queue* queuePtr);
+// debug
+void testQueue();
 
-void queueEnqueue(const ElementType* elementPtr, struct Queue* queuePtr) {
-    if (queueIsFull(queuePtr)) {
-        int newCapacity = queuePtr->capacity * 2;
-        ElementType* newData = malloc(sizeof(ElementType) * newCapacity);
+#endif
+```
+
+##### queue.c
+
+```c
+// ### 说明
+// 有 size 字段
+#include "queue.h"
+
+static inline bool queueIsFull(Queue queue);
+static inline int queueSucc(int index, Queue queue);
+
+// ## debug
+#include <time.h>
+
+#define ARRAY_SIZE (10000 * 10)
+// #define ARRAY_SIZE (10)
+
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
+
+void queueEnqueue(QueueElementType element, Queue queue) {
+    if (queueIsFull(queue)) {
+        int newCapacity = queue->capacity * 2;
+        QueueElementType* newData = malloc(sizeof(QueueElementType) * newCapacity);
         if (!newData) {
             fprintf(stderr, "No space for newData!\n");
             exit(EXIT_FAILURE);
         }
 
-        for (int i = 0; i < queuePtr->size; i++) {
-            newData[i] = queueDequeue(queuePtr);
+        int qsize = queueSize(queue);
+        for (int i = 0; i < qsize; i++) {
+            newData[i] = queueDequeue(queue);
         }
-        free(queuePtr->data);
-        queuePtr->data = newData;
-        queuePtr->capacity = newCapacity;
-        queuePtr->front = 0;
-        queuePtr->rear = queuePtr->size - 1;
+        free(queue->data);
+        queue->data = newData;
+        queue->capacity = newCapacity;
+        queue->front = 0;
+        queue->size = qsize;
+        queue->rear = queue->size - 1;
     }
 
-    queuePtr->rear = queueSucc(queuePtr->rear, queuePtr);
-    queuePtr->data[queuePtr->rear] = *elementPtr;
-    queuePtr->size++;
+    queue->rear = queueSucc(queue->rear, queue);
+    queue->data[queue->rear] = element;
+    queue->size++;
 }
 
-ElementType queueDequeue(struct Queue* queuePtr) {
-    if (queueIsEmpty(queuePtr)) {
+QueueElementType queueDequeue(Queue queue) {
+    if (queueIsEmpty(queue)) {
         fprintf(stderr, "The queue is empty!\n");
         exit(EXIT_FAILURE);
     }
 
-    ElementType frontElement = queueFront(queuePtr);
-    queuePtr->front = queueSucc(queuePtr->front, queuePtr);
+    QueueElementType frontElement = queueFront(queue);
+    queue->front = queueSucc(queue->front, queue);
+    queue->size--;
     return frontElement;
 }
 
-static inline bool queueIsFull(const struct Queue* queuePtr) {
-    return queuePtr->size == queuePtr->capacity;
+void queueEmpty(Queue queue) {
+    queue->size = 0;
+    queue->rear = 0;
+    queue->front = 1;
 }
 
-static inline int queueSucc(int index, struct Queue* queuePtr) {
-    if (++index == queuePtr->capacity) {
+Queue queueCreate(int capacity) {
+    Queue queue = malloc(sizeof(struct QueueStruct));
+    if (!queue) {
+        fprintf(stderr, "No space for creating queue!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    queue->data = malloc(sizeof(QueueElementType) * capacity);
+    if (!queue->data) {
+        fprintf(stderr, "No space for queue data!\n");
+        exit(EXIT_FAILURE);
+    }
+    queue->capacity = capacity;
+
+    queueEmpty(queue);
+    return queue;
+}
+
+void queueDestroy(Queue queue) {
+    free(queue->data);
+    free(queue);
+}
+
+static inline bool queueIsFull(Queue queue) {
+    return queue->size == queue->capacity;
+}
+
+static inline int queueSucc(int index, Queue queue) {
+    if (++index == queue->capacity) {
         index = 0;
     }
     return index;
 }
 
-void queueEmpty(struct Queue* queuePtr) {
-    queuePtr->size = 0;
-    queuePtr->rear = 0;
-    queuePtr->front = 1;
-}
-
-struct Queue* queueCreate(int capacity) {
-    struct Queue* queuePtr = malloc(sizeof(struct Queue));
-    if (!queuePtr) {
-        fprintf(stderr, "No space for creating queue!\n");
-        exit(EXIT_FAILURE);
-    }
-
-    queuePtr->data = malloc(sizeof(ElementType) * capacity);
-    if (!queuePtr->data) {
-        fprintf(stderr, "No space for queue data!\n");
-        exit(EXIT_FAILURE);
-    }
-    queuePtr->capacity = capacity;
-
-    queueEmpty(queuePtr);
-    return queuePtr;
-}
-
-void queueDestroy(struct Queue* queuePtr) {
-    free(queuePtr->data);
-    free(queuePtr);
-}
-
-static inline int queueSize(const struct Queue* queuePtr) {
-    return queuePtr->size;
-}
-
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -7241,7 +8724,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -7250,24 +8733,24 @@ clock_t getTime() {
     return t;
 }
 
-int main() {
-    ElementType array[ARRAY_SIZE];
+void testQueue() {
+    QueueElementType array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
     clock_t start, end, duration;
-    struct Queue* queuePtr = queueCreate(20);
+    Queue queue = queueCreate(2);
     start = getTime();
     for (int i = 0; i < ARRAY_SIZE; i++) {
-        queueEnqueue(&array[i], queuePtr);
+        queueEnqueue(array[i], queue);
     }
-    printf("size of queue: %d\n", queueSize(queuePtr));
+    printf("size of queue: %d\n", queueSize(queue));
 
-    ElementType tmpArray[ARRAY_SIZE];
+    QueueElementType tmpArray[ARRAY_SIZE];
     for (int j = 0; j < ARRAY_SIZE; j++) {
-        tmpArray[j] = queueDequeue(queuePtr);
+        tmpArray[j] = queueDequeue(queue);
     }
     end = getTime();
-    printf("size of queue: %d\n", queueSize(queuePtr));
+    printf("size of queue: %d\n", queueSize(queue));
     // 取上限
     duration = ((end - start) - 1) / CLOCKS_PER_SEC + 1;
     printf("duration = %lfs\n", (double) duration);
@@ -7281,9 +8764,7 @@ int main() {
     }
     printf("isSame: %d\n", isSame);
 
-    queueDestroy(queuePtr);
-
-    return 0;
+    queueDestroy(queue);
 }
 ```
 
@@ -7294,134 +8775,146 @@ int main() {
 // 链表不保留头节点
 
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+typedef int QueueElementType;
+
+struct NodeStruct;
+struct QueueStruct;
+typedef struct NodeStruct* Node;
+typedef struct QueueStruct* Queue;
+
+struct NodeStruct {
+    QueueElementType element;
+    Node next;
+};
+
+struct QueueStruct {
+    Node front;
+    Node rear;
+    int size;
+};
+
+
+void queueEnqueue(QueueElementType element, Queue queue);
+QueueElementType queueDequeue(Queue queue);
+Queue queueCreate();
+void queueDestroy(Queue queue);
+
+inline bool queueIsEmpty(Queue queue) {
+    return queue->size == 0;
+}
+
+inline QueueElementType queueFront(Queue queue) {
+    if (queueIsEmpty(queue)) {
+        fprintf(stderr, "The queue is empty!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return queue->front->element;
+}
+
+inline QueueElementType queueBack(Queue queue) {
+    if (queueIsEmpty(queue)) {
+        fprintf(stderr, "The queue is empty!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return queue->rear->element;
+}
+
+void queueEmpty(Queue queue);
+
+int queueSize(Queue queue);
+
+// ## debug
 #include <time.h>
 
 #define ARRAY_SIZE (10000 * 10)
 
-typedef int ElementType;
+static void printArray(int* array, int n);
+static void genRandomNums(int* outArray, int n, int lower, int upper);
+static clock_t getTime();
 
-struct Node {
-    ElementType element;
-    struct Node* next;
-};
-
-struct Queue {
-    struct Node* front;
-    struct Node* rear;
-    int size;
-};
-
-void queueEnqueue(const ElementType* elementPtr, struct Queue* queuePtr);
-ElementType queueDequeue(struct Queue* queuePtr);
-struct Queue* queueCreate();
-void queueDestroy(struct Queue* queuePtr);
-
-inline bool queueIsEmpty(const struct Queue* queuePtr) {
-    return queuePtr->size == 0;
-}
-
-inline ElementType queueFront(struct Queue* queuePtr) {
-    if (queueIsEmpty(queuePtr)) {
-        fprintf(stderr, "The queue is empty!\n");
-        exit(EXIT_FAILURE);
-    }
-
-    return queuePtr->front->element;
-}
-
-inline ElementType queueBack(struct Queue* queuePtr) {
-    if (queueIsEmpty(queuePtr)) {
-        fprintf(stderr, "The queue is empty!\n");
-        exit(EXIT_FAILURE);
-    }
-
-    return queuePtr->rear->element;
-}
-
-void queueEmpty(struct Queue* queuePtr);
-
-static int queueSize(const struct Queue* queuePtr);
-
-void queueEnqueue(const ElementType* elementPtr, struct Queue* queuePtr) {
-    struct Node* newNodePtr = malloc(sizeof(struct Node));
-    if (!newNodePtr) {
+void queueEnqueue(QueueElementType element, Queue queue) {
+    Node node = malloc(sizeof(struct NodeStruct));
+    if (!node) {
         fprintf(stderr, "No space for new Node!\n");
         exit(EXIT_FAILURE);
     }
-    newNodePtr->element = *elementPtr;
-    newNodePtr->next = NULL;
+    node->element = element;
+    node->next = NULL;
 
-    if (!queuePtr->size) {
-        queuePtr->rear = newNodePtr;
-        queuePtr->front = newNodePtr;
+    if (!queue->size) {
+        queue->rear = node;
+        queue->front = node;
     } else {
-        queuePtr->rear->next = newNodePtr;
-        queuePtr->rear = newNodePtr;
+        queue->rear->next = node;
+        queue->rear = node;
     }
-    queuePtr->size++;
+    queue->size++;
 }
 
-ElementType queueDequeue(struct Queue* queuePtr) {
-    if (queueIsEmpty(queuePtr)) {
+QueueElementType queueDequeue(Queue queue) {
+    if (queueIsEmpty(queue)) {
         fprintf(stderr, "The queue is empty!\n");
         exit(EXIT_FAILURE);
     }
 
-    struct Node* tmpNode = queuePtr->front;
-    queuePtr->front = tmpNode->next;
-    queuePtr->size--;
+    Node tmpNode = queue->front;
+    queue->front = tmpNode->next;
+    queue->size--;
 
-    ElementType element = tmpNode->element;
+    QueueElementType element = tmpNode->element;
     free(tmpNode);
     return element;
 }
 
-struct Queue* queueCreate() {
-    struct Queue* queuePtr = malloc(sizeof(struct Queue));
-    if (!queuePtr) {
+Queue queueCreate() {
+    Queue queue = malloc(sizeof(struct QueueStruct));
+    if (!queue) {
         fprintf(stderr, "No space for creating queue!\n");
         exit(EXIT_FAILURE);
     }
-    queuePtr->front = queuePtr->rear = NULL;
-    queuePtr->size = 0;
-    return queuePtr;
+    queue->front = queue->rear = NULL;
+    queue->size = 0;
+    return queue;
 }
 
-void queueDestroy(struct Queue* queuePtr) {
-    struct Node* tmpNode;
-    while (queuePtr->front) {
-        tmpNode = queuePtr->front;
-        queuePtr->front = queuePtr->front->next;
+void queueDestroy(Queue queue) {
+    Node tmpNode;
+    while (queue->front) {
+        tmpNode = queue->front;
+        queue->front = queue->front->next;
         free(tmpNode);
     }
-    free(queuePtr);
+    free(queue);
 }
 
-void queueEmpty(struct Queue* queuePtr) {
-    struct Node* tmpNode;
-    while (queuePtr->front) {
-        tmpNode = queuePtr->front;
-        queuePtr->front = queuePtr->front->next;
+void queueEmpty(Queue queue) {
+    Node tmpNode;
+    while (queue->front) {
+        tmpNode = queue->front;
+        queue->front = queue->front->next;
         free(tmpNode);
     }
-    queuePtr->rear = NULL;
-    queuePtr->size = 0;
+    queue->rear = NULL;
+    queue->size = 0;
 }
 
-static int queueSize(const struct Queue* queuePtr) {
-    return queuePtr->size;
+int queueSize(Queue queue) {
+    return queue->size;
 }
 
-void printArray(const int* array, int n) {
+static void printArray(int* array, int n) {
     for (int i = 0; i < n; i++) {
         printf("%d\t", array[i]);
     }
     printf("\n");
 }
 
-void genRandomNums(int* outArray, int n, int lower, int upper) {
+static void genRandomNums(int* outArray, int n, int lower, int upper) {
     srand(time(0));
     int tmpUpper = upper - lower + 1;
     for (int i = 0; i < n; i++) {
@@ -7429,7 +8922,7 @@ void genRandomNums(int* outArray, int n, int lower, int upper) {
     }
 }
 
-clock_t getTime() {
+static clock_t getTime() {
     clock_t t = clock();
     if (t == (clock_t)-1) {
         fprintf(stderr, "clock() failed\n");
@@ -7439,23 +8932,23 @@ clock_t getTime() {
 }
 
 int main() {
-    ElementType array[ARRAY_SIZE];
+    QueueElementType array[ARRAY_SIZE];
     genRandomNums(array, ARRAY_SIZE, 1, ARRAY_SIZE);
 
     clock_t start, end, duration;
-    struct Queue* queuePtr = queueCreate();
+    Queue queue = queueCreate();
     start = getTime();
     for (int i = 0; i < ARRAY_SIZE; i++) {
-        queueEnqueue(&array[i], queuePtr);
+        queueEnqueue(array[i], queue);
     }
-    printf("size of queue: %d\n", queueSize(queuePtr));
+    printf("size of queue: %d\n", queueSize(queue));
 
-    ElementType tmpArray[ARRAY_SIZE];
+    QueueElementType tmpArray[ARRAY_SIZE];
     for (int j = 0; j < ARRAY_SIZE; j++) {
-        tmpArray[j] = queueDequeue(queuePtr);
+        tmpArray[j] = queueDequeue(queue);
     }
     end = getTime();
-    printf("size of queue: %d\n", queueSize(queuePtr));
+    printf("size of queue: %d\n", queueSize(queue));
     // 取上限
     duration = ((end - start) - 1) / CLOCKS_PER_SEC + 1;
     printf("duration = %lfs\n", (double) duration);
@@ -7469,7 +8962,7 @@ int main() {
     }
     printf("isSame: %d\n", isSame);
 
-    queueDestroy(queuePtr);
+    queueDestroy(queue);
 
     return 0;
 }
