@@ -3420,10 +3420,10 @@ Position avlTreeFindMax(AvlTree avlTree);
 int avlTreeHeight(AvlTree avlTree);
 AvlTree avlTreeMakeEmpty(AvlTree avlTree);
 
-static inline Position avlTreeSingleRotateWithLeft(Position k2);
-static inline Position avlTreeSingleRotateWithRight(Position k2);
-static inline Position avlTreeDoubleRotateWithLeft(Position k3);
-static inline Position avlTreeDoubleRotateWithRight(Position k3);
+static inline Position avlTreeSingleRotateWithLeft(Position node);
+static inline Position avlTreeSingleRotateWithRight(Position node);
+static inline Position avlTreeDoubleRotateWithLeft(Position node);
+static inline Position avlTreeDoubleRotateWithRight(Position node);
 static inline int max(int a, int b);
 
 // debug
@@ -3557,36 +3557,49 @@ AvlTree avlTreeDelete(ElementType element, AvlTree avlTree) {
     return avlTree;
 }
 
-// 标号：最底的结点为 k1, 往上是 k2, k3...
-// k1 不为空
-static inline Position avlTreeSingleRotateWithLeft(Position k2) {
-    Position k1 = k2->leftChild;
-    k2->leftChild = k1->rightChild;
-    k1->rightChild = k2;
+// node 右旋。新插入的节点在左-左边。
+static inline Position avlTreeSingleRotateWithLeft(Position node) {
+    Position leftChild = node->leftChild;
 
-    k2->height = max(avlTreeHeight(k2->leftChild), avlTreeHeight(k2->rightChild)) + 1;
-    k1->height = max(avlTreeHeight(k1->leftChild), avlTreeHeight(k1->rightChild)) + 1;
-    return k1;
+    // ### 右旋
+    node->leftChild = leftChild->rightChild;
+    leftChild->rightChild = node;
+
+    // ### 更新 node, leftChild 的 height。
+    node->height = max(avlTreeHeight(node->leftChild), avlTreeHeight(node->rightChild)) + 1;
+    leftChild->height = max(avlTreeHeight(leftChild->leftChild), avlTreeHeight(leftChild->rightChild)) + 1;
+    return leftChild;
 }
 
-static inline Position avlTreeSingleRotateWithRight(Position k2) {
-    Position k1 = k2->rightChild;
-    k2->rightChild = k1->leftChild;
-    k1->leftChild = k2;
+// node 左旋。新插入的节点在右-右边。
+static inline Position avlTreeSingleRotateWithRight(Position node) {
+    Position rightChild = node->rightChild;
 
-    k2->height = max(avlTreeHeight(k2->leftChild), avlTreeHeight(k2->rightChild)) + 1;
-    k1->height = max(avlTreeHeight(k1->leftChild), avlTreeHeight(k1->rightChild)) + 1;
-    return k1;
+    // ### 左旋
+    node->rightChild = rightChild->leftChild;
+    rightChild->leftChild = node;
+
+    // ### 更新 node, rightChild 的 height。
+    node->height = max(avlTreeHeight(node->leftChild), avlTreeHeight(node->rightChild)) + 1;
+    rightChild->height = max(avlTreeHeight(rightChild->leftChild), avlTreeHeight(rightChild->rightChild)) + 1;
+
+    return rightChild;
 }
 
-static inline Position avlTreeDoubleRotateWithLeft(Position k3) {
-    k3->leftChild = avlTreeSingleRotateWithRight(k3->leftChild);
-    return avlTreeSingleRotateWithLeft(k3);
+// 左-右旋。新插入的节点在左-右边。
+static inline Position avlTreeDoubleRotateWithLeft(Position node) {
+    // 左儿子左旋
+    node->leftChild = avlTreeSingleRotateWithRight(node->leftChild);
+    // node 右旋
+    return avlTreeSingleRotateWithLeft(node);
 }
 
-static inline Position avlTreeDoubleRotateWithRight(Position k3) {
-    k3->rightChild = avlTreeSingleRotateWithLeft(k3->rightChild);
-    return avlTreeSingleRotateWithRight(k3);
+// 右-左旋。新插入的节点在右-左边。
+static inline Position avlTreeDoubleRotateWithRight(Position node) {
+    // 右儿子右旋
+    node->rightChild = avlTreeSingleRotateWithLeft(node->rightChild);
+    // node 左旋
+    return avlTreeSingleRotateWithRight(node);
 }
 
 static inline int max(int a, int b) {
