@@ -4,7 +4,7 @@
 ### 基本概念
 
 key(注册表项), value, data
-    
+
     key 下可有多个 subkeys 或 values
     data 有多个数据类型
 
@@ -41,7 +41,7 @@ for example
 :: ### 增删改查
 :: key 表示注册表项
 reg add "HKLM\Software\KeyName" /f
-reg add "HKLM\Software\KeyName" /v "valueName1" /t REG_SZ /d "data1" /f 
+reg add "HKLM\Software\KeyName" /v "valueName1" /t REG_SZ /d "data1" /f
 
 reg query "HKLM\Software\KeyName" /v "valueName1"
 

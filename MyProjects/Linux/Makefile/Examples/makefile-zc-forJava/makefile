@@ -56,7 +56,7 @@ PACKAGE_PATH := $(filter-out $(BIN_DIR),$(shell dirname $(OBJ_FILES)))
 
 ## ### Rules
 
-.PHONY: all run runjar build rebuild buildjar clean cleantarget cleanpkg cleanpkg help debug
+.PHONY: all run runjar build rebuild buildjar clean cleantarget cleanpkg help debugMake
 
 all: cleantarget build run
 
@@ -72,14 +72,11 @@ rebuild: clean build
 buildjar: $(BINARY)
 	jar cvfe $(JAR_PKG) $(ENTRY_POINT) -C bin .
 
-clean: cleanpkg
-	rm -f $(JAR_PKG)
+clean:
+	rm -rf $(BIN_DIR)
 
 cleantarget:
 	rm -f $(BINARY)
-
-cleanbin:
-	rm -rf $(BIN_DIR)/*
 
 # 清除包
 cleanpkg:
@@ -101,7 +98,7 @@ $(BIN_DIR)/%$(OBJ_SUFFIX): $(SRC_DIR)/%$(SRC_SUFFIX)
 help:
 	@echo 'make [ENTRY_POINT=<entryPoint>] [<targets>]'
 
-debug:
+debugMake:
 	@echo $(ENTRY_POINT)
 	@echo $(BINARY)
 	@echo $(SRC_FILES)

@@ -5,7 +5,7 @@
 - vim help
 - <https://vim.fandom.com/wiki/Learn_to_use_help>
 - <http://vimcdoc.sourceforge.net/doc/help.html>
-    
+
     vim 中文官方文档
 
 ### Help
@@ -26,7 +26,7 @@ vim 有多个帮助文档, 每个文档有多个 tags, 每个 tags 都有其说�
         `C-c, S-c, M/A-c 分别表示 ctrl-c, shift-c, Alt-c`
         `<Up>, <Down>, <Left>, <Right> 表示方向键`
         tab 键可能用 `<tab>, Tab`
-        
+
         # ctrl 快捷方式的 tag 可能不包 `C-`, 但是会包含 `ctrl`。所以搜索时如果用 `C-` 找不到可用 `ctrl` 代替。
 
     tag 前缀
@@ -37,10 +37,10 @@ vim 有多个帮助文档, 每个文档有多个 tags, 每个 tags 都有其说�
 
     help <tag>
         只列出一个匹配的 tag
-    
+
     tag /<pattern>
         进入 help 帮助文档后用此命令，则是用正则表达式搜索 help tags（列出所有符合的 tags），然后可以用 ts 等命令操作这些 tags。
-    
+
     helpgrep <pattern>
 
         搜索整个 help 文档。
@@ -66,7 +66,7 @@ vim 有多个帮助文档, 每个文档有多个 tags, 每个 tags 都有其说�
 
     help quickref
         类似 help 的索引
-        
+
     help vimtutor
         :!vimturtor -g zh         # 可调出 vimtutor 中文文档
 

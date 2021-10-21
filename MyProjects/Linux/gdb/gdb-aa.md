@@ -42,16 +42,15 @@ note: help 信息有比较好的说明，这里只是记录哪部分要学的。
 
     gdb -pid <pid> [program_file]
     gdb <program_file> [core_file]
-    
+
 ### location
 
 - `'<file>'::<symbol>::<symbol>`
 - `'<file>':<lineNumber> 或 <file>:<lineNumber>`
 - `'<obj>.<member>'`
-    
+
 `` `'` 号的作用，当文件名出名特殊字符时，如 `.` 也能自动补全。``
-        
-        
+
 ### info, show
 
 - info
@@ -72,7 +71,7 @@ note: help 信息有比较好的说明，这里只是记录哪部分要学的。
     info source
     info sources
     ...
-	
+
 ### 操控程序的运行(start, run, continute, next, step, until, finish, return)
 
 - step
@@ -96,33 +95,33 @@ note: help 信息有比较好的说明，这里只是记录哪部分要学的。
 - finish
 
     直到函数运行完成
-        
+
 启动程序并设置程序的参数
 
     {start | run} [paraments]
     show args
-    
+
     c 语言只能从 main 开始调试，定义全局变量过程不能调试。但是 c++ 可以。
-	
+
 ### breakpoint, watchpoint, catchpoint(disable, enable, delete)
 
 - break
         break <location> [if <condition>]
         condition 很有用，比如在一个循环中调试。
-        
+
         for example
             break 1 if i == 10 || i == 20
-        
+
 - watch, rwatch, awatch
         {watch, rwatch, awatch} <expr> [if (<condition>)]
             expr 必须是一个 <内存单元>
-        
+
         注意:
             它们使用的符号不是表示固定的东西，根据作用域的不同可能会表示不同的东西。比如：符号重名。解决这个问题，将符号换为地址即可。符号消失时，watchpoint 会补自动删除。
-            
+
             watch 是内存区域的值有改变时，才打断。而不是写这个单元就打断。
             watch <数组名>: 表示监控整个数组。而在 rwatch, awatch 中仅表示是一个字符，不代表是内存单元。
-            
+
             char buf[1024];
             watch (long)*buf; watch *(long*)buf 有关区别的。`watch (long)*buf` 因为会先执行 `*buf` 所以不一定是 sizeof(long) 个字节的单元。
 
@@ -132,19 +131,19 @@ note: help 信息有比较好的说明，这里只是记录哪部分要学的。
             当发生系统调用时会停止程序。
         catch fork
         ...
-    
+
 `condition <breakpoint_num> [<expression> | <number>]`
 
 > 编辑 breakpoint 的条件。
-    
+
 `command <breakpoint_num>`
 
-> Set commands to be executed when a breakpoint is hit.	
-	
+> Set commands to be executed when a breakpoint is hit.
+
 ### call
 
 如果不调用某函数，而我们要调试，可用该指令调用函数，从而触发断点。
-		
+
 ### 查看内存的信息(print, x, disassemble)
 
 FMT is a repeat count followed by a format letter and a size letter.
@@ -153,7 +152,7 @@ print 的 FMT 只支持 format letter.
 
     format letter
         o(octal), x(hex), d(decimal), u(unsigned decimal),t(binary),...
-    
+
     size letter
          b(byte), h(halfword), w(word), g(giant, 8 bytes)
 
@@ -163,10 +162,10 @@ print 的 FMT 只支持 format letter.
 
         x /<count><o|x|d|u><b|h|w|g> <address>
             默认为小端模式
-            
+
             x /2xb 0x555555554000
             x /2xh 0x555555554000
-            
+
 - set
 
     修改内存。
@@ -174,7 +173,7 @@ print 的 FMT 只支持 format letter.
         set <process_variable> = <value>
         set args <program_args>
             还能修改程序的信息
-				
+
 ### 栈
 
     info stack(与 backtrace 相同)
@@ -183,7 +182,7 @@ print 的 FMT 只支持 format letter.
         查看栈帧的内容
     frame
         选择栈帧。可用于查看当前运行的位置。
-			
+
 ### 查看哪些进程/线程，和选择操作
 
     info inferiors
@@ -192,25 +191,26 @@ print 的 FMT 只支持 format letter.
         fork 之后跟踪父或子进程
     {show | set} detach-on-fork {on | off}
         fork 之后是否 detach 某个进程
-    
+
     info threads
     thread
-		
+
 ### 查看进程的信息
 
     info proc
     info line <n>
-    
+
     info target（与 info files 相同）
     info vtbl EXPRESSION
         EXPRESSION 是代表一个 object.
 
     info symbol <addr>
         列出 <symbol + offset>。可用来查看地址与哪些符号相近，用于当不知地址在程序的位置时。
-			
+
 ### shell
 
     shell nm <app> | c++filt | grep <regexp>
+    objdump -S <app> | c++filt
 
 ### core file
 
@@ -225,7 +225,7 @@ print 的 FMT 只支持 format letter.
 ### log file
 
     set logging file [filename]
-    set logging {on | off} 		// 只有打开 logging ，才会创建logging file 且 overwrite 和 redirect 才起作用。 
+    set logging {on | off}      // 只有打开 logging ，才会创建logging file 且 overwrite 和 redirect 才起作用。
 
     set logging overwrite {on | off}
         Set whether logging overwrites or appends to the log file.
@@ -235,12 +235,12 @@ print 的 FMT 只支持 format letter.
             Set the logging output mode.
             If redirect is off, output will go to both the screen and the log file.		// 默认 off
             If redirect is on, output will go only to the log file.
-    
+
 ### gdb script file
 
     source <gdbScript>
     gdb -x <gdbScript>
-        
+
 ### others
 
     attach <pid>
@@ -290,7 +290,7 @@ show args
 # gdb --args a.out aa bb cc
 show args
 
-start 
+start
 info args
 
 ### 查看源代码

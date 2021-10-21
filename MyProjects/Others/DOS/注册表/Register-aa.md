@@ -3,7 +3,7 @@
 ### refer
 
 - <https://blog.csdn.net/meng_suiga/article/details/79485855>
-    
+
     注册表参数
 
 ## 添加右键菜单
@@ -15,11 +15,11 @@
     shell\<Key>
         @="<prompt>"
         icon="<iconpath>"
-        ; 有这个值时，按 shift + RightClick 才能显示 
+        ; 有这个值时，按 shift + RightClick 才能显示
         "Extended"=""
     shell\<Key>\command
         @=<命令>
-	    
+
 #### 注册表参数
 
 | Parameter | Evaluates to                               |
@@ -48,7 +48,7 @@
 
     ; 驱动
     HKEY_CLASSES_ROOT\Drive\shell\
-		
+
 ### 删除注册表“项”
 
     [-<key>]

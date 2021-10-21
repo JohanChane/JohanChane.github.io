@@ -6,137 +6,6 @@ Python
 Content
 ---
 
-<!-- vim-markdown-toc GFM -->
-
-* [References](#references)
-* [基本概念](#基本概念)
-    * [一切都是对象。](#一切都是对象)
-    * [变量名与对象](#变量名与对象)
-        * [对象的 id](#对象的-id)
-    * [对象含有对象是如何存储的](#对象含有对象是如何存储的)
-    * [Ohters](#ohters)
-        * [语法变化](#语法变化)
-* [Basic](#basic)
-    * [Get help](#get-help)
-        * [查看 builtin 函数或类型的定义](#查看-builtin-函数或类型的定义)
-    * [查看信息（用于反馈）](#查看信息用于反馈)
-    * [调试程序](#调试程序)
-    * [Output](#output)
-    * [`print()`](#print)
-    * [输出格式](#输出格式)
-    * [字面值](#字面值)
-        * [字符串字面值拼接](#字符串字面值拼接)
-    * [转义字符](#转义字符)
-        * [转义换行符](#转义换行符)
-    * [内置数据类型](#内置数据类型)
-        * [常用的内置容器类型](#常用的内置容器类型)
-        * [可变对象与不可变对象](#可变对象与不可变对象)
-        * [hashable](#hashable)
-        * [数字类型](#数字类型)
-            * [类型转换](#类型转换)
-        * [序列类型](#序列类型)
-            * [列表解析（list comprehension）](#列表解析list-comprehension)
-        * [集合类型](#集合类型)
-        * [映射类型](#映射类型)
-            * [字典](#字典)
-    * [垃圾回收机制](#垃圾回收机制)
-        * [驻留（interning）](#驻留interning)
-    * [Branch Control](#branch-control)
-        * [比较](#比较)
-            * [运算符](#运算符)
-    * [Loop Control](#loop-control)
-    * [function](#function)
-        * [argument](#argument)
-            * [positional-only or keyword-only arguments](#positional-only-or-keyword-only-arguments)
-        * [return](#return)
-        * [传参方式](#传参方式)
-            * [浅层 (shallow) 和深层 (deep) 复制操作](#浅层-shallow-和深层-deep-复制操作)
-    * [内嵌函数与闭包](#内嵌函数与闭包)
-    * [lambda](#lambda)
-    * [异常](#异常)
-    * [命名空间和作用域](#命名空间和作用域)
-* [class](#class)
-    * [super()](#super)
-    * [类的属性与方法](#类的属性与方法)
-        * [类的属性](#类的属性)
-        * [类的方法](#类的方法)
-    * [类的访问属性](#类的访问属性)
-        * [name mangling](#name-mangling)
-    * [类的继承](#类的继承)
-        * [单继承](#单继承)
-        * [多重继承](#多重继承)
-        * [类的多态](#类的多态)
-    * [抽象基类 abc](#抽象基类-abc)
-* [装饰器（decorator）](#装饰器decorator)
-    * [添加一个自定义的 decorator](#添加一个自定义的-decorator)
-    * [Others](#others)
-* [`__*__` 标识符](#____-标识符)
-    * [特殊属性](#特殊属性)
-    * [`class.__mro__, class.mro(), class.__subclass__(), super()`](#class__mro__-classmro-class__subclass__-super)
-    * [Magic Method(重点)](#magic-method重点)
-        * [基本定制](#基本定制)
-            * [`__new__(), __init__()`](#__new__-__init__)
-            * [`__repr__(), __str__()`](#__repr__-__str__)
-            * [`__lt__()`](#__lt__)
-        * [自定义属性访问](#自定义属性访问)
-            * [property 与 getatt, getattribute, setattr, delattr](#property-与-getatt-getattribute-setattr-delattr)
-        * [实现描述器](#实现描述器)
-        * [模拟数字类型](#模拟数字类型)
-        * [模拟容器类型](#模拟容器类型)
-            * [`迭代器, __iter__(), __next__()`](#迭代器-__iter__-__next__)
-            * [生成器](#生成器)
-    * [包与模块](#包与模块)
-        * [python 的搜索路径](#python-的搜索路径)
-        * [from, import, as](#from-import-as)
-* [Python 与 C/C++ 相互调用](#python-与-cc-相互调用)
-    * [Python 调用 C/C++](#python-调用-cc)
-        * [用 C/C++ 扩展 Python](#用-cc-扩展-python)
-            * [用 C/C++ 扩展 Python 的函数](#用-cc-扩展-python-的函数)
-            * [用 C/C++ 扩展 Python 的类型](#用-cc-扩展-python-的类型)
-    * [C/C++调用 Python](#cc调用-python)
-* [常用](#常用)
-    * [str, byte, bytearray](#str-byte-bytearray)
-    * [sys](#sys)
-    * [IO](#io)
-        * [stdandard input output](#stdandard-input-output)
-        * [文件读写](#文件读写)
-    * [re（正则表达式）](#re正则表达式)
-    * [time](#time)
-    * [读写 json 文件](#读写-json-文件)
-* [用 Python 代替操作系统的 shell](#用-python-代替操作系统的-shell)
-    * [原因](#原因)
-    * [Python 与操作系统交互的工具](#python-与操作系统交互的工具)
-    * [执行 Shell 命令](#执行-shell-命令)
-        * [os.system](#ossystem)
-        * [subprocess](#subprocess)
-            * [shell 参数意义](#shell-参数意义)
-            * [subprocess.DEVNULL，subprocess.PIPE，subprocess.STDOUT](#subprocessdevnullsubprocesspipesubprocessstdout)
-            * [返回值](#返回值)
-    * [os](#os)
-    * [os.path](#ospath)
-    * [pathlib.Path](#pathlibpath)
-    * [glob](#glob)
-    * [fnmatch](#fnmatch)
-    * [shutil](#shutil)
-    * [tarfile](#tarfile)
-    * [zipfile](#zipfile)
-    * [psutil](#psutil)
-    * [检测系统平台](#检测系统平台)
-    * [python 获得管理员权限 ??](#python-获得管理员权限-)
-        * [linux](#linux)
-        * [windows](#windows)
-    * [总结 python 替代 shell](#总结-python-替代-shell)
-* [Python 编码风格](#python-编码风格)
-    * [References](#references-1)
-    * [命名约定](#命名约定)
-* [Others](#others-1)
-    * [PEPs (Python Enhancement Proposals)](#peps-python-enhancement-proposals)
-    * [python 的实现](#python-的实现)
-    * [urllib](#urllib)
-    * [Python GUI](#python-gui)
-
-<!-- vim-markdown-toc -->
-
 References
 ---
 
@@ -510,8 +379,8 @@ python 常用的内置容器类型：tuple, list, set, dict。它们是可以迭
 
 大多数 Python 中的不可变内置对象都是可哈希的；可变容器（例如列表或字典）都不可哈希；不可变容器（例如元组和 frozenset）仅当它们的元素均为可哈希时才是可哈希的。 用户定义类的实例对象默认是可哈希的。
 
-*可变对象一定是 unhashable，不可变对象的元素都是 hashable 时，它才是 hashable。  
-hashable 对象则是不可变对象且其元素也是 hashable。  
+*可变对象一定是 unhashable，不可变对象的元素都是 hashable 时，它才是 hashable。<br>
+hashable 对象则是不可变对象且其元素也是 hashable。<br>
 不可变对象不一定是 hashable 的，比如：`([1, 2], [3, 4])`*
 
 -   hashable
@@ -3795,9 +3664,9 @@ Python 编码风格
 
 [Python之父Guido推荐的规范](https://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/python_style_rules/#id16)
 
-> Classes, Exceptions 应该用驼峰命名法，且首字母大写。  
-> `Global/Class Constants` 全是大写，用下划线分隔单词。`Global/Class Variables` 全是小写，用下划线分隔单词。  
-> 其他全是小写，用下划线分隔单词。  
+> Classes, Exceptions 应该用驼峰命名法，且首字母大写。<br>
+> `Global/Class Constants` 全是大写，用下划线分隔单词。`Global/Class Variables` 全是小写，用下划线分隔单词。<br>
+> 其他全是小写，用下划线分隔单词。<br>
 > 如果是模块内部的，则用一个下划线作为前缀。
 
 Others

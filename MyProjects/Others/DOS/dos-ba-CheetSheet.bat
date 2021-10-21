@@ -74,7 +74,7 @@ exit /b 0
 
 :funcForEscape
     echo ### funcForEscape
-    
+
     :: ### `^` 在 echo 中是特殊字符
     echo ^^ ^>
 
@@ -265,7 +265,7 @@ goto :eof
     for /r ".\"  %%v in (*) do (echo %%v)
     :: 列出当前路径及其子目录下的目录
     for /d /r ".\"  %%v in (*) do (echo  %%v)
-    
+
 goto :eof
 
 
@@ -331,13 +331,13 @@ goto :eof
     echo AA,BB,CC> txtfile
     for /f "delims=, tokens=1,2,3" %%i in (txtfile) do (echo %%i %%j %%k)
     del txtfile
-    
+
 goto :eof
 
 
 :funcForFunction
     echo ### funcForFunction
-    
+
     echo %*
     echo %0, %1, %2
 
@@ -348,12 +348,12 @@ goto :eof
 
 :funcForFuncLocal
     echo ### funcForFuncLocal
-    
+
     set "var=10"
     setlocal
     set "var=100"
     endlocal
 
     echo %var%
-    
+
 goto :eof

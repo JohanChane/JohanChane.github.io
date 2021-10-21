@@ -52,8 +52,8 @@
 
 #### motion
 
-有以下这些 motions - Left-right motions		Up-down motions Word motions			
-- Text object motions		
+有以下这些 motions - Left-right motions		Up-down motions Word motions
+- Text object motions
 - Text object selection. *不能单独使用，要结合 opertor 与 visual mode 使用*
 - Marks
 - Jumps
@@ -115,12 +115,12 @@
         输出一个正确的消息到 message
     echoe
         输出一个错误的消息到 message
-        
+
     echo errmsg
         查看最后一个错误消息
     g<
         查看最后一页输出。包含 echo 输出和 message 的消息。
-    
+
 #### 命令行的特殊字符
 
     help cmdline-special
@@ -142,7 +142,7 @@
     执行命令并返回命令 output string
         execute(<cmd>)
             <cmd> can be a string or a List.
-        
+
             for example:
                 let outputStr = execute("set fileencodings?")
                 put =outputStr
@@ -170,7 +170,7 @@
     help :!<str>       # 重点    # 不处理 <str>，直接放在 shell: cmd.exe /c (<str>)  运行。
     `:!start`, `:! start` 的区别   # 重点
         `:!start` 运行的不是 shell 的 start，而 vim 内置的一个程序与 windows start 有区别，而 `:! start` 是运行 shell 的 start。
-    
+
     help :rang!
 
 #### 执行多个命令
@@ -219,10 +219,10 @@ buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and locat
                     AAA           AAA           AAA
                     BBB  =`u`=>   BBB   ==>     BBB
                     CCC                         DDD
-                        
+
                     # BBB 是 CCC, DDD 的父结点。
                     # u, C-r 则不能重现 CCC，因为到 BBB 结点时会转为 DDD 结点。所以是兄弟节点中，只能访问最近的访问的节点。
-    
+
     marks
         每个 buffer 都有各自的 `m[a-z]`。但 `m[A-Z]`(也称 file marks) 是属于 vim 程序的，vim 退出后则丢失。
         `m[0-9]` 不能直接设置，是 viminfo 设置的。比如：`m0` 是上次最后 vim 时光标所在位置。
@@ -254,7 +254,7 @@ buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and locat
     system clipboard of Linux: "+
     system clipboard of Windows: "+ 或 "*
     a-z/A-Z
-    
+
     ". 上次插入模式下输入的内容。
 
 #### 宏 (recoding)
@@ -267,7 +267,7 @@ buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and locat
                 q<reg>
             结束录制
                 q
-                
+
         使用宏
             @<reg>
 
@@ -282,9 +282,9 @@ buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and locat
     windows
         :split      # 水平分割
         :vsplit     # 垂直分割
-    
+
         C-w =
-        C-w - 
+        C-w -
         C-w |
         C-w p
 
@@ -304,10 +304,10 @@ buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and locat
 
 #### 按键映射
 
-    help map-commands
+    help map-commands, help map-overview
         :map, nmap, xmap, cmap, omap, imap
         :noremap, nnoremap, xnoremap, cnoremap, onoremap, inoremap      # nore: 表示非递归
-    
+
     <Leader>
         会被 mapleader 的内容所代替。`help mapleader`。
 
@@ -343,7 +343,7 @@ buffers, windows, tab pages, reg, jumps, changes, marks, quickfix-list and locat
 
     列出自动命令
     执行自动命令
-        :doau 
+        :doau
 
     for example:
         autocmd FileType text set textwith=0
@@ -369,14 +369,16 @@ for example
     <count>
 
     <bang>
-        与 `!` 相关
+        The command can take a ! modifier (like :q or :w)
 
     <reg>
     <args>
-        还有 <q-args>, <f-args>。它们分别类似于 bash 的 `"$@", "$*"`。
-        比如：
+        还有 <q-args>, <f-args>。
+        比如 `:Com arg1 args2`：
+            # 代替 Com 后面的字符
+            <args>: arg1 args2
             <q-args>: "arg1 arg2"
-            <f-args>: "arg1" "arg2"
+            <f-args>: "arg1", "arg2"
 
 attr
 
@@ -451,7 +453,7 @@ vim 有两种搜索方式，internal grep(vimgrep) 和 external grep(grep)。
         复制 C-insert
         粘贴 S-insert
         剪切 C-del
-        
+
     help ins-special-keys
         词之间移动
             S-Left
@@ -459,21 +461,21 @@ vim 有两种搜索方式，internal grep(vimgrep) 和 external grep(grep)。
             C-w
         删除行
             C-u
-        
+
         插入/删除 tab
             c-t
                 tab
             c-d
                 删除 tab
-                
+
     插入模式或命令模式下粘贴 reg 内容
         help c_ctrl-r
             C-r<reg>
-    
+
     补全
         C-i/tab/S-tab: 匹配下个命令。
         C-d: 列出所有匹配的命令
-        
+
         插入模式下的补全: C-p, C-n
 
     easy 模式转为普通模式
@@ -525,7 +527,7 @@ windows 的换行符为 `CRLF`（`CR` 即 `^M`）。，而 unix 的换行符为 
 `set listchars=eol:$` 表示将换行符显示为 `$`。那么如何查看换行符的区别呢？
 
 > 可重新以 fileformat=unix 的形式打开 dos format 文件（`:e ++ff=unix`），而 `CR` 会显示为可见字体 `^M`。因为 `CR` 并不等于 `^M`，所以不要保存。以 :e ++ff=dos` 重新打开文件，再 `:e ++ff=unix` 即可将 windows 换行转为 unix 换行符。
-> 
+>
 > 如果已经保存则用 `:%s/r\//gc` 删除 `^M` 即可。
 
 ##### 替换换行符
@@ -544,7 +546,7 @@ for example
 
     # 将换行符转为分号
     :%s/\n/;/gc
-    
+
 #### 编码
 
 转换 buffer 的编码。比如：`set fileencoding=gbk, set fileencoding=utf-8`。
@@ -553,7 +555,7 @@ for example
 
 > 以某种编码重新打开文件即可。比如：`:e ++enc=gbk(help :e)`。然后再将 buffer 写入文件即可。还有，可以某种编码转换 buffer 再写入文件。比如：`w ++enc=utf-8`。一般是重新打开文件无乱码后，直接写入文件即可。
 
-for example 
+for example
 
     # 打开一个 gbk 的文件乱码，则这样解决
     :e ++enc=gbk
@@ -568,86 +570,3 @@ for example
 `set ff=<fileformat>, set fileencoding=<encoding>` 都表示转换 buffer 的内容。
 
 `e|w ++ff|++enc=<something>` 表示以某种方式打开或写入文件。
-
-### vim 技巧
-
-    搜索
-        搜索不区别大小写。`help \c`
-            help ignorecase
-                /<pattern>\c
-        全词匹配。`help \\<`
-            help \\<
-                \<<word>\>
-
-    搜索历史命令
-        [/ | :| ?]<str> + Up/Down 会根据 <str> 自动匹配历史命令
-
-        help command-line-window
-            q??     # 向上搜索历史命令
-
-    重新选择刚粘贴的文本
-        `help `[`
-
-        nnoremap gp `[v`]
-
-        
-    复制历史命令
-        `q:, :C-f` 进入 command-line-window 即可复制
-
-    退出命令补全并编辑
-        可按 <S-<Right>/<Left>> 退出并编辑
-
-    快速定位行
-        help 'relativenumber'
-
-    自动对齐
-        help =
-
-    help scrolling
-        zz, zt, zb      # 重点
-        # zz 可将最后一行移动到中间
-
-        页之间移动
-            C-B, C-F
-        
-        百分比移动
-            <N>%
-        
-    打开最近文件
-        oldfiles            # 查看最近打开的文件
-        browse oldfiles     # 查看并打开最后打开的文件
-
-    浏览文件系统
-        # 除了 `:Next, :X`，大写开头是用户命令
-        Exporle     # 用此 window 打开
-        Sex         # 用新的 window 打开
-        .\<C-d>
-
-    `-- More --` 模式的导航
-        可按 <Right> 查看帮助。比如：let
-
-    输出文件路径
-        help expand
-        echo expand('%:p')              # full path
-        echo expand('%:t')              # 最后一个 path component
-        echo expand('%:e')              # 扩展名
-        echo expand('%:p:h')            # `:h` 删除最后一个 path component。最终是文件所在的目录。
-        echo expand('%:p:r')            # `:r` 删除扩展名。
-        echo expand('%:h')
-        echo expand('%:r')
-
-    多文件或多窗口编辑文件的技巧
-        m[A-Z] 记录好位置，因为 changes 只针对 buf, jumps 只针对 window，用 `C-o, g;` 则没有那么方便。
-        `g;, C-o` 要多用
-        如果一个文件过长，则用 m[a-z] 记录好位置。
-
-    比较两行是否相同
-        <range>sort [i] u
-            如果只剩下一行则两行相同，否则不同。
-
-    拼接文件
-        :r <file>
-        :w>> [file]			# `help :w_a`
-
-    删除交换文件
-        如果没有 Delete it 选项，则是因为有其他 vim 进程打开了这个文件。杀死它即可。

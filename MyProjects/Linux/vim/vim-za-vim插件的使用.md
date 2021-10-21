@@ -26,7 +26,7 @@
     \cc
         注释。
     \c<space>
-        Toggles the comment state of the selected line(s). 
+        Toggles the comment state of the selected line(s).
     \cu
         取消注释。
 
@@ -57,7 +57,7 @@ map <C-n> :NERDTreeToggle<CR>       " 打开或关闭 NERDTree
 
     preview 与 open 的区别是打开文件后光标的位置。
     o, go, i, gi, s, gs
-    
+
 - directory node
 
     o
@@ -93,7 +93,7 @@ ga 是相当于一个 operator(c,d,y)。可参考 `help y, help operator, help f
 语法格式（与 c, d, y 类似，是在最后加入一个对齐方案和一个对齐字符）
 
     # [<enter>]<对齐方案>]<对齐字符> 最终是在命令行下输入的。<enter> 是取反的意思。
-    ga{motion}[<enter>][<对齐方案>]<对齐字符>          
+    ga{motion}[<enter>][<对齐方案>]<对齐字符>
     {Visual}ga[<enter>][<对齐方案>]<对齐字符>
 
 ### 对齐方案
@@ -202,15 +202,15 @@ ga 是相当于一个 operator(c,d,y)。可参考 `help y, help operator, help f
     C-r
 
 - 历史命令
-    
+
     C-p, C-n
 
 - 浏览结果
-    
+
     C-j, C-k, <Up>, <Down>
 
 - 打开多个文件
-    
+
     C-z + C-o
 
 - 返回上层目录
@@ -243,7 +243,7 @@ for example:
     ABCDEFGHIJKLNN
     OPQRSTUVVXYZ
 
-    # 比较两个区块 
+    # 比较两个区块
     :1, 2Linediff
     :4, 5Linediff
     :tabclose       " diff 的信息也会丢失，下次再比较时，要重新选。

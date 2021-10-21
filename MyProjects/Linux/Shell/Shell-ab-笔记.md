@@ -27,7 +27,7 @@
 
 ## Quoting（引用）
 
-#### quoting rules 
+#### quoting rules
 
     \: 转义字符。\newline
     "": $, `, \ 有效
@@ -53,7 +53,7 @@ list 是由 `;`, `&`, `&&`, `||` 隔开每个命令，且由 `;`, `&`, `<newline
         while test-commands; do consequent-commands; done
         for name [ [in [words …] ] ; ] do commands; done
         for (( expr1 ; expr2 ; expr3 )) ; do commands ; done
-        
+
     Conditional Constructs
         if test-commands; then
           consequent-commands;
@@ -61,17 +61,17 @@ list 是由 `;`, `&`, `&&`, `||` 隔开每个命令，且由 `;`, `&`, `<newline
           more-consequents;]
         [else alternate-consequents;]
         fi
-    
+
         case word in
             [ [(] pattern [| pattern]…) command-list ;;]…
         esac
-        
+
         select name [in words …]; do commands; done
-        
+
         (( expression ))
-        
+
         [[ expression ]]
-        
+
 ## Shell Parameters
 
 ### Positional Parameters
@@ -86,14 +86,14 @@ list 是由 `;`, `&`, `&&`, `||` 隔开每个命令，且由 `;`, `&`, `<newline
         echo /usr/{ucb/{ex,edit},lib/{ex?.?*,how_ex}}
     tilde expansion(~)
         '~' 必须是前缀。
-        
+
         ~: $HOME
         ~+: $PWD
         ~-: $OLDPWD
-        
+
     parameter and variable expansion
         ${parameter}    # 基本格式
-        
+
         # 如果 parameter 为空时的处理
         ${parameter:-word}
         ${parameter:+word}
@@ -106,18 +106,18 @@ list 是由 `;`, `&`, `&&`, `||` 隔开每个命令，且由 `;`, `&`, `<newline
             将前缀为 prefix 的数组的名字组合。区别与 $@, $* 的区别一样。
         ${!name[@]}, ${!name[*]}
             将 name 数组的所有下标组合。区别与 $@, $* 的区别一样。
-        
+
         ${parameter:offset}, ${parameter:offset:length}
             截取从 offset 开始的 length 个的字符或数组单元。
             offset 为负数是从左开始数
             length 为负数是(从 offset 开始到未尾的长度 + length) 个字符或数组单元。
             offset 与 length 不能同为负数。
-                
+
             ${@}, ${*} 被当成数组
-            
+
         ${#parameter}
             parameter 字符个数或数组元素个数。${@}, ${*} 被当成数组
-            
+
         ${parameter#word}, ${parameter##word}
             从左到右匹配，如果匹配第一个到 n 个字符的字符串，则删除 1~n 个字符。
             #, ## 区别
@@ -130,19 +130,19 @@ list 是由 `;`, `&`, `&&`, `||` 隔开每个命令，且由 `;`, `&`, `<newline
             将匹配到 pattern 的字符串，替换成 string。
             /, // 区别
                 // 是尽量匹配长一些(全局匹配)，而 / 是尽量匹配短一些(只匹配一个)。
-    
+
     command substitution
         在子 shell 中执行命令，并用结果替换命令。$(command) 与 ( list ) 的区别是用结果替换命令。
-        
+
         $(command)
         `command`
             如果结果是多行的，则用空格将每行连接成一行。
-        
+
     arithmetic expansion
-        All tokens in the expression undergo parameter and variable expansion, command substitution, and quote removal. 
+        All tokens in the expression undergo parameter and variable expansion, command substitution, and quote removal.
         $(( expression ))
             $(( a + b ))    # 不用这样写 $(( $a + $b ))
-        
+
     word splitting
         $IFS
         If IFS is unset, or its value is exactly <space><tab><newline>, the default, then sequences of <space>, <tab>, and <newline>
@@ -150,7 +150,7 @@ list 是由 `;`, `&`, `&&`, `||` 隔开每个命令，且由 `;`, `&`, `<newline
     filename expansion
         ‘*’, ‘?’, and ‘[’
         为了防止误操作 '.' 开头的文件，除非明确地指定的 '.' 开头的文件模式，否则都不会匹配 '.' 开头的文件。
-        
+
         for example:
             echo *
             echo .*
@@ -188,18 +188,18 @@ list 是由 `;`, `&`, `&&`, `||` 隔开每个命令，且由 `;`, `&`, `<newline
     [n]<<[-]word
             here-document
     delimiter
-    
+
     for example:
         cat>test<<end      # 定义 end 为结束字符
             abc
             efg
             end
-        
+
         xargs echo>test
             abc
             efg
             <eof>
-            
+
 ### Here Strings
 
 
@@ -232,7 +232,7 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
     [n]<>word
         word: 表示文件名
         以读写的形式打开文件，且读写的文件描述符都是 n。如果不指定 n 则 n=0。
-    
+
 ## Command Execution Environment
 
 shell 进程维护着 Command Execution Environment。

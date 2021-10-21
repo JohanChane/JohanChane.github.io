@@ -183,7 +183,7 @@ exit /b 0
         reg add "%regPosForFile%\%regKeyForContextMenu%" /ve        /t "REG_SZ" /d "%menuStr% /f
         reg add "%regPosForFile%\%regKeyForContextMenu%" /v "icon"  /t "REG_SZ" /d "\"%icon%\"" /f
 
-        
+
         reg add "%regPosForFile%\%regKeyForContextMenu%\command" /ve /t "REG_SZ" /d "\"%program%\" !paramForFile!" /f
     )
 
@@ -237,7 +237,7 @@ goto :eof
 goto :eof
 
 :delContextMenu
-    
+
     if "%1"=="1" (
         reg delete "%regPosForFile%\%regKeyForContextMenu%" /f
     )
@@ -255,15 +255,15 @@ goto :eof
 :help
     echo HELP START
     echo.
-    
+
     echo 请以管理员身份运行！
     echo.
-    
+
     echo script usage:
     echo    ^<script^> --program ^<programpPath^> --icon ^<iconPath^> --menustr ^<menustr^> --regkey ^<regkeyForMenu^>
     :: 输出空白行
     echo.
-    
+
     echo cmd usage:
     echo    不能使用 `!;`。param 为空时，用空格代替。
     echo    add;^<file^>;^<dir^>;^<dirgb^>;^<paramForFile^>;^<paramForDir^>;^<paramForDirBg^>

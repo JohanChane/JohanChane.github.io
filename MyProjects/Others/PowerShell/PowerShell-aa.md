@@ -32,7 +32,7 @@
 - module
 
     [A module is a package that contains PowerShell commands, such as cmdlets, providers, functions, workflows, variables, and aliases.](https://docs.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-7#:~:text=A%20module%20is%20a%20package,workflows%2C%20variables%2C%20and%20aliases.&text=People%20who%20receive%20modules%20can,how%20to%20use%20PowerShell%20modules.)
-    
+
 
     `Get-Module -ListAvailable`
 
@@ -43,7 +43,7 @@
         列出指定 module 的所有 commands
 
     `get-command | more`
-        
+
         source 字段有列出命令的来源
 
 #### PowerShell 与 Linux Shell 的区别
@@ -51,9 +51,9 @@
 它们大体上大同小异，较大的差别有:
 
 > PowerShell 的管道是以 object 形式传递的，而 Linux Shell 是文本的形式。
-> 
+>
 > PowerShell 的 cmdlet 与一般命令不同，是 .NET(C#) 类的实例。
-> 
+>
 > PowerShell 的转义字符是 ```, 因为 `\` 用于文件路径中，所以不能以 `\` 作为转义字符。
 
 #### Others
@@ -138,7 +138,7 @@ for example
 
     {"Hello World"}
     & {"Hello World"}
-    
+
     $alert = { "Hello World" }
     & $alert
 
@@ -154,7 +154,7 @@ for example
 ### 输出
 
 for example
-    
+
     function funcForOutput {
         write-host '## funcForOutput'
 
@@ -283,7 +283,7 @@ for example
 - `( ) Grouping Expression operator.`
 
     括号内东西会优先运行。会被替换为输出结果。
-    
+
 - `$( ) Subexpression operator.`
 
         While a simple ( ) grouping expression means 'execute this part first', a subexpression $( ) means 'execute this first and then treat the result like a variable'.
@@ -295,7 +295,7 @@ for example
 
         # #### 分号
         # 出错，因为 `()` 中不能有分号
-        # (echo aa; echo bb) 
+        # (echo aa; echo bb)
         # 可以有分号
         $(echo aa; echo bb)
 
@@ -380,7 +380,7 @@ for example
 #### [Comparison Operators](https://ss64.com/ps/syntax-compare.html)
 
     -eq, -ne, ...
-        
+
 因为是一切都是对象所以会调用对象的比较函数。
 
 #### 常用的比较操作
@@ -420,19 +420,19 @@ for example
     查看是否能调用脚本
 
 - `set-executionpolicy remotesigned`
-    
+
     以管理员身份运行即可。
 
 调用脚本或程序的方式
 
-- `& <file> <arg1> <arg2>` 
+- `& <file> <arg1> <arg2>`
 
 - `. <file> <arg1> <arg2>`
 
 - 用脚本或程序相对路径或绝对路径调用
-    
+
     在子进程中运行。
-    
+
 - ```powershell.exe [-File] <script_file> <arg1> <arg2>```
 
     在子进程中运行。
@@ -465,11 +465,11 @@ for example
 
         # 以管理员身份运行
         Start-Process -FilePath "powershell" -Verb RunAs
-        
+
         # 注册表
         @="powershell -windowstyle \"hidden\" -Command \"Start-Process \"D:\\PortableProgramFiles\\Alacritty\\Alacritty.exe\" -ArgumentList \"--working-directory\", \"%V\" -Verb \"runas\"\""
 
-        
+
 调用一组命令
 
     & \{<commands>\}
@@ -498,7 +498,7 @@ for example
         # $local:var = 1000
         $var = 1000
         $var
-        
+
         $global:var
     }
 
@@ -520,7 +520,7 @@ for example
     . .\test.ps1
     # 没有定义
     get-variable | where Name -eq 'scriptVar'
-    
+
     # ### Private
     remove-variable privateVar
     $private:privateVar=1000
@@ -543,7 +543,7 @@ for example
     $MyVariable = SomeValue
     $MyVariable = "Some String Value"
     [DataType]$MyVariable = SomeValue
-    
+
     # `Variable:` 与 `Env:` 一样，都是 psdrive
     `New-Item Variable:\MyVariable -value SomeValue`
         Create a new variable called $MyVariable
@@ -563,7 +563,7 @@ for example
 
         [int]$i = 100
         [string]$str = "ABC"
-        
+
         [int[]]$iArray = @(1,2,3)
 
         $iArray[0] = 10
@@ -595,7 +595,7 @@ for example
         $Args[0], ...
     $MyInvocation.MyCommand.name
         获得函数名
-        
+
 for example
 
     function funcForFunction {
@@ -719,14 +719,14 @@ for example
 #### 定义格式
 
     function [scope_type:]name
-    { 
+    {
         [ param(param_list) ]
         script_block
     }
     filter [scope_type:]name
     {
         [ param(param_list) ]
-        script_block 
+        script_block
     }
 
 #### 传参方式
@@ -748,7 +748,7 @@ return 会输出结果。不会改变 `$?`。
 
 for example
 
-    
+
     function func() {
         return 'abc'
     }
@@ -781,7 +781,7 @@ for example
         write-host 'funcForFunction1:'
         # 定义全局函数
         $global:myGlobalVar=100
-        
+
         write-host $a, $b
         # param 之后的参数
         write-host $Args
@@ -868,7 +868,7 @@ for example
 - `[<className>]`
 
     方括号是必须要写的，表示是 PowerShell 的类型。
-    
+
     for example
 
         [int]$i = 100
@@ -897,12 +897,12 @@ for example
         [int] $property1=10
 
     `<method-definition>`
-        
+
         for example
-            
+
             # `[void]` 可以省略
             [void] method() { }
-            
+
             [int] method([int]$i) { }
 
     `hidden, static`
@@ -1007,7 +1007,7 @@ for example: attribute
 ### 列出条目
 
 - Get-PSDrive
-    
+
     get-ChildItem Env:\
     get-ChildItem Function:\
     get-ChildItem Variable:\
@@ -1100,7 +1100,7 @@ for example: attribute
 `.Substring( StartIndex [, length] )`
 
     StartIndex, length 不能是负数
-    
+
 for example
 
     "abcdef".substring(0,1)
@@ -1132,7 +1132,7 @@ for example
         [io.path]::GetFileNameWithoutExtension("c:\temp\myfile.txt")
         [io.path]::GetExtension("c:\temp\myfile.txt")
         [io.path]::GetPathRoot("c:\temp\myfile.txt")
-        
+
 - System.IO.DirectoryInfo, TypeName:System.IO.FileInfo
 
     for example
@@ -1189,10 +1189,10 @@ for example
 
         Get-Command|Out-File testfile
 
-- Get-Location 
+- Get-Location
 
         pwd
-        
+
 - Measure-Object
 
         "AA BB", "CC", "DD" | Measure-Object

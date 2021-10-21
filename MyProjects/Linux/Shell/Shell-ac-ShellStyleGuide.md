@@ -88,7 +88,7 @@ for example
 
 ### 字符串变量要用 ""
 
-### 尽量用 [[ ]], 少用 [], test 
+### 尽量用 [[ ]], 少用 [], test
 
     [[ ]] -a 改为 &&
 
@@ -121,7 +121,7 @@ for example
     ### 解决
     echo -e 'aa\nbb' > txtfile; while read line; do echo $line; done < txtfile
     while read line; do echo $line; done < <(echo -e 'aa\nbb')
-    
+
 
 ### 某种情况下，局部变量定义与赋值分开
 

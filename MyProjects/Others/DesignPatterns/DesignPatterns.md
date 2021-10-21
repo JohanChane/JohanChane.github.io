@@ -167,7 +167,7 @@ Behavioural patterns（行为模式）
 
 例子：`C++ 布尔表达式`
 
-> TerminalExp: true, false, <value>  
+> TerminalExp: true, false, <value><br>
 > NonTerminalExp: and, or, not
 
 ![](http://www.plantuml.com/plantuml/png/SoWkIImgAStDuU9ApaaiBbPmpiyhIQqeKQZcgkNYoWIoYz8IarCLN2iAYbABYpFpyu0o2a2WhG2M18gMQ2H3zLZ1T6jorSBC2qajoitCIymXsm2__3oSPkWgfCA5Ye6w4Gf8ii8v9pCr3-fbB7RfwTNO8HiDSX5XLKXIIhe8Poe15UPZznGNn1r01NOAM4LXJkVYoiilILN8IKqhKSXFWuc2lVoqf_NfXDKlbYz-sTxrTEQA9pkxdowPzdnMovCT3KzspNxQkkBfneOd-nS-Qrp_kA69ApKlHG5a59g1O1iXvYcysD3yVCeAY87F9lS-sJi7LQC3a0bAFW00)
@@ -244,7 +244,7 @@ Behavioural patterns（行为模式）
 
 > 考虑一个编译器，它将源程序表示为一个抽象语法树。该编译器需在抽象语法树上实施某些操作以进行“静态语义”分析，例如检查是否所有的变量都已经被定义了。它也需要生成代码。因此它可能要定义许多操作以进行类型检查、代码优化、流程分析，检查变量是否在使用前被赋初值，等等。
 >
-> Visitor（作用于元素的操作）: 检查变量是否被定义了；类型检查；检查变量是否在使用前被赋值。  
+> Visitor（作用于元素的操作）: 检查变量是否被定义了；类型检查；检查变量是否在使用前被赋值。<br>
 > Element: 抽象语法树（objectStructure）的节点。
 
 ![](http://www.plantuml.com/plantuml/png/pLMnxz906DtlhxWmjJ4juSQ64DGuEvZeNCzhh1uzqbvPb8I844ZKcEY4n3WwEZWO0_upqg8J_u87_LhQguY__1Qwm7tlVU-z--uAtKYweOnx724_a2pqNChmVJ_ofGZnCuJLSmCFzklR8g0Xa-mEPpqMo9P1jG9siCun_o50T05I5o0c6Y94kHj51GJXMXUTZbnAkkEXGha8vbBA-j8Om5ax-QcNDwMdFDiBkEYpq9M-26uQf-N8rULkbUNkFdp2gBmdmvZAE6IWPc4gE5U0efUikQyS2uhGMXrT37YG28wdSlsg359d40YVQpnm-LF3h1O955NEsgnj-ta7mqf7YOPgsJ8KLZfAgYXeu8Prd5i3MvQeZGHcQDj5izfqknr7hDCfWrfVYOG28Hdcp9DOU3hFSHgb18Sv9PFnzkkdxUBbxm_JvErijthrQxnEFousttvabMGwKMX6-pbwWLZm2EyzD2Tzjihgv9NBdA5k__tjbO_zoFnFCt8zCtB6x31sPL6vPQ3RREBaopHzztgpNkvMCw3iLdErthx_lFd-flOYg6ccyr6wd6SpFSXuAhAHNnC6duxUQiBBfPwSP5Vt3Rzemz9Ukkhh_h_d3m00)

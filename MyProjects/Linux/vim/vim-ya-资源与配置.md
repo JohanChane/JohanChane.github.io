@@ -17,7 +17,7 @@
     各版本 vim 的源码
 
 - <https://tuxproject.de/projects/vim/>
-    
+
     别人编译好的 vim
 
 - vimrc 参考
@@ -36,7 +36,7 @@
     - <https://www.cnblogs.com/abcat/p/3392727.html>
 
 - markdown
-    
+
     谷歌插件 Markdown Viewer
 
 
@@ -103,7 +103,7 @@ set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 
 set fileformats=unix,dos        " 优先使用 unix 格式
 
-"解决菜单乱码  
+"解决菜单乱码
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 
@@ -207,7 +207,7 @@ map <Leader>f :call OpenFileWithBrowser ()<CR>
 "     " :if line==""
 "     " let line = "\"" . (expand("%:p")) . "\""
 "     " :endif
-" 
+"
 "     " 注意：`:!start` 是调用 vim 的 start, 而 `:! start` 是调用 shell 的 start。
 "     :if line != ""
 "     exec ':silent !start "' . g:webBrowser . "\" \"" . line .  "\""
@@ -249,12 +249,12 @@ set guifont=Consolas:h11
 " call vundle#begin('$VIMRUNTIME/vimfiles/bundle')            " 指定插件安装的位置
 " " let Vundle manage Vundle, required
 " Plugin 'VundleVim/Vundle.vim'
-" 
+"
 " " 添加 Plugins。PluginInstall 时会下载插件到 $VIMRUNTIME/vimfiles/bundle 下
-" 
+"
 " " https://github.com/vim-scripts/AutoComplPop
 " " Plug 'vim-scripts/AutoComplPop'
-" 
+"
 " " All of your Plugins must be added before the following line
 " call vundle#end()            " required
 " filetype plugin indent on    " required

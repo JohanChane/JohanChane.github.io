@@ -26,7 +26,7 @@
         之后操作 vim 则不会调出 verbose 消息，而是输出到了 verbosefile。
 
 `help -V`
-    
+
     -V[N]<filename> 表示设置 verbose=N, verbosefile=<filename>
 
     for example:
@@ -55,7 +55,7 @@
             debug echo 'AA' | echo 'BB'
 
 ### debug commands
-    
+
 `help \><DebugCmd>`
 
 *进入 debug mode 之后才能使用这些命令。*
@@ -65,9 +65,9 @@ debug commans:
     `next, step, cont, finish, bt/backtrace/where, (frame, up, down), quit, interrupt`
 
 ### breakpoint
-    
+
 - defining breakpoints
-    
+
     help breakadd
 
     可根据相对于文件，函数，光标设置断点。
@@ -104,11 +104,11 @@ program: test.Vim
     function Add(para1, para2)
         return a:para1 + a:para2
     endfunction
-    
+
     function Func()
         call Add(1, 2)
     endfunction
-    
+
     echo Func()
 
 commands:

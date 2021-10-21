@@ -10,15 +10,15 @@
 function funcForOutput {
     rite-host '### funcForOutput'
 
-    write-host '#### Ö±½ÓÊä³ö'
+    write-host '#### ç›´æ¥è¾“å‡º'
     100
     "ABC"
 
-    write-host '##### Êä³öÊı×é'
-    # Êı×éµÄÃ¿¸ö item ÎªÒ»ĞĞ¡£
-    # `"ABC", "XYZ"` ±íÊ¾ÊÇÒ»¸öÊı×é
+    write-host '##### è¾“å‡ºæ•°ç»„'
+    # æ•°ç»„çš„æ¯ä¸ª item ä¸ºä¸€è¡Œã€‚
+    # `"ABC", "XYZ"` è¡¨ç¤ºæ˜¯ä¸€ä¸ªæ•°ç»„
     "ABC", "XYZ"
-    # ³ö´íµÄ¡£ÒòÎª²»ÊÇÒ»¸öÊı×é¡£
+    # å‡ºé”™çš„ã€‚å› ä¸ºä¸æ˜¯ä¸€ä¸ªæ•°ç»„ã€‚
     # "ABC" "XYZ"
 
     write-host '#### var'
@@ -26,15 +26,15 @@ function funcForOutput {
     $var
 
     write-host '#### echo'
-    # ²»ÓÃ¼ÓÒıºÅ
-    # ¶ººÅºÍ¿Õ¸ñ¶¼ÊÇ·Ö¸ô·û
+    # ä¸ç”¨åŠ å¼•å·
+    # é€—å·å’Œç©ºæ ¼éƒ½æ˜¯åˆ†éš”ç¬¦
     echo ABC, XYZ
     echo ABC XYZ
 
     write-host '#### write-host'
-    # Êä³ö¿Õ°×ĞĞ
+    # è¾“å‡ºç©ºç™½è¡Œ
     write-host ''
-    # Óë echo ²»Í¬£¬Êä³ö item ²»»»ĞĞ
+    # ä¸ echo ä¸åŒï¼Œè¾“å‡º item ä¸æ¢è¡Œ
     write-host ABC, XYZ
     write-host ABC XYZ
 
@@ -48,7 +48,7 @@ funcForOutput
 function funcForQuote {
     rite-host '### funcForQuote'
 
-    # ÔÚµ¥ÒıºÅÖĞ£¬×ªÒå×Ö·ûÊ§Ğ§
+    # åœ¨å•å¼•å·ä¸­ï¼Œè½¬ä¹‰å­—ç¬¦å¤±æ•ˆ
     # write-host '`'
     write-host 'str1''str2'
     write-host "'"
@@ -62,7 +62,7 @@ funcForQuote
 
 function funcForConcatStr {
     rite-host '### funcForConcatStr'
-    
+
     $first = "abcde"
     $second = "FGHIJ"
     "$first $second"
@@ -77,7 +77,7 @@ function funcForVariable {
 
     [int]$i = 100
     [string]$str = "ABC"
-    
+
     [int[]]$iArray = @(1,2,3)
 
     $iArray[0] = 10
@@ -163,15 +163,15 @@ function funcForLoop {
 funcForLoop
 
 function funcForFunction {
-    # Òª·ÅÔÚÊ×ĞĞ
+    # è¦æ”¾åœ¨é¦–è¡Œ
     param ([int]$a, [int]$b)
 
     rite-host '### funcForFunction1'
-    # ¶¨ÒåÈ«¾Öº¯Êı
+    # å®šä¹‰å…¨å±€å‡½æ•°
     $global:myGlobalVar=100
-    
+
     write-host $a, $b
-    # param Ö®ºóµÄ²ÎÊı
+    # param ä¹‹åçš„å‚æ•°
     write-host $Args
     write-host $Args[0]
     write-host $MyInvocation.MyCommand.name
@@ -185,9 +185,9 @@ function funcForFunction {
 
 funcForFunction 1 2 3 4
 $ret="$(funcForFunction)"
-# return »áÊä³ö½á¹û
+# return ä¼šè¾“å‡ºç»“æœ
 write-host "ret = $ret"
-# return ²»¸Ä±ä `$?`
+# return ä¸æ”¹å˜ `$?`
 write-host "`$? = $?"
 
 
@@ -202,33 +202,33 @@ funcForFuncParam 1 2 3 4
 
 function funcForPassParam([ref]$i) {
     rite-host '### funcForPassParam'
-    
+
     $i = 100
 }
 
 [int]$param=10
-# ÕâÀïÀ¨ºÅ²»ÊÇº¯ÊıµÄÀ¨ºÅ
+# è¿™é‡Œæ‹¬å·ä¸æ˜¯å‡½æ•°çš„æ‹¬å·
 funcForPassParam ([ref]$param) ([ref]$param)
 write-host "`$param = $param"
 
 function funcForInputProcFunc1($Param1) {
     rite-host '### funcForInputProcFunc1'
 
-    # `$_` Îª¿ÕµÄ
+    # `$_` ä¸ºç©ºçš„
     write-host "`$_ = $_"
 }
 
 Echo Testing1, Testing2 | funcForInputProcFunc1 Sample
 
 function funcForInputProcFunc($Param1) {
-    # ²»ÄÜÔÚ´ËÌí¼ÓÓï¾ä
+    # ä¸èƒ½åœ¨æ­¤æ·»åŠ è¯­å¥
     # write-host "test"
 
     Begin{ write-host "Starting"}
     Process{ write-host "processing" $_ for $Param1}
     End{write-host "Ending"}
-    
-    # ²»ÄÜÔÚ´ËÌí¼ÓÓï¾ä
+
+    # ä¸èƒ½åœ¨æ­¤æ·»åŠ è¯­å¥
     # write-host "test"
 }
 
@@ -250,13 +250,13 @@ rite-host '### class basic'
 class Base {
 }
 
-# ÔÚÖÕ¶ËÉÏÊäÈëÊ±£¬ÀàÖĞ²»Òª³öÏÖ¿ÕĞĞ£¬·ñÔò³öÏÖ `±í´ïÊ½»òÓï¾äÖĞ°üº¬ÒâÍâµÄ±ê¼Ç¡°}¡±¡£`µÄ´íÎó¡£
+# åœ¨ç»ˆç«¯ä¸Šè¾“å…¥æ—¶ï¼Œç±»ä¸­ä¸è¦å‡ºç°ç©ºè¡Œï¼Œå¦åˆ™å‡ºç° `è¡¨è¾¾å¼æˆ–è¯­å¥ä¸­åŒ…å«æ„å¤–çš„æ ‡è®°â€œ}â€ã€‚`çš„é”™è¯¯ã€‚
 class MyClass : Base, System.IComparable {
     hidden [int]$i=100
     static [string]$str="ABC"
     MyClass() {
     }
-    # `[void]` ¿ÉÒÔ²»Ğ´
+    # `[void]` å¯ä»¥ä¸å†™
     hidden [void] method1([int]$i) {
     }
     static [void] method2([int]$i) {

@@ -41,14 +41,14 @@ function funcForDataType() {
     local num3='10.5'
     local num4='10.4'
     echo "scale=4; $num3 - $num4" | bc
-    
+
     # echo $(( num3 - num4 ))       # 有些 bash 可以
 
     awk "BEGIN {print "$num3" - "$num4"}"
 
 
     # let "num3 - num4"               # 不可以
-    
+
     let "num5=10" "num6=100" "sum=num5 + num6"       # let 中的 num 不能是浮点数。声明的变量都是全局变量
     echo $sum
 
@@ -61,7 +61,7 @@ function funcForDataType() {
     echo $indexedArray1
     echo ${indexedArray1[0]}             # 要加花括号
 
-    
+
     #  打印数组
     for i in "${!indexedArray1[@]}"; do
         printf '${indexedArray1[%s]}=%s\t' "$i" "${indexedArray1[$i]}"
@@ -76,7 +76,7 @@ function funcForDataType() {
 
     ### associative arrays
     declare -A assocArray1=([keya]=1 [keyb]='abc')
-    
+
     echo ${assocArray1[keyb]}
     echo ${assocArray1['keyb']}
 
@@ -251,7 +251,7 @@ funcForFunc() {
     echo parameters: $@
 
     echo 'subsitution of the func'
-    
+
     return 0
 }
 

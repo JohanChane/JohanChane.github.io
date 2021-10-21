@@ -9,7 +9,7 @@
     根据 Functions, Variables, Directives 查找文档
 
 - <https://devhints.io/makefile>
-	
+
     Makefile cheatsheet
 
 ### 基本概念
@@ -19,7 +19,7 @@ makefile 主要是用于编译项目的。
 为什么有 makefile 呢？
 
 > 因为项目的每个文件可能依赖都各不相同，所以 makefile 会提供相应的功能，方便用户管理这些文件的关系。
-> 
+>
 > *为了文便用户，makefile 会自动设置一些常用东西。可用 `make -p` 查看。*
 
 makefile 的大概执行过程
@@ -38,7 +38,7 @@ for example
 
 ### 用于调试与反馈的命令
 
-    make 
+    make
         -n
             列出要运行的命令，但并没有运行。
         -p
@@ -56,15 +56,15 @@ Makefiles contain five kinds of things
         include, define ...
 
 - comments
-        
-            
+
+
 ### rule foramt
 
     target … : prerequisites …
         recipe
         …
-    
-    
+
+
 ### 什么时候执行 recipes
 
 `MAKECMDGOALS` 为用户指定生成的目标。
@@ -76,7 +76,7 @@ Makefiles contain five kinds of things
 - 依赖的修改时间比目标的修改时间晚，证明依赖文件没有被修改，所以不必转到依赖相应的目标了。否则，则转。
 - 如果依赖文件不存在或依赖是 PHONY 的，则转到依赖的相应目标。
 - 如果目标文件不存在或目标是 PHONY 的，则会执行生成目标的命令。
-    
+
 ### [makefile 的解析](https://www.gnu.org/software/make/manual/html_node/Reading-Makefiles.html)
 
 可分为两个阶段
@@ -102,7 +102,7 @@ for example
     foo = $(bar)
     # 第一阶段时，bar 的值会被展开，所以其值已确定为 abc。
     bar := abc
-    
+
     all:
         # 第二阶段时，recipes 会被展开，所以 `$(foo)` 展开为 `abc`。
         echo $(foo)
@@ -284,7 +284,7 @@ for example
 
     # ### makefile
     # var 的值是 `aa<space>`。这样写会好看点 `var = aa # end of line`。
-    var = aa 
+    var = aa
     all:
         echo A$(var)A
 
@@ -292,8 +292,8 @@ for example
 
 for example
 
-    nullstring := 
-    
+    nullstring :=
+
     $(space) := $(nullstring) # end of line
 
     all:
@@ -337,15 +337,15 @@ for example
 不能用 ifeq 语句，因为在调用 recips 时，它们才被赋值。[makefile 二次处理](#How make Reads a Makefile)
 
     $@: target
-    $^: all prerequisite 
+    $^: all prerequisite
     $*: the stem（去掉茎(或梗)的）。当 target pattern 为 a.%.b，目标为 dir/a.foo.b 时，$* 为  dir/foo。
-    $<: the first prerequisite 
+    $<: the first prerequisite
     ...
 
 ### 变量的 substring
 
 for example
-    
+
     # 将 .o 改成 .c
     foo := a.o b.o c.o
     bar := $(foo:.o=.c)
@@ -398,11 +398,11 @@ for example
     bar:
         @echo $(var)
 
-               
+
 Suppressing Inheritance
 
 > 通过 private 使相对于目标的变量值只针对一个目标。其依赖不会继承这个变量。
-        
+
 for example
 
     # ### makefile
@@ -497,7 +497,7 @@ for example
     all: test.bar
         @echo in all
     test.bar:
-            
+
     .foo.bar:
         @echo suffix rules
     %.bar: %.foo
@@ -508,7 +508,7 @@ for example
     .SUFFIXES: .foo .bar
     .PHONY: test.foo
     all: test.bar
-        @echo in all   
+        @echo in all
     .foo.bar:
         @echo suffix rules
     %.bar: %.foo
@@ -523,7 +523,7 @@ for example
 
 
 for example
-    
+
     # ### target 不能是伪目标
     # `test.bar` 不能是伪目标
     .PHONY: test.foo test.bar
@@ -640,7 +640,7 @@ for example
     all: foo.c
         echo all
     # rm -rf src
-            
+
 ### [链接库作为依赖](https://www.gnu.org/software/make/manual/html_node/Libraries_002fSearch.html)
 
 只适用于 prerequisites。
@@ -650,7 +650,7 @@ for example
     all: -lc
         # echo /usr/lib/x86_64-linux-gnu/libc.so
         echo $^
-        
+
 ### [Generating Prerequisites Automatically](https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html)
 
     {g++ | gcc } -MM -M
@@ -663,7 +663,7 @@ for example
 
     `@recipe`
 
-        不会显示该命令，而只是显示命令执行的输出。一般用于输出语句. 
+        不会显示该命令，而只是显示命令执行的输出。一般用于输出语句.
 
 - Errors in Recipes
 
@@ -696,7 +696,7 @@ for example
 ### [Empty recipe](https://www.gnu.org/software/make/manual/html_node/Empty-Recipes.html)
 
     target: ;
-        
+
 
 ### `.ONESHELL`
 
@@ -718,7 +718,7 @@ for example:
     tb:
         echo tb1 $$$$
         echo tb2 $$$$
-        
+
 
 
 ## 函数
@@ -803,7 +803,7 @@ for example
 
         $(shell ...)
             如果结果是多行，则每行用一个空格隔开，形成一行。
-        
+
         for example
             $(shell find .)
 
@@ -824,7 +824,7 @@ for example
 `The wildcard characters in make are ‘*’, ‘?’ and ‘[…]’, the same as in the Bourne shell. `
 
 [`wildcard 可用于 recipe(由 shell 处理), prerequisites, function`](https://www.gnu.org/software/make/manual/html_node/Wildcards.html)
-        
+
 
 ### [Conditional Parts of Makefiles](https://www.gnu.org/software/make/manual/html_node/Conditional-Syntax.html#Conditional-Syntax)
 
@@ -865,7 +865,7 @@ for example
 ### [Makefile Conventions](https://www.gnu.org/prep/standards/html_node/Makefile-Conventions.html)
 
     Standard Targets for Users。比如：all。
-        
+
 ### Others
 
     Parallel Execution

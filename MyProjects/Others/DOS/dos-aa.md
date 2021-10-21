@@ -29,7 +29,7 @@ batch 脚本的编码最好是 ANSI 编码且换行符是 windows 换行符。
 
 [虽然 cmd 支持 Unicode，但是有点地方必须是 ANSI。](https://ss64.com/nt/chcp.html)
 
-有意思的是，有时 cmd 的 chcp 是 936 时，batch 脚本是 utf-8 的，就算有中文也是可以成功运行的，但是有时是会出现乱码的。这应该是之前的中文的 gbk 编码与 utf-8 编码是相同时则不会出现，但是出现了 gbk 编码与 utf-8 编码不同的中文时，则会导致乱码。这点让人很困惑。 
+有意思的是，有时 cmd 的 chcp 是 936 时，batch 脚本是 utf-8 的，就算有中文也是可以成功运行的，但是有时是会出现乱码的。这应该是之前的中文的 gbk 编码与 utf-8 编码是相同时则不会出现，但是出现了 gbk 编码与 utf-8 编码不同的中文时，则会导致乱码。这点让人很困惑。
 
 #### 语句的解析
 
@@ -60,7 +60,7 @@ batch 脚本的编码最好是 ANSI 编码且换行符是 windows 换行符。
         set var=
         :: 最终语句为 `echo `
         echo %var%
-    
+
 - 运行最终语句
 
     没有关闭 echo 时，会输出最终语句。
@@ -89,7 +89,7 @@ batch 脚本的编码最好是 ANSI 编码且换行符是 windows 换行符。
     echo ^%var^%
 
 DelayExpansion
-    
+
     问题:
 
         Set "var=first"
@@ -123,7 +123,7 @@ DelayExpansion
     echo "内环境"外环境"内环境
 
     内环境表示在引号内，很多特殊字符是无效的。而外环境则表示不在引号内。
-    
+
 for example
 
     在双引号中输出双引号的问题
@@ -152,7 +152,7 @@ for example
 显示、设置或删除 cmd.exe 环境变量。
 注意这里是用环境变量。
 
-#### unset 
+#### unset
 
     set var=
     set "var="
@@ -305,7 +305,7 @@ for example
             :: cmd.exe 进程退出
             exit 0
 
-### get help 
+### get help
 
 `help <command>`
 
@@ -314,7 +314,7 @@ for example
 指令格式
 
 > 大写字符则要直接写
-> 
+>
 > 小写字符则要根据相应意思来填写
 
 
@@ -331,7 +331,7 @@ for example
 
         `%%`
             转义 for 语句的 `%`，还有脚本中的 `%%` 会转义为 `%` 然后在终端上运行。
-        `""`                    
+        `""`
             转义双引号中的双引号。原因是 `^` 在双引号中无效
         `\<specialChar>`
             Some commands (e.g. REG and FINDSTR) use the standard escape character of \ (as used by C, Python, SQL, bash and many other languages.)
@@ -351,7 +351,7 @@ for example
         for %%v in (aa) do echo %%v
 
         :: ### `""` 转义双引号
-        echo ^" | find """" 
+        echo ^" | find """"
 
         :: 最终语句 `echo % | find %`
         echo %% | find "%%"
@@ -376,7 +376,7 @@ for example
         Tab (     )
 
         for example
-            
+
             for %v in (aa,bb) do echo %v
             for %v in (aa;bb) do echo %v
             for %v in (aa=bb) do echo %v
@@ -455,7 +455,7 @@ for example
         echo dp %~nx1
         echo dp %~dpnx1
         ```
-        
+
         test.bat "C:\directory\filename.extend"
         test.bat ".\filename.extend"
         test.bat "filename"
@@ -511,7 +511,7 @@ Syntax
 
 
 for example
-    
+
     set "var=ABCDE"
     echo %var:ABC=abc%
     :: 支持通匹配符模式
@@ -599,8 +599,8 @@ for example
 
 #### Loop
 
-- if 
-   
+- if
+
     总体格式
 
         :: 左括号与右括号分别要与 if, else 在同一行。
@@ -618,12 +618,12 @@ for example
         ) [else (
             <commands>
         )]
-        
+
     <options>
 
         逻辑命令
             not
-            
+
         字符串比较
             <string_a>==<string_b>
             "<string_a>"=="<string_b>"
@@ -664,7 +664,7 @@ for example
         del "txtfile"
 
 - [for](https://ss64.com/nt/for.html)
-    
+
     *`匹配文件`, `分隔符` 章节中有提及。*
 
     for example
@@ -690,7 +690,7 @@ for example
         :: ### 生成一串数字
         :: `FOR /L %%parameter IN (start,step,end) DO command `
         :: output: 0, 2, 4 ... 10
-        for /l %i in (0, 2, 10) do (echo %i)  
+        for /l %i in (0, 2, 10) do (echo %i)
 
         :: ### 处理文件内容 `/f`
         :: 在单引号表示命令，会执行命令并返回结果
@@ -723,22 +723,22 @@ for example
 - `goto /?`
 
     GOTO 命令现在接受目标标签 :EOF，这个标签将控制转移到当前批脚本文件的结尾。不定义就退出批脚本文件。
-            
+
 
 - `setlocal /?`
 
     开始批处理文件中环境改动的本地化操作。在执行 SETLOCAL 之后所做的环境改动只限于批处理文件。用 ENDLOCAL 结束。
-    
+
     for example
 
         call :funcForFunction aa bb
         call :funcForFunLocal
-        
+
         exit /b 0
 
         :funcForFunction
             echo ### funcForFunction
-            
+
             echo %*
             echo %0, %1, %2
 
@@ -749,14 +749,14 @@ for example
 
         :funcForFuncLocal
             echo ### funcForFuncLocal
-            
+
             set "var=10"
             setlocal
             set "var=100"
             endlocal
 
             echo %var%
-            
+
         goto :eof
 
 ### [Redirection](https://ss64.com/nt/syntax-redirection.html)
@@ -772,7 +772,7 @@ for example
     :: 不支持
     :: (echo aa & echo bb & echo cc) &> txtfile
     (echo aa & echo bb & echo cc) > txtfile 2>&1
-    
+
     (echo aa & echo bb & echo cc) >> txtfile
     (echo aa & echo bb & echo cc) 1>> txtfile
     (echo aa & echo bb & echo cc) 2>> txtfile
@@ -784,7 +784,7 @@ for example
     del txtfile
 
 ### 命令前缀
-            
+
 command echoing feature(命令回显功能)
 
     与 bash 不同，dos 是默认打开命令回显的。打开回显一般用于命令调试。
@@ -810,11 +810,11 @@ command echoing feature(命令回显功能)
 
     用相对路径与绝对路径执行 <program>
         新建一个子 cmd 进程来执行，父子是同步执行。
-        
+
     call "{<program>/<command>}"
         用当前的 cmd 进程来执行脚本。
         相当于 source
-    
+
     start "{<program>/<command>}"
         启动一个单独的窗口运行指定的程序或命令。两个窗口是异步执行的。可用 /waite 来达到同步。
         脚本开启二进制程序的常用方法。
@@ -880,7 +880,7 @@ command echoing feature(命令回显功能)
         (echo aa bb & echo cc dd & echo. & echo ee ff) | findstr /R ".*"
         :: 查看文件并显示行号
         (echo aa bb & echo cc dd & echo. & echo ee ff) | findstr /N /R ".*"
-        
+
         :: 显示含有 `aa bb` 的文件的文件名
         (echo aa bb & echo cc dd & echo. & echo ee ff) > test1.log & (echo aa bb & echo cc dd & echo. & echo ee ff) > test2.log & findstr /M /C:"aa bb"  *.log
         :: 显示当前目录下含有 `aa bb` 的文件的文件名
@@ -892,7 +892,7 @@ command echoing feature(命令回显功能)
 #### 操作文件
 
 for example
-    
+
     :: ### 列出文件
     dir /b
     dir /s /b
@@ -922,7 +922,7 @@ for example
     move testfile testdir\
     :: move testfile testdir\mytestfile
     rmdir /s /q testdir
-    
+
 
 #### 网络
 
@@ -946,7 +946,7 @@ taskkill
         /im: 根据映像来 kill
 
 for example
-    
+
     tasklist
     taskkill /f /im "chrome.exe"
 
