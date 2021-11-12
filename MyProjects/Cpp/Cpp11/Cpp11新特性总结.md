@@ -133,6 +133,10 @@ func(c).method();
 
 using namespace std;
 
+#define VALUE_CATEGORY(expr) ( \
+    valueCategory<decltype((expr))>() \
+)
+
 // 用法：valueCategory<decltype((<expr>))>();
 template<typename T>
 const char* valueCategory() {
@@ -159,11 +163,11 @@ int&& func3() {
 }
 
 int main() {
-    cout << valueCategory<decltype((func1()))>() << endl;
-    cout << valueCategory<decltype((func2()))>() << endl;
-    cout << valueCategory<decltype((func3()))>() << endl;
-    cout << valueCategory<decltype((0))>() << endl;
-    cout << valueCategory<decltype((gi))>() << endl;
+    cout << VALUE_CATEGORY(func1()) << endl;
+    cout << VALUE_CATEGORY(func2()) << endl;
+    cout << VALUE_CATEGORY(func3()) << endl;
+    cout << VALUE_CATEGORY(0) << endl;
+    cout << VALUE_CATEGORY(gi) << endl;
 }
 ```
 
