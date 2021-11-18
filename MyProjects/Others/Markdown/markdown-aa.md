@@ -318,6 +318,10 @@ This text is ***really important***.
 
 #### Syntax Highlighting
 
+[language-support](https://rdmd.readme.io/docs/code-blocks#language-support)
+
+[language-support of github markdown](https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/creating-and-highlighting-code-blocks#syntax-highlighting)
+
 支持多种语言。
 
 ```json
