@@ -5,7 +5,7 @@ backuputility
 
 支持 linux 和 windows(msys2)。
 
-所有文件的格式都为 `utf-8`。如果 record 的第一行注释不起作用时，检查 record 的文件是否是 `utf-8 nobomb` 的。
+所有文件的格式都为 `utf-8`。（如果 record 的第一行不起作用时，检查 record 的文件是否是 `utf-8 nobomb` 的。）
 
 ### 帮助
 
@@ -43,7 +43,7 @@ cmd_dir = /home/johan/BackupUtility/Cmds
 
 ### 例子
 
-#### backuputility_cmd
+#### Cmds
 
 `/home/johan/BackupUtility/Cmds/johan_cmds`
 
@@ -70,7 +70,7 @@ npm list -g > npm.global.list
 cd $old_pwd
 ```
 
-#### records
+#### Records
 
 `/home/johan/BackupUtility/Records/confs`
 
@@ -115,7 +115,7 @@ cd $old_pwd
 ...
 ```
 
-#### 命令
+#### Examples
 
     # 检查不存在的文件
     backuputility -c confs apps
@@ -135,7 +135,6 @@ cd $old_pwd
 
 ### 安装和卸载
 
-    # 这里的安装不算完善，还需添加 backuputility 到 path
     make install
 
     # 实际只是输出一些参考命令

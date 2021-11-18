@@ -1,8 +1,0 @@
-# ### backuputility
-/opt/myapps/backuputility/
-/home/johan/.config/backuputility/
-/home/johan/BackupUtility/Records
-/home/johan/BackupUtility/Cmds
-
-# #### backuputility CmdOutput
-/home/johan/BackupUtility/CmdOutput

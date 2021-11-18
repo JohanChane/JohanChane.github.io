@@ -4,13 +4,12 @@ all: install
 
 install:
 	mkdir -p ~/.config/backuputility
-	cp ./default.conf ~/.config/backuputility/backuputility.conf
-	mkdir -p ~/BackupUtility/Records
-	cp ./default.confs.record ~/BackupUtility/Records/confs
-	cp ./default.user_cmds ~/BackupUtility/Cmds/user_cmds
-	chmod a+x ~/BackupUtility/Cmds/user_cmds
-	mkdir ~/BackupUtilityBackups
+	configFile=~/.config/backuputility/backuputility.conf; \
+	if [[ ! -f $$configFile ]]; then \
+		cp ./default.conf $$configFile; \
+	fi
+	@echo '手动将 backuputility 程序加入 path。'
 
 uninstall:
-	@echo 'rm -r ~/BackupUtility'
-	@echo 'rm -r ~/BackupUtilityBackups'
+	@echo '手动 rm ~/.config/backuputility/backuputility.conf'
+	@echo '手动 rm record_dir cmd_dir dest_dir'

@@ -1,9 +1,0 @@
-#!/bin/bash
-
-old_pwd=$(pwd)
-cd /home/johan/BackupUtility/CmdOutput
-
-# add cmds there
-#pacman -Qeq > ./pacmanQeq
-
-cd $old_pwd
