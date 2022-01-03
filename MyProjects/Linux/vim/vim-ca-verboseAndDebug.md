@@ -33,6 +33,8 @@
         `vim -V[12]`
             如果想保存结果则设置 verbosefile。
 
+        vim -V9myVim.log
+
 ### debug mode
 
 `help debug-mode`

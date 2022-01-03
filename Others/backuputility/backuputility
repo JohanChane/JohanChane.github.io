@@ -1,11 +1,48 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+'''
+Name
+    backuputility
+
+Description
+    备份文件的工具
+
+Synopsis
+    backuputility [option] <record>...
+Options
+    opts, args = getopt.getopt(sys.argv[1:], 'hcDa:d:l:e:', ['help', 'check', 'list-duplicate', 'add-file', 'delete-file', 'cat-records', 'execute-cmd'])
+    -h, --help                                      Get help
+    -c, --check                                     检查 records 的文件是否存在
+    -D, --list-duplicate                            列出重复的文件
+    -l, --cat-records                               查看 records 的内容
+    -e <script_name>, --execute-cmd <script_name>   执行 script
+    -a <file>, --add-file <file>                    向 records 添加文件
+    -d <file>, --delete-file <file>                 从 records 中删除文件
+
+Examples
+    # 检查不存在的文件
+    sudo backuputility -c confs apps
+    # 检查重复的文件
+    sudo backuputility -D confs apps
+    # 备份文件
+    sudo backuputility confs apps
+
+    # 执行 cmd（用管理员身份执行时，要注意区别。比如：`pip list` 不会列出 johan 用户的 local packages）
+    # confs record 记得添加输出结果的文件
+    backuputility -e johan_cmds; sudo backuputility confs
+
+    # 添加，删除，查看（建议直接编辑）
+    backuputility -a <file> confs
+    backuputility -d <file> confs
+    backuputility -l confs apps
+
+'''
+
 import os, sys, re, time, getopt, configparser, tarfile
 
 def usage():
-    print("backuputility [option] <record>...")
-    print("opts, args = getopt.getopt(sys.argv[1:], 'hcDa:d:l:e:', ['help', 'check', 'list-duplicate', 'add-file', 'delete-file', 'list-records', 'execute-cmd'])")
+    print(__doc__)
 
 def read_file(path):
     with open(path) as f:
@@ -17,22 +54,17 @@ def read_file(path):
 def parse_records(record_names, record_dir):
     records = {}
     for n in record_names:
-        record_path = record_dir + "/" + n
-        with open(record_path, "r") as f:
+        record_path = record_dir + '/' + n
+        with open(record_path, 'r') as f:
             content = f.readlines()
 
         parsed_content = []
-        for i in range(0, len(content)):
-            # 删除空白行
-            if re.match(r"^\s*$", content[i]):
-                continue
-            # 删除注释
-            elif re.match(r"^\s*#", content[i]):
+        for x in content:
+            # 删除空白行, 删除注释
+            if re.match(r'^\s*$', x) or re.match(r'^\s*#', x):
                 continue
             else:
-                pass
-
-            parsed_content.append(content[i].rstrip())
+                parsed_content.append(x.rstrip())
 
         records[n] = parsed_content
 
@@ -64,42 +96,36 @@ def get_duplicate_files(files):
 
     return duplicate_files
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     # ### parse args
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hcDa:d:l:e:", ["help", "check", "list-duplicate", "add-file", "delete-file", "list-records", "execute-cmd"])
+        opts, args = getopt.getopt(sys.argv[1:], 'hcDa:d:le:', ['help', 'check', 'list-duplicate', 'add-file', 'delete-file', 'cat-records', 'execute-cmd'])
     except getopt.GetoptError:
         usage()
         sys.exit(os.EX_USAGE)
 
     is_check = False
     is_list_duplicate = False
-    is_add_file = False
-    addingFile = ""
-    is_delete_file = False
-    deleting_file = ""
-    is_list_records = False
-    is_execute_cmd = False
-    cmd_name = ""
+    adding_file = None
+    deleting_file = None
+    is_cat_records = False
+    cmd_name = None
 
     for opt, arg in opts:
-        if opt in ("-h", "--help"):
+        if opt in ('-h', '--help'):
             usage()
             sys.exit()
-        elif opt in ("-c", "--check"):
+        elif opt in ('-c', '--check'):
             is_check = True
-        elif opt in ("-D", "--list-duplicate"):
+        elif opt in ('-D', '--list-duplicate'):
             is_list_duplicate = True
-        elif opt in ("-a", "--add-file"):
-            is_add_file = True
-            addingFile = arg
-        elif opt in ("-d", "--delete-file"):
-            is_delete_file = True
+        elif opt in ('-a', '--add-file'):
+            adding_file = arg
+        elif opt in ('-d', '--delete-file'):
             deleting_file = arg
-        elif opt in ("-l", "--list-records"):
-            is_list_records = True
-        elif opt in ("-e", "--execute-cmd"):
-            is_execute_cmd = True
+        elif opt in ('-l', '--cat-records'):
+            is_cat_records = True
+        elif opt in ('-e', '--execute-cmd'):
             cmd_name = arg
         else:
             usage()
@@ -109,30 +135,30 @@ if __name__ == "__main__":
 
     # ### read config file
     user = os.getlogin()
-    config_path = "/home/" + user + "/.config/backuputility/backuputility.conf"
+    config_path = '/home/' + user + '/.config/backuputility/backuputility.conf'
 
     if not os.path.exists(config_path):
-        sys.stderr.write(config_path + " is not exists!\n")
+        sys.stderr.write(config_path + ' is not exists!\n')
         sys.exit(os.EX_CONFIG)
 
     config = configparser.ConfigParser()
-    config.read(config_path, encoding="utf-8")
-    section = "base"
-    dest_dir = config.get(section, "dest_dir")
-    record_dir = config.get(section, "record_dir")
-    cmd_dir = config.get(section, "cmd_dir")
+    config.read(config_path, encoding='utf-8')
+    section = 'base'
+    dest_dir = config.get(section, 'dest_dir')
+    record_dir = config.get(section, 'record_dir')
+    cmd_dir = config.get(section, 'cmd_dir')
 
-    if dest_dir.endswith("/"):
+    if dest_dir.endswith('/'):
         dest_dir = dest_dir[:-1]
 
-    if record_dir.endswith("/"):
+    if record_dir.endswith('/'):
         record_dir = record_dir[:-1]
 
-    if cmd_dir.endswith("/"):
+    if cmd_dir.endswith('/'):
         cmd_dir = cmd_dir[:-1]
 
     if not os.path.exists(record_dir):
-        sys.stderr.write(record_dir + " is not exists!\n")
+        sys.stderr.write(record_dir + ' is not exists!\n')
         sys.exit(os.EX_CONFIG)
 
     # ### action commands checkfile and list-duplicate
@@ -140,54 +166,54 @@ if __name__ == "__main__":
 
     if is_check:
         files_in_records = get_files_in_records(records)
-        print(*check_files(files_in_records), sep = "\n")
+        print(*check_files(files_in_records), sep = '\n')
         sys.exit()
 
     if is_list_duplicate:
         files_in_records = get_files_in_records(records)
-        print(*get_duplicate_files(files_in_records), sep = "\n")
+        print(*get_duplicate_files(files_in_records), sep = '\n')
         sys.exit()
 
-    if is_add_file:
+    if adding_file:
         for n in record_names:
-            record_path = record_dir + "/" + n
+            record_path = record_dir + '/' + n
             content = read_file(record_path)
-            if addingFile not in content:
-                content.append(addingFile)
+            if adding_file not in content:
+                content.append(adding_file)
 
-            with open(record_path, "w") as f:
-                f.write("\n".join(content))
+            with open(record_path, 'w') as f:
+                f.write('\n'.join(content))
 
         sys.exit()
 
-    if is_delete_file:
+    if deleting_file:
         for n in record_names:
-            record_path = record_dir + "/" + n
+            record_path = record_dir + '/' + n
             content = read_file(record_path)
             content.remove(deleting_file)
 
-            with open(record_path, "w") as f:
-                f.write("\n".join(content))
+            with open(record_path, 'w') as f:
+                f.write('\n'.join(content))
 
         sys.exit()
 
-    if is_list_records:
+    if is_cat_records:
         content = []
         for n in record_names:
-            record_path = record_dir + "/" + n
-            content.append("# record: {0}\n# ===\n".format(n))
+            record_path = record_dir + '/' + n
+            content.append(f'# record: {n}\n# ===\n')
             content += read_file(record_path)
 
-        print(*content, sep = "\n")
+        print(*content, sep = '\n')
 
         sys.exit()
 
     # #### execute cmd
-    if is_execute_cmd:
-        cmd_path = cmd_dir + "/" + cmd_name
+    if cmd_name:
+        cmd_path = cmd_dir + '/' + cmd_name
         exit_code = os.system(cmd_path)
         if exit_code:
-            sys.stderr.write("exit_code is " + str(exit_code))
+            sys.stderr.write('exit_code is ' + str(exit_code))
             sys.exit(os.EX_CONFIG)
 
         sys.exit()
@@ -199,10 +225,13 @@ if __name__ == "__main__":
 
     # ### backup files in records
     for record_name, files in records.items():
-        tarfileOfRecord = dest_dir + "/" + record_name + "_" + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())+ ".tar.gz"
-        with tarfile.open(tarfileOfRecord, "w:gz") as tar:
+        tarfileOfRecord = dest_dir + '/' + record_name + '_' + time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime())+ '.tar.gz'
+        with tarfile.open(tarfileOfRecord, 'w:gz') as tar:
             for f in files:
                 if os.path.exists(f):
                     tar.add(f)
+                    print(f"added '{f}'")
                 else:
-                    print(f + " isn't exists")
+                    sys.stderr.write(f"add failed. {f} + ' isn't exists'")
+
+        print(f'Done. Backup file is {tarfileOfRecord}.')

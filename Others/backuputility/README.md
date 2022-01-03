@@ -118,11 +118,11 @@ cd $old_pwd
 #### Examples
 
     # 检查不存在的文件
-    backuputility -c confs apps
+    sudo backuputility -c confs apps
     # 检查重复的文件
-    backuputility -D confs apps
+    sudo backuputility -D confs apps
     # 备份文件
-    backuputility confs apps
+    sudo backuputility confs apps
 
     # 执行 cmd（用管理员身份执行时，要注意区别。比如：`pip list` 不会列出 johan 用户的 local packages）
     # confs record 记得添加输出结果的文件

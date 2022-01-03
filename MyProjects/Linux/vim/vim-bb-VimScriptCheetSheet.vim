@@ -7,7 +7,7 @@
 "   函数
 
 " ### 其他
-"   变量的剪切   
+"   变量的剪切
 "   用户命令
 
 " ### 使用说明
@@ -140,8 +140,8 @@ call FunctionForPassPara(num, float, string, blob, list, dict)
 " call FunctionForPassPara(num, float, string, blob->copy(), list->copy(), dict->copy())
 " 深复制
 " call FunctionForPassPara(num, float, string, blob->deepcopy(), list->deepcopy(), dict->deepcopy())
-echo num 
-echo float 
+echo num
+echo float
 echo string
 echo blob
 echo list[0]
@@ -202,7 +202,7 @@ function FunctionForErrHandling()
 
     try
         throw "error"
-    catch /.*/ 
+    catch /.*/
     finally
         echomsg "cleanup"
     endtry
@@ -315,7 +315,7 @@ function FunctionForCurlyBN()
     let kerryVar=100
     " 相当于 echo johanVar
     echo {usera}Var
-    " 相当于 echo kerryVar   
+    " 相当于 echo kerryVar
     echo {userb}Var
 endfunction
 

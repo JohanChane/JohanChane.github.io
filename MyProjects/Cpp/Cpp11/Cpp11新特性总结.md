@@ -654,7 +654,7 @@ ref: [类型特征库](https://zh.cppreference.com/w/cpp/types)
 
 在C++11中，这种初始化的方法被称为“初始化列表”（initializer list）。
 
-```cpp
+```C++
 vector<int> v{1, 3, 5};
 map<int, float> m = {{1, 1.0f},
                      {2, 2.0f},
