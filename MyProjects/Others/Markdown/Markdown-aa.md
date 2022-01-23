@@ -55,11 +55,9 @@ first paragraph
 
 second paragraph
 
-<!-- 最好不要用这样方式 -->
 first line<br>
 second line
 
-<!-- 建议使用这种方法 -->
 first line<br />
 second line
 
