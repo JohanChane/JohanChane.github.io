@@ -1,8 +1,7 @@
-<# 
+<#
 # PowerShell Cheet Sheet
 
 ### Refers
-
 
 ### PowerShell Cheet Sheet
 #>
