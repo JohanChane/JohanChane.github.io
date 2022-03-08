@@ -1,5 +1,7 @@
 # Johan Chane's Blog
 
+此项目已转到 gitee <https://gitee.com/JohanChane/JohanChane>。
+
 主要是个人笔记。
 
 ## The Algorithms
