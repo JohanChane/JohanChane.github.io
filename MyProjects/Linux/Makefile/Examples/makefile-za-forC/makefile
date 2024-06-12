@@ -1,13 +1,11 @@
-## # Auto Make Application
+# # Auto Make Application
 
 # 自动构建 C 程序的通用 makefile
 
-# `##` 开头的注释是 markdown 标题。
-
-## ### 使用说明
+# ## 使用说明
 # SRC_DIR 放置源文件，OUT_DIR 放置编译生成的文件。
 
-## ### Variables
+# ## Variables
 
 AppName := app
 CC := gcc
@@ -22,22 +20,23 @@ OBJ_SUFFIX := .o
 
 # 编译参数
 CINCS = -I$(SRC_DIR)
-CFLAGS += -std=c11 -g -O1 $(CINCS)
+# CFLAGS += -std=c11 -g -O1 $(CINCS)
+CFLAGS += -std=c11 -g -O0 $(CINCS)
 
 # 加载库
-LDLIBS =
+LDLIBS = -pthread
 LDFLAGS = -L$(SRC_DIR)
 
-## ### 分析项目
+# ## 分析项目
 # find 不要用绝对路径
 APP := $(OUT_DIR)/$(AppName)
 SRC_FILES := $(shell find $(SRC_DIR) -type f -name '*$(SRC_SUFFIX)')
 OBJ_FILES := $(patsubst $(SRC_DIR)/%,$(OUT_DIR)/%,$(subst $(SRC_SUFFIX),$(OBJ_SUFFIX),$(SRC_FILES)))
 DEP_FILES := $(subst $(OBJ_SUFFIX),.d,$(OBJ_FILES))
 
-## ### Rules
+# ## Rules
 
-.PHONY: all build install rebuild clean cleantarget run debug help makeDebug
+.PHONY: all build install rebuild clean cleantarget run debug help debug_make
 
 all: cleantarget build install run
 
@@ -62,24 +61,20 @@ cleantarget:
 clean:
 	rm -rf $(OUT_DIR) 2> /dev/null
 
-debug: cleantarget build install $(APP)
+debug: $(APP)
 	gdb ./$(APP)
 
 objdump: $(APP)
 	objdump -S ./$(APP) | less
 
-## #### Include dependence。
+# ### Include dependence。
 # include <files> 会转到与 files 相关的目标。
-# make clean 就不必产生依赖文件了。
-# 放在 all 目标之后即可。
 ifneq ($(MAKECMDGOALS),clean)
 -include $(DEP_FILES)
 endif
 
-## #### Generate dependence, including rules to generate object files
-# 为每个 target 产生一个 dep file。-MM 不包含系统头文件。
-
-# ##### 例如: out/mytest/mytest.d
+# ### 为每个 target 产生一个 dep file。
+# 例如: out/mytest/mytest.d
 # out/mytest/mytest.o: src/mytest/mytest.c src/mytest/mytest.h
 #	gcc -c $(CFLAGS) out/mytest/mytest.o
 # out/mytest/mytest.d: out/mytest/mytest.c
@@ -97,7 +92,7 @@ $(OUT_DIR)/%.d:
 help:
 	@echo 'make [LDLIBS=<LDLIBS> ][<target>]'
 
-makeDebug:
+debug_make:
 	@echo $(SRC_FILES)
 	@echo $(OBJ_FILES)
 	@echo $(DEP_FILES)

@@ -2,15 +2,11 @@
 
 ## Shell 的参考资料
 
-- <https://www.gnu.org/software/bash/manual/html_node/index.html>
-- <https://www.tldp.org/LDP/abs/html/special-chars.html>
-
-    bash 的所有特殊字符
-
-- <https://github.com/LeCoupa/awesome-cheatsheets/blob/master/languages/bash.sh>
-
-- <https://unix.stackexchange.com/questions/129072/whats-the-difference-between-and>
-- <https://unix.stackexchange.com/questions/187651/how-to-echo-single-quote-when-using-single-quote-to-wrap-special-characters-in>
+-   [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html)
+-   [bash 的所有特殊字符](https://www.tldp.org/LDP/abs/html/special-chars.html)
+-   [LeCoupa/awesome-cheatsheets](https://github.com/LeCoupa/awesome-cheatsheets/blob/master/languages/bash.sh)
+-   [https://unix.stackexchange.com/a/129077](https://unix.stackexchange.com/questions/129072/whats-the-difference-between-and)
+-   [https://unix.stackexchange.com/a/187654](https://unix.stackexchange.com/questions/187651/how-to-echo-single-quote-when-using-single-quote-to-wrap-special-characters-in)
 
 ## 脚本执行方式
 
@@ -26,13 +22,16 @@
     set -x; set +x
     bash -x <shell_script>
 
-### 字符串拼接
+## 字符串拼接
 
     str=${str1}${str2}
 
-## Others
+## let
 
-    let
+See `help let`.
 
-    # [100, 999]
-    for i in {1..5}; do echo $(( $RANDOM % 999 + 100 )); done
+```sh
+i=1
+let i++
+echo $i
+```

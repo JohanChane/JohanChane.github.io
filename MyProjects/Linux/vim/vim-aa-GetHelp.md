@@ -1,5 +1,9 @@
 # Get help with vim
 
+## Content
+
+${toc}
+
 ## References
 
 -   vim help
@@ -36,6 +40,8 @@ tag 前缀
     包含四种模式下的命令( , v_, i_, :)，命令行编辑的快捷键(c_)，命令的参数(')，vim 程序的命令参数(-)，还有正则表达式(/)。
 
 ### 搜索 tag
+
+***使用 fzf.vim 的 `Helptags` 命令即可。***
 
     # 只列出一个匹配的 tag
     help <tag>

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-### Refers
-# https://unix.stackexchange.com/questions/40786/how-to-do-integer-float-calculations-in-bash-or-other-languages-frameworks
+# ## Refers
+# [integer & float calculations](https://unix.stackexchange.com/questions/40786/how-to-do-integer-float-calculations-in-bash-or-other-languages-frameworks)
 
 err() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
@@ -144,7 +144,7 @@ function funcForLoop() {
     echo ""
 
     OLDIFS=$IFS
-    IFS=$','                            
+    IFS=$','
     list='aa,bb,cc'
     # for i in 'aa','bb','cc'; do       # 不可以这么写
     # for i in 'aa,bb,cc'; do           # 不可以这么写
@@ -212,7 +212,7 @@ function funcForCmp() {
     fi
     if [[ -z $str ]]; then
         echo string len is zero
-    fi 
+    fi
 
     if [[ $str == 'abc' ]]; then
         echo equal to abc
@@ -224,7 +224,7 @@ function funcForCmp() {
     # if [[ $str =~ "^a.*" ]]; then     # 不能加引号
     if [[ $str =~ ^a.* ]]; then
         echo match ^a.*
-    else 
+    else
         echo no match ^a.*
     fi
 

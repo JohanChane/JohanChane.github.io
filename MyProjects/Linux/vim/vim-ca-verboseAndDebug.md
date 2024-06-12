@@ -1,8 +1,12 @@
 # Vim Verbose and Debug
 
-### Refers
+### References
 
-- vim help
+-   vim help
+
+### logfile
+
+    echo $NVIM_LOG_FILE
 
 ### verbosenum and verbosefile
 

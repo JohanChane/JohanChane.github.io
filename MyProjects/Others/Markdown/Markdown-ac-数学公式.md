@@ -2,6 +2,16 @@
 
 markdown 支持完整 LaTex 数学公式语法
 
+### References
+
+-   [帮助:数学公式](https://zh.wikipedia.org/wiki/Help:%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F)
+-   [LaTeX公式手册(全网最全)](https://www.cnblogs.com/1024th/p/11623258.html)
+-   [LaTeX 公式篇](https://zhuanlan.zhihu.com/p/110756681)
+
+## mathjax
+
+[mathjax 支持 LaTeX](https://zh.wikipedia.org/wiki/MathJax)
+
 $$
 \mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix}
 \mathbf{i} & \mathbf{j} & \mathbf{k} \\
@@ -9,16 +19,6 @@ $$
 \frac{\partial X}{\partial v} &  \frac{\partial Y}{\partial v} & 0 \\
 \end{vmatrix}
 $$
-
-## mathjax
-
-[mathjax 支持 LaTeX](https://zh.wikipedia.org/wiki/MathJax)
-
-### References
-
--   <https://zh.wikipedia.org/wiki/Help:%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F>
--   <https://www.cnblogs.com/1024th/p/11623258.html>
--   <https://zhuanlan.zhihu.com/p/110756681>
 
 ### 基础
 

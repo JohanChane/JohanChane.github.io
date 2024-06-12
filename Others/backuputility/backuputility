@@ -134,7 +134,13 @@ if __name__ == '__main__':
     record_names = args
 
     # ### read config file
-    user = os.getlogin()
+    try:
+        user = os.getlogin()
+    except FileNotFoundError:
+        try:
+            user = os.environ['SUDO_USER']
+        except KeyError:
+            user = os.environ['USER']
     config_path = '/home/' + user + '/.config/backuputility/backuputility.conf'
 
     if not os.path.exists(config_path):
@@ -213,7 +219,7 @@ if __name__ == '__main__':
         cmd_path = cmd_dir + '/' + cmd_name
         exit_code = os.system(cmd_path)
         if exit_code:
-            sys.stderr.write('exit_code is ' + str(exit_code))
+            sys.stderr.write('exit_code is ' + str(exit_code) + '.\n')
             sys.exit(os.EX_CONFIG)
 
         sys.exit()
@@ -232,6 +238,6 @@ if __name__ == '__main__':
                     tar.add(f)
                     print(f"added '{f}'")
                 else:
-                    sys.stderr.write(f"add failed. {f} + ' isn't exists'")
+                    sys.stderr.write(f"add failed. '{f}' isn't exists.\n")
 
         print(f'Done. Backup file is {tarfileOfRecord}.')

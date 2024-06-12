@@ -1,8 +1,13 @@
 # Vim Script
 
+## Content
+
+${toc}
+
 ## References
 
 -   `help expression`
+-   [Vim 脚本代码规范](https://spacevim.org/cn/conventions/#vim-%E8%84%9A%E6%9C%AC%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83)
 
 ## 说明
 

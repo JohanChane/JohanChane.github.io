@@ -1,5 +1,9 @@
 # Markdown 的绘图
 
+## References
+
+-   [mermaid 教程][https://mermaid-js.github.io/mermaid/#/]
+
 ## mermaid (支持很多图，不能一一列举)
 
 ### mermaid graph
@@ -12,6 +16,7 @@ graph LR
     %% 用个框围起来
     subgraph SGA
         A[Square shape]
+        D[Triangle shape]
         B(Rounded square shape)
         C((Circle shape))
         %% 还有很多形状

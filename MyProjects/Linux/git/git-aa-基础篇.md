@@ -1,5 +1,9 @@
 # My Git Manual
 
+## Content
+
+${toc}
+
 ## References
 
 -   [git book](https://git-scm.com/book/zh/v2)
@@ -411,10 +415,18 @@ git config mergetool.prompt false
 git mergetool
 # 标识文件为 `unresolve`
 git update-index --unresolve <file>...
-# 下/上一个不同的地方
-]c, [c
 # 查找冲突
 /^<<<<<<<
+
+# ## vimdiff commands
+# vim -d <file1> <file2>
+]c          - next difference
+[c          - previous difference
+do          - diff obtain
+dp          - diff put
+zo          - open folded text
+zc          - close folded text
+:diffupdate - re-scan the files for differences
 ```
 
 ### 冲突的相关文件

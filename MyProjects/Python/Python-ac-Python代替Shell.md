@@ -1,5 +1,11 @@
 # 用 Python 代替操作系统的 shell
 
+## Content
+
+${toc}
+
+## 说明
+
 [用 Python 代替操作系统的 shell](https://github.com/ninjaaron/replacing-bash-scripting-with-python/blob/master/README.rst)
 
 *个人例子代码的系统平台默认是 linux。*
@@ -82,40 +88,31 @@ subprocess.run(['echo', '$HOME'])
 
 -   subprocess.DEVNULL
 
-    int 类型，值为 -3。可被 Popen 的 stdin, stdout 或者 stderr 参数使用的特殊值, 表示使用特殊文件 os.devnull.
+    是 os.devnull。
 
 -   subprocess.PIPE
 
-    int 类型，值为 -1。可被 Popen 的 stdin, stdout 或者 stderr 参数使用的特殊值, 表示打开标准流的管道. 常用于 Popen.communicate().
+    表示重定向到 subprocess 的 stdin 或 stdout 或 stderr。
 
 -   subprocess.STDOUT
 
-    int 类型，值为 -2。可被 Popen 的 stdin ，stdout 或者 stderr 参数使用的特殊值，表示标准错误与标准输出使用同一句柄。
+    表示重定向到 subprocess 的 stdout。
 
 for example
 
 ```python
 import subprocess
 
-# ### PIPE
-# 打开标准输出、错误输出流管道。标准输出、错误输出输出到 result。
-result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.PIPE, stdout = subprocess.PIPE, shell = True)
-# `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`
+result = subprocess.run('echo foo', shell = True)
+result = subprocess.run('unknowncmd', shell = True)
+result = subprocess.run('unknowncmd', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell = True)
+result = subprocess.run('unknowncmd', stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell = True)
+result = subprocess.run('unknowncmd', stdout=None, stderr=subprocess.STDOUT, shell = True)
 print(result)
 
-# #### stdin 与 PIPE
-from subprocess import Popen, PIPE, STDOUT
-p = Popen(['grep', 'f'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+p = subprocess.Popen(['cat'], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
 grep_stdout = p.communicate(input=b'one\ntwo\nthree\nfour\nfive\nsix\n')[0]
 print(grep_stdout.decode())
-# -> four
-# -> five
-# ->
-
-# ### STDOUT
-result = subprocess.run('echo aa; echo bb 1>&2', stderr = subprocess.STDOUT, stdout = subprocess.PIPE, shell = True)
-# `CompletedProcess(args='echo aa; echo bb 1>&2', returncode=0, stdout=b'aa\nbb\n')`。返回值 stderr 类型为 None
-print(result)
 ```
 
 #### 返回值
@@ -303,11 +300,12 @@ import os
 
 os.path.abspath(path)
 os.path.isabs(path)
+# 有些接口不会转换 `~` 为 $HOME 来处理。
 os.path.expanduser(path)
 
-os.path.exists(path)
+os.path.exists(path)        # 文件或目录
 os.path.lexists(path)
-os.path.isfile(path)
+os.path.isfile(path)        # 是否普通文件（不包含目录）
 os.path.isdir(path)
 os.path.islink(path)
 

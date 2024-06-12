@@ -1,8 +1,12 @@
 # Python 的语言基础
 
-*Python version: Python3.8*
-
 ## Content
+
+${toc}
+
+## 说明
+
+*Python version: Python3.8*
 
 ## References
 
@@ -156,28 +160,6 @@ print(issubclass(object, str))
 ## 调试程序
 
 调试(导入 pdb module): `python3 -m pdb <script>`
-
-## Output
-
-在 python interactive 模式与脚本运行的模式下输出的区别
-
-for example
-
-```python
-# ### interactive 模式下
-# 输出 `ABC`
-'ABC'
-# 输出 `ABC\nDEF` 注意，没有输出换行符
-'ABC\nDEF'
-# 输出两行
-print('ABC\nDEF')
-
-# ### 脚本模式下
-# 没有输出
-'ABC'
-# 输出字符串
-print('ABC')
-```
 
 ## `print()`
 
@@ -1147,43 +1129,66 @@ self, cls
     因为父类的属性无法用 super() 访问，只能用 self 访问，所以父类属性会被覆盖，只通过父类的方法访问。
     父方法没有被覆盖，可用 super() 访问。
 
-### super()
+### `super()` 与 `__mro__` 的关系
+
+[`class.__mro__`](https://docs.python.org/zh-cn/3/library/stdtypes.html#class.__mro__)
+
+`__mro__`:
+
+> 此属性是由类组成的元组，在方法解析期间会基于它来查找基类。如果 obj 的 mro 是 `C -> B -> A -> object`，则 `obj.method()` 则查找 D 的 method，如果没有则查找 B 的。依此类推。
+>
+> `class A(), class B(), class C(A, B)` 中 C 的 mro 是 `C -> B -> A -> object`。
 
 [super()](https://docs.python.org/zh-cn/3/library/functions.html?highlight=super#super)
 
+> 返回一个代理对象，它会将方法调用委托给 type 的父类或兄弟类。 这对于访问已在类中被重载的继承方法很有用。[super() 不能用于调用父类的属性](#super不能访问父类的属性)。
+>
+> 举例来说，如果 object-or-type 的 `__mro__` 为 D -> B -> C -> A -> object 并且 type 的值为 B，则 super() 将会搜索 C -> A -> object。即 super(C, obj) 会搜索 `C -> A -> object`。
+
 `super()`
 
-    返回父类实例对象。
+    返回父类或父类的兄弟的实例对象。
 
 `super([type[, object-or-type]])`
 
-    根据第二个参数返回类型 type 的父类的实例或类对象。
+    根据第二个参数返回类型 type 的”父类或父类的兄弟类“的“实例或类对象“。
+
+Refs:
+
+-   [直接继承object的Python类是否调用super](https://zhuanlan.zhihu.com/p/133110568)
 
 for example
 
 ```python
+#!/usr/bin/python3
+# -*- coding:utf-8 -*-
+
 # 在 python3 中，如果不写 object, 解析器会自动添加。
-class Base1(object):
-    def foo(self):
-        print('Base1')
+class Foo():
+    def __init__(self):
+        # 不一定是调用 object.__init__()。实际调用 Bar.__init__(self)
+        super().__init__()
+        print('Foo')
 
-class Base2(object):
-    def foo(self):
-        print('Base2')
+class Bar():
+    def __init__(self):
+        # 实际调用 object.__init__()
+        super().__init__()
+        print('Bar')
 
-class MyClass(Base1, Base2):
-    def foo(self):
-        print('MyClass')
+class Baz(Foo, Bar):
+    def __init__(self):
+        #Foo.__init__(self)
+        #Bar.__init__(self)
 
-myClass = MyClass()
+        # 相当于 `super(Baz, self)`。调用 Foo.__init__()
+        super().__init__()
 
-# 根据 myClass 实例返回 MyClass 父类实例
-superOfObj = super(MyClass, myClass)
-# 根据 MyClass 类对象返回 MyClass 父类的类对象
-superOfClass = super(MyClass, MyClass)
-superOfObj.foo()
-# 因为 superOfClass 是一个类对象，也可说 superOfClass 是未绑定的，所以要传一个实例。
-superOfClass.foo(myClass)
+        print('Baz')
+
+print(Baz.__mro__)
+
+baz = Baz()
 ```
 
 ### 类的属性与方法
@@ -1315,6 +1320,8 @@ child = Child()
 
 ### 类的继承
 
+<a name="super不能访问父类的属性"></a>
+
 ***可以通过 `self, 父类名，super()` 调用父类的方法。但是只能通过 `self` 来访问父类的属性。***
 
 ***当子类定义构造函数时，会覆盖父类的构造函数，这时子类的构造函数不会自动调用父类的构造函数，所以用户要通过 super 来调用父类的构造函数。***
@@ -1436,9 +1443,11 @@ class Base2():
 
 class MyClass(Base1, Base2):
     def __init__(self):
-        # 无法用 super 调用父类的构造函数了
         Base1.__init__(self)
         Base2.__init__(self)
+        # OR
+        #super(MyClass, self).__init__()
+        #super(Base1, self).__init__()
 
 myClass = MyClass()
 ```
@@ -1761,12 +1770,7 @@ if __name__ == '__main__':
 
 ### `class.__mro__, class.mro(), class.__subclass__(), super()`
 
-[`class.__mro__, class.mro(), class.__subclass__(), super()`](https://docs.python.org/zh-cn/3/library/stdtypes.html#class.__mro__)
-
-    class.__mro__, class.mro()
-    class.__subclasses__()
-
-for example
+for example: mro, subclasses
 
 ```python
 class Base1(object):
@@ -1788,8 +1792,8 @@ print(MyClass.mro())
 # AttributeError: 'MyClass' object has no attribute '__mro__'
 # print(myClass.__mro__)
 
-# 打印 Base1 的子类对象
 print(Base1.__subclasses__())
+print(MyClass.__subclasses__())
 ```
 
 ### Magic Method(重点)
@@ -2157,6 +2161,8 @@ while True:
 *import 之后，要用 import 或 as 之后的名称来访问其下的东西。*
 
 *`import <package>` 不会导入包内的所有模块。应该用 ``` from <package> import * ```。*
+
+*`from <module> import *` 导入模块的所有东西。*
 
 *当导入的名称相同时，无法通过添加限定符解决，而是要用别名解决。*
 

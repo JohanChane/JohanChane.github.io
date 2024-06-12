@@ -53,8 +53,14 @@ cmd_dir = /home/johan/BackupUtility/Cmds
 old_pwd=$(pwd)
 cd /home/johan/BackupUtility/CmdOutput
 
-# add cmds here
+## root
+function root_cmds() {
+    :
+}
 
+sudo bash -c "$(declare -f root_cmds); root_cmds"
+
+## user
 # ### pacman
 pacman -Qeq > pacmanQeq
 pacman -Qeq | xargs expac -Q --timefmt='%Y-%m-%d %T' '%l\t%n' | sort -nr | awk '{print $1" "$2"\t"$3}' > expacqe

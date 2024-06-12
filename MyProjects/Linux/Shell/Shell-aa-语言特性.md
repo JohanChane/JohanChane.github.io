@@ -1,5 +1,9 @@
 # Shell 语言特性
 
+## Content
+
+${toc}
+
 ## 说明
 
 只是介绍 Shell 的语言特性
@@ -14,7 +18,7 @@ declare 与 local 用法相同，它们的区别是 local 只用于定义局部�
 
 for example
 
-```shell
+```sh
 #!/usr/bin/env bash
 
 globalVar1="ABC"
@@ -51,59 +55,64 @@ echo $localVar2
 
 #### 数组
 
-    declare -a      # indexed arrays. e.g. array[1]
+    declare -a      # indexed arrays. e.g. array[0]
     declare -A      # associative arrays. e.g. array[key]
 
 *indexed arrays 类似于 c 的数组，associative arrays 类似于 python 的字典。*
 
 for example
 
-```shell
-#!/usr/bin/env bash
+```sh
+#!/bin/bash
 
 # ## indexed array
-declare -a indexedArray1
-
-indexedArray1[0]=10
-indexedArray1[1]=20
+# 注意，元素的分隔符是空格。
+declare -a indexedArray1=(10 20)
+# OR
+#indexedArray1=(10 20)
 
 echo ${indexedArray1[@]}
+# size of array
+echo ${#indexedArray1[@]}
 
-# 声明并赋值
-indexedArray2[0]=100
+declare -a indexedArray2
+
+indexedArray2[0]=10
+indexedArray2[1]=20
 
 echo ${indexedArray2[@]}
 
-indexedArray3=(1000 2000 3000)
-
 # 移除元素
-unset indexedArray3[0]
-echo ${indexedArray3[@]}
-unset indexedArray3
-echo ${indexedArray3[@]}
+unset indexedArray1[0]
+echo ${indexedArray1[@]}
+unset indexedArray2
+echo ${indexedArray2[@]}
 
 # ## associative array
+declare -A animals=(["moo"]="cow" ["woof"]="dog")
+# OR
+#animals=(["moo"]="cow" ["woof"]="dog")
+
+# values
+echo ${animals[@]}
+# keys
+echo ${!animals[@]}
+# size of array
+echo ${#animals[@]}
+
 declare -A assocArray1
 
 assocArray1[a]=10
 assocArray1[b]=20
 
+echo ${!assocArray1[@]}
 echo ${assocArray1[@]}
 
-# 声明并赋值
-assocArray2[a]=100
-
-echo ${assocArray2[@]}
-
-assocArray3=(a=1000 b=2000 c=3000)
-
-echo ${assocArray3[@]}
-
 # 移除元素
-unset assocArray3[a]
-echo ${assocArray3[@]}
-unset assocArray3
-echo ${assocArray3[@]}
+unset assocArray1[a]
+echo ${assocArray1[@]}
+unset assocArray1
+echo ${assocArray1[@]}
 ```
 
 #### 只读属性
@@ -116,7 +125,7 @@ echo ${assocArray3[@]}
 
 for example
 
-```shell
+```sh
 #!/usr/bin/env bash
 
 var="value"
@@ -133,7 +142,7 @@ echo $var
 
 for example
 
-```shell
+```sh
 declare -x var1=100
 printenv | grep 'var1=100'
 ```
@@ -142,7 +151,7 @@ printenv | grep 'var1=100'
 
 `${name[@]}, ${name[*]}`
 
-    表示 name 数组的所有内容。区别与 $@, $* 相同。
+    表示 name 数组的所有内容。区别与 $@, $* 的区别相同。
 
 `${#parameter}`
 
@@ -158,7 +167,7 @@ printenv | grep 'var1=100'
 
 for example
 
-```shell
+```sh
 #!/usr/bin/env bash
 
 array1=(10 20 30)
@@ -196,7 +205,7 @@ condition 可取反的位置
 
 for example
 
-```shell
+```sh
 # !(!0 && !0) && !(0) = 1
 if ! [[ ! (0 -ne 1) || ! (0 -ne 1) ]] && ! [[ 0 -eq 1 ]] ; then echo true; else echo false; fi
 ```
@@ -240,7 +249,7 @@ for example
 
 for example
 
-```shell
+```sh
 #!/usr/bin/env bash
 
 while :
@@ -270,7 +279,7 @@ done
 
 for example: for
 
-```shell
+```sh
 #!/usr/bin/env bash
 
 for i in 'aa' 'bb' 'cc'; do
@@ -286,7 +295,7 @@ echo ""
 
 for example: while
 
-```shell
+```sh
 #!/usr/bin/env bash
 
 i=0
@@ -299,7 +308,7 @@ echo ""
 
 for example: until
 
-```shell
+```sh
 #!/usr/bin/env bash
 
 # until 与 while 的区别：until 与 while 相反，until 是条件不成立则进入循环，成立则退出循环。
@@ -313,7 +322,7 @@ echo ""
 
 for example: select
 
-```shell
+```sh
 #!/usr/bin/env bash
 
 select choice in 'option1' 'option2' 'quit'; do
@@ -365,7 +374,7 @@ Positional 与 Special Parameters 都无法直接修改，因为不符合变量�
 
 for example
 
-```shell
+```sh
 #!/usr/bin/env bash
 
 set -- one two "three four"
@@ -396,11 +405,11 @@ Other Parameters
 
     }
 
-***return 只是改变 $? 的值而不改变 function substitution（$(<function>)）。function substitution 是函数的输出结果。***
+***return 只是改变 `$?` 的值而不改变 `function substitution（$(<function>)）`。`function substitution` 是函数的输出结果。也是用此来返回值。***
 
-    # 只列出声明
+    # 只列出函数的声明
     declare -F
-    # 只列出声明与定义
+    # 只列出函数的声明与定义
     declare -f
 
 #### parameters

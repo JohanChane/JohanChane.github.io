@@ -1,5 +1,8 @@
-Cpp11 新特性总结
-===
+# Cpp11 新特性总结
+
+## Content
+
+${toc}
 
 ## References
 
@@ -125,7 +128,7 @@ func(c);
 func(c).method();
 ```
 
-***用 `decltype((表达式))` 可找出表达式的值类别。***
+***用 `decltype((表达式))` 可找出表达式的值类别。<a name="decltypeValueCategory"></a>***
 
 ```cpp
 #include <iostream>
@@ -299,7 +302,7 @@ typename std::remove_reference<T>::type&& move(T&& t) noexcept;
 for example
 
 ```cpp
-### 问题
+// ## 问题
 class C {
     int* iPtr;
 public:
@@ -324,7 +327,7 @@ int main() {
     C cc = func(c);
 }
 
-### 用移动语义解决
+// ## 用移动语义解决
 
 class C {
     int* iPtr;
@@ -410,6 +413,7 @@ using namespace std;
 // std::forward 其中一个版本的实现
 template<typename T>
 T&& forward(typename std::remove_reference<T>::type& t) noexcept {
+    cout << "forward(typename std::remove_reference<T>::type& T)\n";
     return static_cast<T&&>(t);
 }
 
@@ -424,23 +428,29 @@ void func(const int& i) {
 template<typename T>
 void funcWrapper(T&& t) {
     // 都是调用 func(int&), 因为右引用是一个左值。
-    // func(t);
+    //func(t);
     // 完美转发
     func(::forward<T>(t));
 }
 
 int main() {
-    funcWrapper(10);       // func(int&& i)
+    funcWrapper(10);       // func(int&& i); T = int&&
     int i;
-    funcWrapper(i);        // func(int& i)
+    funcWrapper(i);        // func(int& i); T = int&
 }
 ```
 
-以下的 forward 实现了完美转发。转发左值为左值或右值，依赖于 T。
+以下的 forward 实现了完美转发。转发左值（具名的右值引用是左值）为左值或右值，依赖于 T。<a name="forwardExample1"></a>
 
 ```cpp
 template<typename T>
 T&& forward(typename std::remove_reference<T>::type& t) noexcept;
+
+template<class T>
+void wrapper(T&& arg) {
+    // arg 始终是左值
+    foo(std::forward<T>(arg)); // 转发为左值或右值，依赖于 T
+}
 ```
 
 #### 引用折叠
@@ -472,13 +482,13 @@ T&& forward(typename std::remove_reference<T>::type& t) noexcept;
     int g(const T&& x);     // x 不是转发引用：const T 不是无 cv 限定的
 
     template<class T> struct A {
-    template<class U>
-    A(T&& x, U&& y, int* p);    // x 不是转发引用：T 不是构造函数的类型模板形参（因为 T 为实例化决定）
-                                // 但 y 是转发引用
+        template<class U>
+        A(T&& x, U&& y, int* p);    // x 不是转发引用：T 不是构造函数的类型模板形参（因为 T 为实例化决定）
+                                    // 但 y 是转发引用
     };
     ```
 
--   auto&&，但当其从花括号包围的初始化器列表推导时除外：
+-   auto&& 是转发引用，但当其从花括号包围的初始化器列表推导时除外：
 
     ```cpp
     auto&& vec = foo();       // foo() 可以是左值或右值，vec 是转发引用
@@ -581,7 +591,7 @@ func<int&>(i);  // T = int&
 
 #### `std::forward` 的另一个版本
 
-以下的 forward 是转发右值为右值并禁止右值的转发为左值。<br>
+以下的 forward 是将右值转发为右值并禁止将右值的转发为左值。<br>
 
 ```cpp
 template <class T>
@@ -591,11 +601,14 @@ T&& forward(typename std::remove_reference<T>::type&& arg) noexcept {
 }
 ```
 
-与之前的版本结合，用于转发表达式（如函数调用）的结果。结果可以是右值或左值。
+与[之前的版本](#forwardExample1)结合，用于转发表达式（如函数调用）的结果。
 
 用法:
 
 ```cpp
+// expr 不能作为模板实参
+//foo( forward< <expr> >(<expr>) );
+// 一个 decltype 后，可作为模板实参。
 foo( forward<decltype(<expr>)>(<expr>) );
 ```
 
@@ -605,6 +618,7 @@ for example: 若包装器不仅转发其参数，还在参数上调用成员函�
 // 转换包装器
 template<class T>
 void wrapper(T&& arg) {
+    // expr = forward<T>(arg).get()
     foo(forward<decltype(forward<T>(arg).get())>(forward<T>(arg).get()));
 }
 
@@ -660,6 +674,11 @@ map<int, float> m = {{1, 1.0f},
                      {2, 2.0f},
                      {5, 3.2f}};
 ```
+
+`initializer_list` 的使用时机：
+
+> 初始一个数组或有数组功能的类型，比如：vector, array 等。<br>
+> 还有一种是构造函数只有一个形参, 且形参是一个实例时。一般是整数相关的类型，比如：int，double 等。这样可以防止类型收窄。
 
 使用列表初始化还有一个最大优势是可以防止类型收窄（narrowing）。
 
@@ -848,9 +867,9 @@ for example
 1.  如果e是一个没有带括号的标识符表达式（id-expression）或者类成员访问表达式，那么decltype(e)就是e所命名的实体的类型。此外，如果e是一个被重载的函数，则会导致编译时错误。
 2.  否则，假设e的类型是T，如果e是一个将亡值(xvalue)，那么decltype(e)为T&&。
 3.  否则，假设e的类型是T，如果e是一个左值，则decltype(e)为T&。
-4.  否则，假设e的类型是T，则decltype(e)为T。
+4.  否则，假设e的类型是T，则decltype(e)为T。（纯右值）
 
-*如果想推导出标识表达式的值类别，用 `decltype((标识表达式))` 即可。*
+*如果想推导出标识表达式的值类别，用 [`decltype((标识表达式))`](#decltypeValueCategory) 即可。*
 
 decltype 尽量带走 cv 限定符。
 
@@ -1580,47 +1599,47 @@ pa = vp;
 for example: 基本使用
 
 ```cpp
-// ### auto_ptr
-// #### 获得控制权
-std::auto_ptr<int> iPtrA(new int());
-// #### 转移控制权
-std::auto_ptr<int> iPtrB(iPtrA);        // iPtrA = null
-iPtrA = iPtrA;                          // iPtrB = null
-
-// ### unique_ptr
-// #### 获得控制权
-std::unique_ptr<int> iPtrA(new int());
-// #### 转移控制权
-std::unique_ptr<int> iPtrB(std::move(iPtrA));      // iPtrA = nullptr
-iPtrA = std::move(iPtrB);                          // iPtrB = nullptr
-```
-
-for example
-
-```cpp
 #include <iostream>
 #include <memory>
+
+using namespace std;
+
+class Foo {
+public:
+    Foo(int i) : i(i) {}
+    ~Foo() {
+        cout << "~Foo(): i = " << i << endl;
+    }
+private:
+    int i;
+};
 
 int main() {
     // ## unique_ptr
     // error. 不支持隐式转换
-    // std::unique_ptr<int> iPtrA = new int();
-    std::unique_ptr<int> iPtrA(new int());
+    //unique_ptr<Foo> fooPtr1 = new Foo(1);
+    unique_ptr<Foo> fooPtr1(new Foo(1));
 
-    std::unique_ptr<int> iPtrB;
-    // error. 不支持隐式转换
-    // iPtrB = new int();
-    iPtrB = std::unique_ptr<int>(new int());
+    // ### 通过复制构造的方式绑定资源
+    unique_ptr<Foo> fooPtr2(move(fooPtr1));         // fooPtr1 = nullptr
+
+    // ### 通过赋值的方式绑定资源
+    unique_ptr<Foo> fooPtr3(new Foo(2));
+    fooPtr2 = move(fooPtr3);                        // fooPtr3 = nullptr; fooPtr2 原来的资源会被释放。
 
     // ## auto_ptr
     // error. 不支持隐式转换
-    // std::auto_ptr<int> iPtrC = new int();
+    //auto_ptr<Foo> fooAutoPtr1 = new Foo(10);
+    auto_ptr<Foo> fooAutoPtr1(new Foo(10));
 
-    std::auto_ptr<int> iPtrD;
-    // error. 不支持隐式转换
-    // iPtrD = new int();
-    iPtrD = std::auto_ptr<int>(new int());
+    // ### 通过复制构造的方式绑定资源
+    auto_ptr<Foo> fooAutoPtr2(fooAutoPtr1);         // fooAutoPtr2 = nullptr
 
+    // ### 通过赋值的方式绑定资源
+    auto_ptr<Foo> fooAutoPtr3(new Foo(11));
+    fooAutoPtr2 = fooAutoPtr3;                      // fooAutoPtr3 = nullptr; fooAutoPtr2 原来的资源会被释放。
+
+    cout << "main end\n";
 }
 ```
 
@@ -1634,22 +1653,42 @@ for example: 基本使用
 #include <iostream>
 #include <memory>
 
+using namespace std;
+
+class Foo {
+public:
+    Foo(int i) : i(i) {}
+    ~Foo() {
+        cout << "~Foo(): i = " << i << endl;
+    }
+private:
+    int i;
+};
+
 int main() {
     // error. 不支持隐式转换
-    // std::shared_ptr<int> iPtrA = new int();
+     //shared_ptr<Foo> fooPtr1 = new Foo();
+    shared_ptr<Foo> fooPtr1(new Foo(1));
 
     // ### 通过复制构造的方式共享资源
-    std::shared_ptr<int> iPtrA(new int());
-    std::shared_ptr<int> iPtrB(iPtrA);
-
+    shared_ptr<Foo> fooPtr2(fooPtr1);
 
     // ### 通过赋值的方式共享资源
-    std::shared_ptr<int> iPtrC;
-    iPtrC = std::shared_ptr<int>(new int());
-    std::shared_ptr<int> iPtrD;
-    iPtrD = iPtrC;
-    std::cout << iPtrC.use_count() << std::endl;
-    std::cout << iPtrD.use_count() << std::endl;
+    shared_ptr<Foo> fooPtr3(new Foo(2));
+    cout << "fooPtr1 use count: " << fooPtr1.use_count() << endl;
+    fooPtr2 = fooPtr3;          // fooPtr2 原来的资源的引用数会减 1。
+    cout << "fooPtr1 use count: " << fooPtr1.use_count() << endl;
+
+    // ### move
+    auto fooPtr10 = make_shared<Foo>(10);
+    shared_ptr<Foo> fooPtr11(move(fooPtr10));       // fooPtr10 = nullptr
+    cout << "fooPtr10 use count: " << fooPtr10.use_count() << endl;
+
+    auto fooPtr12 = make_shared<Foo>(11);
+    fooPtr11 = move(fooPtr12);
+    cout << "fooPtr12 use count: " << fooPtr12.use_count() << endl;
+
+    cout << "main end.\n";
 }
 ```
 
@@ -1661,8 +1700,37 @@ for example
 int* iPtr = new int();
 
 // iPtr 会被销毁两次
-std::shared_ptr<int> iPtrA = iPtr;
-std::shared_ptr<int> iPtrB = iPtr;
+std::shared_ptr<int> iPtrA(iPtr);
+std::shared_ptr<int> iPtrB (iPtr);
+```
+
+亡值 unique_ptr 可用于初始化/赋值 shared_ptr。
+
+for example
+
+```cpp
+#include <iostream>
+#include <memory>
+
+using namespace std;
+
+class Foo {
+public:
+    Foo(int i) : i(i) {}
+    ~Foo() {
+        cout << "~Foo(): i = " << i << endl;
+    }
+private:
+    int i;
+};
+
+int main() {
+    auto fooUPtr1 = make_unique<Foo>(1);
+    shared_ptr<Foo> fooSPtr1(move(fooUPtr1));
+
+    auto fooUPtr2 = make_unique<Foo>(2);
+    fooSPtr1 = move(fooUPtr2);
+}
 ```
 
 ### `weak_ptr`
@@ -1805,9 +1873,7 @@ void func(Args... args) {
 使用说明
 
 > 声明一个”模板参数包”: `typename... Args, Args... args` OR `typename ...Args, Args ...args`。<br>
-> 展开“参数包”：`args...`。<br>
-> `...` 是一种像 `*, &` 的操作符。
-
+> 展开“参数包”：`args...`。
 
 手动解包。程序在应用上没有意义。
 

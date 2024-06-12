@@ -4,24 +4,20 @@
 
 -   markdown 教程
 
-    -   [Markdown 的创建者编写的原始指南][https://daringfireball.net/projects/markdown/]
-
+    -   [Markdown 的创建者编写的原始指南](https://daringfireball.net/projects/markdown/)
     -   <https://markdown.com.cn/>
     -   <https://www.markdownguide.org/>
 
         -   <https://www.markdownguide.org/cheat-sheet/>
 
-    -   [typora 的 markdown 教程][http://support.typora.io/Markdown-Reference/]
-
-    -   [GFM 语法][https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax]
-
-    -   [GFM 规格][https://github.github.com/gfm/]
+    -   [Markdown style guide](https://github.com/google/styleguide/blob/3591b2e540cbcb07423e02d20eee482165776603/docguide/style.md)
+    -   [typora 的 markdown 教程](http://support.typora.io/Markdown-Reference/)
+    -   [GFM 语法](https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax)
+    -   [GFM 规格](https://github.github.com/gfm/)
 
 -   markdown 在线编辑器
 
-    -   [支持所有功能的 Makrdown 编辑器][https://stackedit.io/]
-
--   [mermaid 教程][https://mermaid-js.github.io/mermaid/#/]
+    -   [支持所有功能的 Makrdown 编辑器](https://stackedit.io/)
 
 ## 基础概念
 
@@ -167,6 +163,11 @@ list content 比 list 多缩进四个空格或一个 tab。list content 显示�
 > Dorothy followed her through many of the beautiful rooms in her castle.
 > >
 > > Dorothy followed her through many of the beautiful rooms in her castle.
+
+[example of Blockquote](https://mermaid-js.github.io/mermaid/#/)
+
+-   [Blockquote 可以不表示缩进, 不是进一步解释](https://mermaid-js.github.io/mermaid/#/?id=about-mermaid)
+-   [Blockquote 表示缩进](https://mermaid-js.github.io/mermaid/#/?id=appreciation)
 
 ### Code
 

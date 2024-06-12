@@ -2,18 +2,6 @@ from __future__ import print_function
 import ctypes, sys
 import winreg
 
-def is_admin():
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
-
-program = r"D:\PortableProgramFiles\Neovim\bin\nvim-qt.exe"
-menuName = "Edit with Neovim"
-menuIcon = program
-
-subKeyName = "EditWithNeovim"
-
 def addRightClickMenu(subKey, menuCommand):
     with winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, subKey) as key:
         winreg.SetValueEx(key, "", 0, winreg.REG_SZ, menuName)
@@ -50,12 +38,25 @@ def deleteRegistryTree(root, subkey):
     winreg.CloseKey(hkey)
     winreg.DeleteKey(root, subkey)
 
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
+
 # ### main
 if is_admin():
     # 将要运行的代码加到这里
 
+    program = r"D:\PortableProgramFiles\Neovim\bin\nvim-qt.exe"
+    menuIcon = program
+
+    menuName = "Edit with Neovim"
+    subKeyName = "EditWithNeovim"
+
     menuCommandOnFile = program + r' "%1"'
     menuCommand = program
+
     addRightClickMenuOnFile(menuCommandOnFile)
     addRightClickMenuOnDirectory(menuCommand)
     addRightClickMenuOnDirectoryBackground(menuCommand)

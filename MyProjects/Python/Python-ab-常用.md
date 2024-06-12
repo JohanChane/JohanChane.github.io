@@ -1,5 +1,9 @@
 # 常用
 
+## Content
+
+${toc}
+
 ## sys
 
 [sys](https://docs.python.org/zh-cn/3/library/sys.html#module-sys)
@@ -198,6 +202,17 @@ with open(<file>, 'r') as file:
 with open(filename) as f:
     content = f.readlines()
 content = [x.strip() for x in content]
+```
+
+## list
+
+```python
+# ## list 和 string 的转换
+list1 = ['a', 'b', 'c']
+str1 = ', '.join(list1))
+print(str1)
+list2 = str1.split(',')
+print(list2)
 ```
 
 ## str, byte, bytearray

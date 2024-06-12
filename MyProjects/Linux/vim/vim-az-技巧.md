@@ -1,5 +1,9 @@
 # Vim 技巧
 
+## Content
+
+${toc}
+
 ## vim 快捷键
 
     help dos-standard-mappings
@@ -81,7 +85,7 @@ windows 的换行符为 `CRLF`（`CR` 即 `^M`）。，而 unix 的换行符为 
 
 > 可重新以 fileformat=unix 的形式打开 dos format 文件（`:e ++ff=unix`），而 `CR` 会显示为可见字体 `^M`。因为 `CR` 并不等于 `^M`，所以不要保存。以 :e ++ff=dos` 重新打开文件，再 `:e ++ff=unix` 即可将 windows 换行转为 unix 换行符。
 >
-> 如果已经保存则用 `:%s/r\//gc` 删除 `^M` 即可。
+> 如果已经保存则用 `:%s/\r//gc` 删除 `^M` 即可。
 
 #### 替换换行符
 

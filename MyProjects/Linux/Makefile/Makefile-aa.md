@@ -1,5 +1,9 @@
 # Makefile 总结
 
+## Content
+
+${toc}
+
 ## References
 
 -   [GNU Make Manual](https://www.gnu.org/software/make/manual/)
@@ -850,8 +854,8 @@ all:
 
 #### 替换
 
+    # feet on the street
     $(subst EE,ee,fEEt on the street)
-        # feet on the street
 
     # 换后缀
     $(patsubst %.o,%.c,aa.c aa.b)

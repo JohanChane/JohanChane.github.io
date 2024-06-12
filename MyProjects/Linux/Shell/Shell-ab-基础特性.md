@@ -1,5 +1,9 @@
 # Shell 的基础特性
 
+## Content
+
+${toc}
+
 ## 说明
 
 这里只是介绍 Shell 的基础特性。比如：转义字符，`$IFS` 等。
@@ -77,8 +81,6 @@ ref: [重定向](https://www.gnu.org/software/bash/manual/html_node/Redirections
 
 ref: [Shell Expansions](https://www.gnu.org/software/bash/manual/html_node/Shell-Expansions.html#Shell-Expansions)
 
-### Shell Expansions 中的 `{}, ~`
-
 brace expansion: `{}`
 
     echo a{d,c,b}e
@@ -93,10 +95,73 @@ tilde expansion: `~`
     ~+: $PWD
     ~-: $OLDPWD
 
+Command Substitution:
+
+    $()
+    ``
+
+Arithmetic Expansion:
+
+    $(( ))
+
+Quote Removal
+
+    # 这些字符不在引号中时，都会自动删除
+    ‘\’, ‘'’, and ‘"’
+
+    echo aa\nbb
+    echo 'aa'
+    echo "aa"
+
+### Process Substitution
+
+Process Substitution 与管道类似，但是比管道更加灵活。
+
+    # 实际传递一个文件，而读取该文件的内容会获取 list 的输出。
+    <(list)
+    # 实际传递一个文件，而向该文件写入的内容补 list 作为输入。
+    >(list)
+
+for example
+
+```sh
+cat <(date)
+cat < <(date)
+# output: `/proc/self/fd/11`。因为 echo 不会像 cat 一样，去读取文件的内容，使用 xargs 即可。
+echo <(date)
+xargs echo < <(date)
+
+# output: date: invalid date ‘/proc/self/fd/13’.
+date >(cat)
+date > >(cat)
+```
+
+所以有：
+
+```sh
+# 三者等价
+cmd1 | cmd2
+cmd2 < <(cmd1)
+cmd1 > >(cmd2)
+
+date | cat
+cat < <(date)
+date > >(cat)
+```
+
+实际应用:
+
+```sh
+# 管道是无法实现的
+diff -u <(echo aa) <(echo bb)
+while read line; do echo $line; done < <(seq 5)
+```
+
 ### shell 对通配符的扩展
 
-filename expansion
+Filename Expansion:
 
+    # 通配符
     ‘*’, ‘?’, and ‘[’
 
 只要通配符能匹配到文件则将其转换所匹配的文件名。如果没有匹配的文件名则不转换。在引号中无效。
@@ -131,7 +196,7 @@ for example
     echo *
     echo .*
 
-## word splitting
+### Word Splitting:
 
 $IFS 默认是空格，tab, 换行符（不包含逗号）。
 
@@ -156,8 +221,25 @@ set -- aa,bb,cc
 echo $@
 ```
 
-## 变量内容的剪切
+### Shell Parameter Expansion
 
+#### 变量的定义
+
+    # 如果 $parameter 是 unset or null, 返回 word，否则返回 $parameter
+    ${parameter:-word}
+
+    # 如果 $parameter 是 unset or null, 则用 word 对 $parameter 赋值，并返回赋值后的 $parameter。否则返回 $parameter。此方法对位置参数和特殊参数无效。
+    ${parameter:=word}
+
+    # 如果 $parameter 是 unset or null, word 输出到 stderr 和 shell（not interactive）。否则，${parameter}。
+    ${parameter:?word}
+
+    # 如果 $parameter 是 unset or null, 不作任何处理, 返回 null。否则返回 word。
+    ${parameter:+word}
+
+#### 变量内容的剪切
+
+```
 `${parameter:offset}, ${parameter:offset:length}`
 
     截取从 offset 开始的 length 个的字符或数组单元。
@@ -184,6 +266,22 @@ echo $@
     将匹配到 pattern 的字符串，替换成 string。
     `/, //` 区别
         `//` 是尽量匹配长一些(全局匹配)，而 / 是尽量匹配短一些(只匹配一个)。
+```
+
+#### Others
+
+```
+# 如果 name 是数组，返回 keys。否则，如果 name 定义了且为 null, 则返回 0。
+${!name[@]}
+${!name[*]}
+
+# 如果 parameter 是数组则返回，数组的元素个数。否则，返回字符的个数。
+${#parameter}
+
+# 返回前缀是 prefix 的变量。
+${!prefix*}
+${!prefix@}
+```
 
 ## `--` 的作用
 
@@ -232,6 +330,8 @@ Here Strings is A variant of here documents. 它们是有区别的，here string
         "$VAR1"
         EOF
     cat testfile
+
+    gcc -xc -E -v - <<<"" 2>&1
 
 ## 环境变量，全局变量，局部变量
 

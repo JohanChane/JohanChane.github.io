@@ -1,5 +1,9 @@
 # GDB
 
+## Content
+
+${toc}
+
 ## References
 
 -   [gdb onlinedocs](https://sourceware.org/gdb/current/onlinedocs/gdb/#SEC_Contents)
@@ -80,10 +84,16 @@ int main() {
 ```
 
 ```gdb
-# print (*list)@5
+# `print (*list)@5`. `@5` 表示 (*list) 是第一个数组单元，一共有 5 个单元。
 print *list@5
-# print (int[5])(*list)
+# `print (int[5])(*list)`. `(int[5])` 与 `@5` 同理。
 print (int[5])*list
+# 不是打印数组
+#print *(list@5)
+#print *(int[5])list
+
+# `int(*)[5]` 表示有 5 个元素的数组指针。和 C 一样。
+print *(int(*)[5])list
 ```
 
 取址时要注意的问题
@@ -113,7 +123,7 @@ for example
 
 ### show
 
-查看 debugger(GDB 程序) 的信息。比如：show history。
+查看 debugger(GDB 程序) 的信息。比如：show history, show listsize, show logging file。
 
 ## 操控程序的运行(start, run, continute, next, step, until, finish, return)
 
@@ -279,7 +289,7 @@ set 是 gdb 的修改命令。比如：args, variables, ...
 
     set logging file [filename]
     # 只有打开 logging ，才会创建logging file 且 overwrite 和 redirect 才起作用。
-    set logging {on | off}
+    set logging enabled {on | off}
 
     # 默认是 on。如果 off, 则是 append 模式。
     set logging overwrite {on | off}
@@ -343,12 +353,14 @@ set 是 gdb 的修改命令。比如：args, variables, ...
 
 ## 解码 Cpp 的 Symbol
 
-    shell nm <app> | c++filt | grep <regexp>
+    nm <app> | c++filt | grep <regexp>
     objdump -S <app> | c++filt
 
 ## 查看信息
 
 ### 查看有关程序的信息
+
+    ptype, whatis 查看 expr 的类型
 
     # 搜索变量
     info variables <REGEXP>
@@ -360,6 +372,14 @@ set 是 gdb 的修改命令。比如：args, variables, ...
     info source
     info sources <REGEXP>
     ...
+
+For Example
+
+```
+# -n: 不打印 non-debug symbols
+info variables -n -t int
+info locals -t int
+```
 
 ### 查看进程的信息
 
@@ -375,7 +395,7 @@ set 是 gdb 的修改命令。比如：args, variables, ...
 
 ## handle
 
-    [调试信号](https://www.cnblogs.com/dongzhiquan/p/4752649.html)
+[调试信号](https://www.cnblogs.com/dongzhiquan/p/4752649.html)
 
 ## 常用的短命令
 
@@ -387,8 +407,31 @@ set 是 gdb 的修改命令。比如：args, variables, ...
     d
     # backtrace
     bt
+    bt full         # 显示 frames 的所有变量
     # 执行上个命令
     <enter>
+
+## TUI
+
+[TUI Key Bindings](https://sourceware.org/gdb/onlinedocs/gdb/TUI-Keys.html)
+
+    # ## 开关 TUI
+    C-x a
+    tui {enable | disable}
+    # ## layout
+    layout {src | next | asm | ...}
+    C-x 1
+    C-x 2
+    # ## 切换 win
+    C-x o
+    # 查看打开的 win
+    info win
+    # ## Others
+    winheight
+
+## GDB Config
+
+GDB 的配置文件是 `~/.gdbinit`。
 
 ## Examples
 

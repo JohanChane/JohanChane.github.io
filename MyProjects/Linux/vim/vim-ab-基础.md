@@ -1,5 +1,9 @@
 # Vim 基础
 
+## Content
+
+${toc}
+
 ## References
 
 -   vim help
@@ -270,11 +274,10 @@ visual-block 是可以编辑的。应用场景，注释。
 
 ref: `help registers`
 
-
     `""`: d,c,s,x,y 命令相关的文本。
     `"0`: 是最近复制的文本。比如：多次粘贴复制的文本。所以复制之后都是用 `"0` 粘贴即可。
-    "1~9: 最近删除的内容。"2: 比 `"1` 更早点删除的内容。依此推到 "9。
-    ". 上次插入模式下输入的内容。
+    `"1~9`: 最近删除的内容。`"2`: 比 `"1` 更早点删除的内容。依此推到 `"9`。`"1` 表示刚删除的多行数据，而 `"-` 表示刚删除的非多行数据。
+    `".` 上次插入模式下输入的内容。
 
     system clipboard of Linux: "+
     system clipboard of Windows: "+ 或 "*
@@ -301,7 +304,7 @@ ref: `help registers`
 
 ### jumps
 
-每个 windows 都有各自的 jumps。且子窗口会继承父窗口的 jumps。
+每 windows 的 jumps 都不同，且 jumps 会跨 buffer（`C-o` 如果跳完本窗口的 jumps，就会跳到非本窗口的 jumps）。而且新的 windows 都有 jumps，新的窗口会继承旧窗口的 jump list。
 
     :ju
     N_ctrl-o
