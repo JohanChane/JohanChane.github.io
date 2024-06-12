@@ -15,7 +15,7 @@ style = "github-dark"
 
 [params]
   author = "Johan Chane"
-  info = "Linux C++ 后端开发工程师"
+  info = "Linux C/C++ 后端开发工程师"
   description = "Johan Chane's personal website"
   keywords = "blog,developer,personal"
   avatarurl = "images/avatar.jpg"

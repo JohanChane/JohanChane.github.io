@@ -20,7 +20,7 @@
       <link>http://localhost:1313/about/</link>
       <pubDate>Wed, 12 Jun 2024 16:14:17 +0800</pubDate>
       <guid>http://localhost:1313/about/</guid>
-      <description> 自我介绍 Link to heading 学习的方向:&#xA;Linux C/C++ 后端开发 喜欢的编程语言:&#xA;C/C++ Rust Python 喜欢高效简洁的开源系统和软件:&#xA;平铺窗口管理器: dwm/i3wm/sway vim/neovim ranger/joshuto lazygit </description>
+      <description> 自我介绍 Link to heading 学习的方向:&#xA;Linux C/C++ 后端开发 喜欢的编程语言:&#xA;C/C++ Rust Python 喜欢高效简洁的开源系统和软件:&#xA;平铺窗口管理器: dwm/i3wm/sway vim/neovim ranger/joshuto lazygit qutebrowser/vimium </description>
     </item>
     <item>
       <title>Cpp 初始化风格</title>

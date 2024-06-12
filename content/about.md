@@ -19,3 +19,4 @@ draft = false
 -   vim/neovim
 -   ranger/joshuto
 -   lazygit
+-   qutebrowser/vimium
