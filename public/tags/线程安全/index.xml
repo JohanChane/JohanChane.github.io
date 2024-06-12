@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>线程安全 on JohanChane</title>
+    <link>http://localhost:1313/tags/%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/</link>
+    <description>Recent content in 线程安全 on JohanChane</description>
+    <generator>Hugo</generator>
+    <language>us</language>
+    <lastBuildDate>Sun, 03 Mar 2024 00:44:30 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cpp 单例模式的线程安全的探讨</title>
+      <link>http://localhost:1313/posts/cpp%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%8E%A2%E8%AE%A8/</link>
+      <pubDate>Sun, 03 Mar 2024 00:44:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/cpp%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%8E%A2%E8%AE%A8/</guid>
+      <description>Cpp 单例模式的线程安全的探讨 Link to heading 预备知识 Link to heading 静态变量的构造和析构顺序 Link to heading See Destruction order of static objects in C++&#xA;静态变量之间的构造顺序是不确定的。但是可以通过 global-static 的方式手动的控制它们的构造顺序:&#xA;for example:&#xA;file_system.cc:&#xA;#include &amp;lt;iostream&amp;gt; class FileSystem { public: FileSystem() { std::cout &amp;lt;&amp;lt; &amp;#34;FileSystem()&amp;#34; &amp;lt;&amp;lt; std::endl; } ~FileSystem() { std::cout &amp;lt;&amp;lt; &amp;#34;~FileSystem()&amp;#34; &amp;lt;&amp;lt; std::endl; } }; FileSystem&amp;amp; tfs() { static FileSystem fs; return fs; } directory.cc:&#xA;#include &amp;lt;iostream&amp;gt; class Directory { public: Directory() { std::cout &amp;lt;&amp;lt; &amp;#34;Directory()&amp;#34; &amp;lt;&amp;lt; std::endl; } ~Directory() { std::cout &amp;lt;&amp;lt; &amp;#34;~Directory()&amp;#34; &amp;lt;&amp;lt; std::endl; } }; Directory&amp;amp; tdir() { static Directory dir; return dir; } main.</description>
+    </item>
+  </channel>
+</rss>

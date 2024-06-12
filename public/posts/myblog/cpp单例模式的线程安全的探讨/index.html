@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+   · JohanChane
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Johan Chane">
+<meta name="description" content="Cpp 单例模式的线程安全的探讨 Link to heading 预备知识 Link to heading 静态变量的构造和析构顺序 Link to heading See Destruction order of static objects in C&#43;&#43;
+静态变量之间的构造顺序是不确定的。但是可以通过 global-static 的方式手动的控制它们的构造顺序:
+for example:
+file_system.cc:
+#include &lt;iostream&gt; class FileSystem { public: FileSystem() { std::cout &lt;&lt; &#34;FileSystem()&#34; &lt;&lt; std::endl; } ~FileSystem() { std::cout &lt;&lt; &#34;~FileSystem()&#34; &lt;&lt; std::endl; } }; FileSystem&amp; tfs() { static FileSystem fs; return fs; } directory.cc:
+#include &lt;iostream&gt; class Directory { public: Directory() { std::cout &lt;&lt; &#34;Directory()&#34; &lt;&lt; std::endl; } ~Directory() { std::cout &lt;&lt; &#34;~Directory()&#34; &lt;&lt; std::endl; } }; Directory&amp; tdir() { static Directory dir; return dir; } main.">
+<meta name="keywords" content="blog,developer,personal">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JohanChane">
+  <meta name="twitter:description" content="Cpp 单例模式的线程安全的探讨 Link to heading 预备知识 Link to heading 静态变量的构造和析构顺序 Link to heading See Destruction order of static objects in C&#43;&#43;
+静态变量之间的构造顺序是不确定的。但是可以通过 global-static 的方式手动的控制它们的构造顺序:
+for example:
+file_system.cc:
+#include &lt;iostream&gt; class FileSystem { public: FileSystem() { std::cout &lt;&lt; &#34;FileSystem()&#34; &lt;&lt; std::endl; } ~FileSystem() { std::cout &lt;&lt; &#34;~FileSystem()&#34; &lt;&lt; std::endl; } }; FileSystem&amp; tfs() { static FileSystem fs; return fs; } directory.cc:
+#include &lt;iostream&gt; class Directory { public: Directory() { std::cout &lt;&lt; &#34;Directory()&#34; &lt;&lt; std::endl; } ~Directory() { std::cout &lt;&lt; &#34;~Directory()&#34; &lt;&lt; std::endl; } }; Directory&amp; tdir() { static Directory dir; return dir; } main.">
+
+<meta property="og:url" content="http://localhost:1313/posts/myblog/cpp%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%8E%A2%E8%AE%A8/">
+  <meta property="og:site_name" content="JohanChane">
+  <meta property="og:title" content="JohanChane">
+  <meta property="og:description" content="Cpp 单例模式的线程安全的探讨 Link to heading 预备知识 Link to heading 静态变量的构造和析构顺序 Link to heading See Destruction order of static objects in C&#43;&#43;
+静态变量之间的构造顺序是不确定的。但是可以通过 global-static 的方式手动的控制它们的构造顺序:
+for example:
+file_system.cc:
+#include &lt;iostream&gt; class FileSystem { public: FileSystem() { std::cout &lt;&lt; &#34;FileSystem()&#34; &lt;&lt; std::endl; } ~FileSystem() { std::cout &lt;&lt; &#34;~FileSystem()&#34; &lt;&lt; std::endl; } }; FileSystem&amp; tfs() { static FileSystem fs; return fs; } directory.cc:
+#include &lt;iostream&gt; class Directory { public: Directory() { std::cout &lt;&lt; &#34;Directory()&#34; &lt;&lt; std::endl; } ~Directory() { std::cout &lt;&lt; &#34;~Directory()&#34; &lt;&lt; std::endl; } }; Directory&amp; tdir() { static Directory dir; return dir; } main.">
+  <meta property="og:locale" content="zh">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/myblog/cpp%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%8E%A2%E8%AE%A8/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      JohanChane
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/myblog/cpp%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%8E%A2%E8%AE%A8/">
+              
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="0001-01-01T00:00:00Z">
+                一月 1, 0001
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          
+          
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="cpp-单例模式的线程安全的探讨">
+  Cpp 单例模式的线程安全的探讨
+  <a class="heading-link" href="#cpp-%e5%8d%95%e4%be%8b%e6%a8%a1%e5%bc%8f%e7%9a%84%e7%ba%bf%e7%a8%8b%e5%ae%89%e5%85%a8%e7%9a%84%e6%8e%a2%e8%ae%a8">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<h2 id="预备知识">
+  预备知识
+  <a class="heading-link" href="#%e9%a2%84%e5%a4%87%e7%9f%a5%e8%af%86">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<h3 id="静态变量的构造和析构顺序">
+  静态变量的构造和析构顺序
+  <a class="heading-link" href="#%e9%9d%99%e6%80%81%e5%8f%98%e9%87%8f%e7%9a%84%e6%9e%84%e9%80%a0%e5%92%8c%e6%9e%90%e6%9e%84%e9%a1%ba%e5%ba%8f">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>See <a href="https://stackoverflow.com/a/469653/10498412"  class="external-link" target="_blank" rel="noopener">Destruction order of static objects in C++</a></p>
+<p>静态变量之间的构造顺序是不确定的。但是可以通过 global-static 的方式手动的控制它们的构造顺序:</p>
+<p>for example:</p>
+<p>file_system.cc:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">FileSystem</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  FileSystem() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;FileSystem()&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72;font-weight:bold">~</span>FileSystem() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;~FileSystem()&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FileSystem<span style="color:#ff7b72;font-weight:bold">&amp;</span> tfs() {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> FileSystem fs;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> fs;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>directory.cc:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Directory</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  Directory() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;Directory()&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72;font-weight:bold">~</span>Directory() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;~Directory()&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Directory<span style="color:#ff7b72;font-weight:bold">&amp;</span> tdir() {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> Directory dir;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> dir;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>main.cc:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">FileSystem</span> {};
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Directory</span> {};
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">extern</span> FileSystem<span style="color:#ff7b72;font-weight:bold">&amp;</span> tfs();
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">extern</span> Directory<span style="color:#ff7b72;font-weight:bold">&amp;</span> tdir();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>  tdir();
+</span></span><span style="display:flex;"><span>  tfs();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;main end&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>静态变量的析构顺序是和构造顺序顺序相反的。比如:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>  tfs();
+</span></span><span style="display:flex;"><span>  tdir();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;main end&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="静态变量的初始化">
+  静态变量的初始化
+  <a class="heading-link" href="#%e9%9d%99%e6%80%81%e5%8f%98%e9%87%8f%e7%9a%84%e5%88%9d%e5%a7%8b%e5%8c%96">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>静态变量的初始化是否是线程安全的，是由编译器决定的:</p>
+<ul>
+<li>VS2013 中不是线程安全的, VS2014 是线程安全的。See <a href="https://stackoverflow.com/a/19907903/10498412"  class="external-link" target="_blank" rel="noopener">ref</a>。</li>
+<li>C++11 之后的标准是线程安全的。</li>
+</ul>
+<p>在C中，静态变量的初始化器必须是常量，在C++中，引入了类, 静态变量可以用非常量初始化, 所以要解决静态变量不使用常量初始化的问题。那么 C++ 是如何保证静态变量的初始化语义(只初始化一次)的呢:</p>
+<p>for example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> <span style="color:#f0883e;font-weight:bold">Foo</span> {
+</span></span><span style="display:flex;"><span>  Foo() {
+</span></span><span style="display:flex;"><span>    abcdefg <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">12345678</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">int</span> abcdefg;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  Foo<span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#ff7b72">operator</span><span style="color:#ff7b72;font-weight:bold">+</span>(<span style="color:#ff7b72">int</span> i) {
+</span></span><span style="display:flex;"><span>    abcdefg <span style="color:#ff7b72;font-weight:bold">+=</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">*</span><span style="color:#ff7b72">this</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Foo<span style="color:#ff7b72;font-weight:bold">&amp;</span> get_instance() {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> Foo local_static_var <span style="color:#ff7b72;font-weight:bold">=</span> Foo() <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">1</span> <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">2</span> <span style="color:#ff7b72;font-weight:bold">+</span> <span style="color:#a5d6ff">3</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> local_static_var;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">auto</span> v <span style="color:#ff7b72;font-weight:bold">=</span> get_instance();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>g++ -S main.cc -std<span style="color:#ff7b72;font-weight:bold">=</span>c++17
+</span></span><span style="display:flex;"><span>cat main.s | c++filt
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-gas" data-lang="gas"><span style="display:flex;"><span><span style="color:#d2a8ff;font-weight:bold">get_instance</span>():
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">.LFB4:</span>
+</span></span><span style="display:flex;"><span>	.cfi_startproc
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">pushq</span>	<span style="color:#79c0ff">%rbp</span>
+</span></span><span style="display:flex;"><span>	.cfi_def_cfa_offset <span style="color:#a5d6ff">16</span>
+</span></span><span style="display:flex;"><span>	.cfi_offset <span style="color:#a5d6ff">6</span>, -<span style="color:#a5d6ff">16</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	<span style="color:#79c0ff">%rsp</span>, <span style="color:#79c0ff">%rbp</span>
+</span></span><span style="display:flex;"><span>	.cfi_def_cfa_register <span style="color:#a5d6ff">6</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">subq</span>	<span style="color:#79c0ff;font-weight:bold">$16</span>, <span style="color:#79c0ff">%rsp</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	<span style="color:#79c0ff">%fs</span>:<span style="color:#a5d6ff">40</span>, <span style="color:#79c0ff">%rax</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	<span style="color:#79c0ff">%rax</span>, -<span style="color:#a5d6ff">8</span>(<span style="color:#79c0ff">%rbp</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">xorl</span>	<span style="color:#79c0ff">%eax</span>, <span style="color:#79c0ff">%eax</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// 判断 local_static_var 是否已经被初始化
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	<span style="color:#d2a8ff;font-weight:bold">movzbl</span>	<span style="color:#79c0ff;font-weight:bold">guard</span> <span style="color:#79c0ff;font-weight:bold">variable</span> <span style="color:#79c0ff;font-weight:bold">for</span> <span style="color:#79c0ff;font-weight:bold">get_instance</span>()::<span style="color:#79c0ff;font-weight:bold">local_static_var</span>(<span style="color:#79c0ff">%rip</span>), <span style="color:#79c0ff">%eax</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">testb</span>	<span style="color:#79c0ff">%al</span>, <span style="color:#79c0ff">%al</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">sete</span>	<span style="color:#79c0ff">%al</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">testb</span>	<span style="color:#79c0ff">%al</span>, <span style="color:#79c0ff">%al</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">je</span>	<span style="color:#79c0ff;font-weight:bold">.L5</span>         <span style="color:#8b949e;font-style:italic">// 如果初始化了, 跳到 .L5
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// 调用加锁函数
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	<span style="color:#d2a8ff;font-weight:bold">leaq</span>	<span style="color:#79c0ff;font-weight:bold">guard</span> <span style="color:#79c0ff;font-weight:bold">variable</span> <span style="color:#79c0ff;font-weight:bold">for</span> <span style="color:#79c0ff;font-weight:bold">get_instance</span>()::<span style="color:#79c0ff;font-weight:bold">local_static_var</span>(<span style="color:#79c0ff">%rip</span>), <span style="color:#79c0ff">%rax</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	<span style="color:#79c0ff">%rax</span>, <span style="color:#79c0ff">%rdi</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">call</span>	<span style="color:#79c0ff;font-weight:bold">__cxa_guard_acquire@PLT</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// 判断 `__cxa_guard_acquire@PLT` 的返回值, 判断 local_static_var 是否已经被初始化?
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	<span style="color:#d2a8ff;font-weight:bold">testl</span>	<span style="color:#79c0ff">%eax</span>, <span style="color:#79c0ff">%eax</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">setne</span>	<span style="color:#79c0ff">%al</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">testb</span>	<span style="color:#79c0ff">%al</span>, <span style="color:#79c0ff">%al</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">je</span>	<span style="color:#79c0ff;font-weight:bold">.L5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// Foo() + 1 + 2 + 3
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	<span style="color:#d2a8ff;font-weight:bold">leaq</span>	-<span style="color:#a5d6ff">12</span>(<span style="color:#79c0ff">%rbp</span>), <span style="color:#79c0ff">%rax</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	<span style="color:#79c0ff">%rax</span>, <span style="color:#79c0ff">%rdi</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">call</span>	<span style="color:#79c0ff;font-weight:bold">Foo</span>::<span style="color:#79c0ff;font-weight:bold">Foo</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">leaq</span>	-<span style="color:#a5d6ff">12</span>(<span style="color:#79c0ff">%rbp</span>), <span style="color:#79c0ff">%rax</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movl</span>	<span style="color:#79c0ff;font-weight:bold">$1</span>, <span style="color:#79c0ff">%esi</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	<span style="color:#79c0ff">%rax</span>, <span style="color:#79c0ff">%rdi</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">call</span>	<span style="color:#79c0ff;font-weight:bold">Foo</span>::<span style="color:#79c0ff;font-weight:bold">operator</span><span style="color:#f85149">+</span>(<span style="color:#79c0ff;font-weight:bold">int</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movl</span>	<span style="color:#79c0ff;font-weight:bold">$2</span>, <span style="color:#79c0ff">%esi</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	<span style="color:#79c0ff">%rax</span>, <span style="color:#79c0ff">%rdi</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">call</span>	<span style="color:#79c0ff;font-weight:bold">Foo</span>::<span style="color:#79c0ff;font-weight:bold">operator</span><span style="color:#f85149">+</span>(<span style="color:#79c0ff;font-weight:bold">int</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movl</span>	<span style="color:#79c0ff;font-weight:bold">$3</span>, <span style="color:#79c0ff">%esi</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	<span style="color:#79c0ff">%rax</span>, <span style="color:#79c0ff">%rdi</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">call</span>	<span style="color:#79c0ff;font-weight:bold">Foo</span>::<span style="color:#79c0ff;font-weight:bold">operator</span><span style="color:#f85149">+</span>(<span style="color:#79c0ff;font-weight:bold">int</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movl</span>	(<span style="color:#79c0ff">%rax</span>), <span style="color:#79c0ff">%eax</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movl</span>	<span style="color:#79c0ff">%eax</span>, <span style="color:#79c0ff;font-weight:bold">get_instance</span>()::<span style="color:#79c0ff;font-weight:bold">local_static_var</span>(<span style="color:#79c0ff">%rip</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// 调用解锁函数
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	<span style="color:#d2a8ff;font-weight:bold">leaq</span>	<span style="color:#79c0ff;font-weight:bold">guard</span> <span style="color:#79c0ff;font-weight:bold">variable</span> <span style="color:#79c0ff;font-weight:bold">for</span> <span style="color:#79c0ff;font-weight:bold">get_instance</span>()::<span style="color:#79c0ff;font-weight:bold">local_static_var</span>(<span style="color:#79c0ff">%rip</span>), <span style="color:#79c0ff">%rax</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	<span style="color:#79c0ff">%rax</span>, <span style="color:#79c0ff">%rdi</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">call</span>	<span style="color:#79c0ff;font-weight:bold">__cxa_guard_release@PLT</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff;font-weight:bold">.L5:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// 返回 local_static_var
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>	<span style="color:#d2a8ff;font-weight:bold">leaq</span>	<span style="color:#79c0ff;font-weight:bold">get_instance</span>()::<span style="color:#79c0ff;font-weight:bold">local_static_var</span>(<span style="color:#79c0ff">%rip</span>), <span style="color:#79c0ff">%rax</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">movq</span>	-<span style="color:#a5d6ff">8</span>(<span style="color:#79c0ff">%rbp</span>), <span style="color:#79c0ff">%rdx</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">subq</span>	<span style="color:#79c0ff">%fs</span>:<span style="color:#a5d6ff">40</span>, <span style="color:#79c0ff">%rdx</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">je</span>	<span style="color:#79c0ff;font-weight:bold">.L7</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#d2a8ff;font-weight:bold">call</span>	<span style="color:#79c0ff;font-weight:bold">__stack_chk_fail@PLT</span>
+</span></span></code></pre></div><p>从上可知, 是对 <code>Foo() + 1 + 2 + 3</code> 加锁保护初始化的, 而不是只对静态变量的内存加锁保护。</p>
+<h3 id="main-结束之后-什么时候回收静态变量">
+  main 结束之后, 什么时候回收静态变量?
+  <a class="heading-link" href="#main-%e7%bb%93%e6%9d%9f%e4%b9%8b%e5%90%8e-%e4%bb%80%e4%b9%88%e6%97%b6%e5%80%99%e5%9b%9e%e6%94%b6%e9%9d%99%e6%80%81%e5%8f%98%e9%87%8f">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>静态变量是属于进程的。进程结束时会调用 <code>exit()</code>, 静态变量会被回收。</p>
+<p>如果 main 结束之后, 如果还有 detach 线程, 则不同的操作系统会有不同的处理。有些调用 exit, detach 线程会退出。有些调用 pthread_exit, 会等待 detach 线程结束。<a href="https://stackoverflow.com/questions/19744250/what-happens-to-a-detached-thread-when-main-exits"  class="external-link" target="_blank" rel="noopener">ref</a></p>
+<p>&ldquo;Unix/Linux系统编程手册&quot;一书的说法: 其他线程调用了 <code>exit()</code>，或是主线程执行 <code>return</code> 语句(return 之后会调用 exit)时，即便遭到分离的线程也还是会受到影响。此时，不管线程处于可连接状态还是已分离状态，进程的所有线程会立即终止。</p>
+<p>Linux/Unix 系统: 进程 exit 的过程, 个人猜测应该会保证所有线程 exit 之后, 才回收静态变量。这样能保证线程可以安全地使用进程的静态变量。</p>
+<h2 id="各种实现版本">
+  各种实现版本
+  <a class="heading-link" href="#%e5%90%84%e7%a7%8d%e5%ae%9e%e7%8e%b0%e7%89%88%e6%9c%ac">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Scott Meyers 优雅的单例模式:</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>Foo<span style="color:#ff7b72;font-weight:bold">&amp;</span> getInst() {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> Foo <span style="color:#d2a8ff;font-weight:bold">inst</span>(...);         <span style="color:#8b949e;font-style:italic">// 从&#34;静态变量的初始化&#34;可知, 进入 static 语句和退出 static 语句是加锁保护的, 所以是线程安全的。
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#ff7b72">return</span> inst;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>懒汉模式:</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> <span style="color:#f0883e;font-weight:bold">Singleton</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> Singleton<span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#d2a8ff;font-weight:bold">get_instance</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">static</span> <span style="color:#ff7b72">auto</span> inst <span style="color:#ff7b72;font-weight:bold">=</span> make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>Singleton<span style="color:#ff7b72;font-weight:bold">&gt;</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> inst.get();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>如果静态变量的初始化是线程安全的，那么这个实现是线程安全的。如果单例对象和其他静态对象有关联, 返回指针则会出现析构顺序的问题:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;vector&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;memory&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">FileSystem</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  FileSystem() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;FileSystem&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72;font-weight:bold">~</span>FileSystem() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;~FileSystem&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> FileSystem<span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#d2a8ff;font-weight:bold">get_instance</span>() {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">static</span> <span style="color:#ff7b72">auto</span> inst <span style="color:#ff7b72;font-weight:bold">=</span> std<span style="color:#ff7b72;font-weight:bold">::</span>make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>FileSystem<span style="color:#ff7b72;font-weight:bold">&gt;</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> inst.get();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">close_files</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">auto</span><span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#79c0ff;font-weight:bold">f</span> : m_files) {
+</span></span><span style="display:flex;"><span>      std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> f <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>std<span style="color:#ff7b72;font-weight:bold">::</span>string<span style="color:#ff7b72;font-weight:bold">&gt;</span> m_files;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Diretory</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72;font-weight:bold">~</span>Diretory() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;~Diretory&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>    close_files();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> Diretory<span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#d2a8ff;font-weight:bold">get_instance</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">static</span> <span style="color:#ff7b72">auto</span> inst <span style="color:#ff7b72;font-weight:bold">=</span> std<span style="color:#ff7b72;font-weight:bold">::</span>make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>Diretory<span style="color:#ff7b72;font-weight:bold">&gt;</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> inst.get();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">close_files</span>() {
+</span></span><span style="display:flex;"><span>    FileSystem<span style="color:#ff7b72;font-weight:bold">::</span>get_instance()<span style="color:#ff7b72;font-weight:bold">-&gt;</span>close_files();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>  Diretory<span style="color:#ff7b72;font-weight:bold">::</span>get_instance()<span style="color:#ff7b72;font-weight:bold">-&gt;</span>close_files();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>为了解决这个问题, 返回 shared_ptr 即可: <a href="https://stackoverflow.com/a/40337728/10498412"  class="external-link" target="_blank" rel="noopener">ref</a>:</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;vector&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;memory&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">FileSystem</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  FileSystem() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;FileSystem&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72;font-weight:bold">~</span>FileSystem() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;~FileSystem&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> std<span style="color:#ff7b72;font-weight:bold">::</span>shared_ptr<span style="color:#ff7b72;font-weight:bold">&lt;</span>FileSystem<span style="color:#ff7b72;font-weight:bold">&gt;</span> get_instance() {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">static</span> <span style="color:#ff7b72">auto</span> inst <span style="color:#ff7b72;font-weight:bold">=</span> std<span style="color:#ff7b72;font-weight:bold">::</span>make_shared<span style="color:#ff7b72;font-weight:bold">&lt;</span>FileSystem<span style="color:#ff7b72;font-weight:bold">&gt;</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> inst;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">close_files</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">const</span> <span style="color:#ff7b72">auto</span><span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#79c0ff;font-weight:bold">f</span> : m_files) {
+</span></span><span style="display:flex;"><span>      std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> f <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>std<span style="color:#ff7b72;font-weight:bold">::</span>string<span style="color:#ff7b72;font-weight:bold">&gt;</span> m_files;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Diretory</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72;font-weight:bold">~</span>Diretory() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;~Diretory&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>    close_files();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> Diretory<span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#d2a8ff;font-weight:bold">get_instance</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">static</span> <span style="color:#ff7b72">auto</span> inst <span style="color:#ff7b72;font-weight:bold">=</span> std<span style="color:#ff7b72;font-weight:bold">::</span>make_unique<span style="color:#ff7b72;font-weight:bold">&lt;</span>Diretory<span style="color:#ff7b72;font-weight:bold">&gt;</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> inst.get();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">init</span>() {
+</span></span><span style="display:flex;"><span>    m_fs <span style="color:#ff7b72;font-weight:bold">=</span> FileSystem<span style="color:#ff7b72;font-weight:bold">::</span>get_instance();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">close_files</span>() {
+</span></span><span style="display:flex;"><span>    FileSystem<span style="color:#ff7b72;font-weight:bold">::</span>get_instance()<span style="color:#ff7b72;font-weight:bold">-&gt;</span>close_files();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>shared_ptr<span style="color:#ff7b72;font-weight:bold">&lt;</span>FileSystem<span style="color:#ff7b72;font-weight:bold">&gt;</span> m_fs;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>  Diretory<span style="color:#ff7b72;font-weight:bold">::</span>get_instance()<span style="color:#ff7b72;font-weight:bold">-&gt;</span>init();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  Diretory<span style="color:#ff7b72;font-weight:bold">::</span>get_instance()<span style="color:#ff7b72;font-weight:bold">-&gt;</span>close_files();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>单例模式的 <code>get_instance</code> 是很可能是调用比较频繁的, get_instance 返回会构造 shared_ptr, 而 shared_ptr 是线程安全的, 所以会有一点性能损耗。</p>
+<p>C++11 提供中的 std::call_once: 如果使用 pthread 则使用 pthread_once。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;thread&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;vector&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;mutex&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">Singleton</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> Singleton<span style="color:#ff7b72;font-weight:bold">*</span> get_instance() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>call_once(m_once_flag, []() {
+</span></span><span style="display:flex;"><span>        m_instance.reset(<span style="color:#ff7b72">new</span> Singleton());
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> m_instance.get();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> std<span style="color:#ff7b72;font-weight:bold">::</span>once_flag m_once_flag;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">static</span> std<span style="color:#ff7b72;font-weight:bold">::</span>unique_ptr<span style="color:#ff7b72;font-weight:bold">&lt;</span>Singleton<span style="color:#ff7b72;font-weight:bold">&gt;</span> m_instance;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>std<span style="color:#ff7b72;font-weight:bold">::</span>once_flag Singleton<span style="color:#ff7b72;font-weight:bold">::</span>m_once_flag;
+</span></span><span style="display:flex;"><span>std<span style="color:#ff7b72;font-weight:bold">::</span>unique_ptr<span style="color:#ff7b72;font-weight:bold">&lt;</span>Singleton<span style="color:#ff7b72;font-weight:bold">&gt;</span> Singleton<span style="color:#ff7b72;font-weight:bold">::</span>m_instance <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">nullptr</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>std<span style="color:#ff7b72;font-weight:bold">::</span><span style="color:#ff7b72">thread</span><span style="color:#ff7b72;font-weight:bold">&gt;</span> v;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">int</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; i <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">100</span>; i<span style="color:#ff7b72;font-weight:bold">++</span>) {
+</span></span><span style="display:flex;"><span>    v.emplace_back([](){
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">auto</span> inst <span style="color:#ff7b72;font-weight:bold">=</span> Singleton<span style="color:#ff7b72;font-weight:bold">::</span>get_instance();
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>inst) {
+</span></span><span style="display:flex;"><span>          std<span style="color:#ff7b72;font-weight:bold">::</span>cerr <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;inst is nullptr&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      });
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">auto</span><span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#79c0ff;font-weight:bold">e</span> : v) {
+</span></span><span style="display:flex;"><span>    e.join();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>如果有关联其他静态变量，get_instance 返回 shared_ptr 即可。</p>
+<p>如果是静态变量的初始化是线程安全的编译标准, 该选择哪个实现版本? 最安全不一定是最适合的, 我要依据自己的情况来选择合适的版本:</p>
+<ul>
+<li>Scott Meyers 优雅的单例模式是可以解决大多数情况的。如果该静态变量不关联其他静态变量, 选择该版本即可。同时 <code>get_instance</code> 是比较频繁的, 返回指针效率是比较高的。<a href="#scott_meyers_singleton" >link</a></li>
+<li>如果想要懒汉模式, 如果该单例不关联其他静态变量, 选择 unique_ptr 版本即可。<a href="#unique_ptr_singleton" >link</a></li>
+<li>如果想要懒汉模式, 如果该单例关联其他静态变量, 选择 sharded_ptr 版本即可。<a href="#shared_ptr_singleton" >link</a></li>
+<li>如果想要用 call_once, 选择 call_once 版本即可。<a href="#call_once_singleton" >link</a></li>
+</ul>
+<p>原子操作的版本:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">singleton</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">public</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">static</span> singleton<span style="color:#ff7b72;font-weight:bold">*</span> instance() 
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        singleton<span style="color:#ff7b72;font-weight:bold">*</span> ptr <span style="color:#ff7b72;font-weight:bold">=</span> inst_ptr_.load(std<span style="color:#ff7b72;font-weight:bold">::</span>memory_order_acquire);     <span style="color:#8b949e;font-style:italic">// 1
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        <span style="color:#ff7b72">if</span> (inst_ptr_ <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72">nullptr</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            std<span style="color:#ff7b72;font-weight:bold">::</span>lock_guard<span style="color:#ff7b72;font-weight:bold">&lt;</span>std<span style="color:#ff7b72;font-weight:bold">::</span>mutex<span style="color:#ff7b72;font-weight:bold">&gt;</span> lk(mutex_);
+</span></span><span style="display:flex;"><span>            ptr <span style="color:#ff7b72;font-weight:bold">=</span> inst_ptr_.load(std<span style="color:#ff7b72;font-weight:bold">::</span>memory_order_relaxed);            <span style="color:#8b949e;font-style:italic">// 2
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>            <span style="color:#ff7b72">if</span> (inst_ptr_ <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#ff7b72">nullptr</span>) {
+</span></span><span style="display:flex;"><span>                ptr <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">new</span> singleton();                                  <span style="color:#8b949e;font-style:italic">// 4
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                inst_ptr_.store(ptr, std<span style="color:#ff7b72;font-weight:bold">::</span>memory_order_release);        <span style="color:#8b949e;font-style:italic">// 3
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span> ptr;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    singleton() {}
+</span></span><span style="display:flex;"><span>    singleton(<span style="color:#ff7b72">const</span> singleton<span style="color:#ff7b72;font-weight:bold">&amp;</span>) {}
+</span></span><span style="display:flex;"><span>    singleton<span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#ff7b72">operator</span> <span style="color:#ff7b72;font-weight:bold">=</span> (<span style="color:#ff7b72">const</span> singleton<span style="color:#ff7b72;font-weight:bold">&amp;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">private</span><span style="color:#ff7b72;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">static</span> std<span style="color:#ff7b72;font-weight:bold">::</span>atomic<span style="color:#ff7b72;font-weight:bold">&lt;</span>singleton<span style="color:#ff7b72;font-weight:bold">*&gt;</span> inst_ptr_;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">static</span> std<span style="color:#ff7b72;font-weight:bold">::</span>mutex mutex_;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>std<span style="color:#ff7b72;font-weight:bold">::</span>atomic<span style="color:#ff7b72;font-weight:bold">&lt;</span>singleton<span style="color:#ff7b72;font-weight:bold">*&gt;</span> singleton<span style="color:#ff7b72;font-weight:bold">::</span>inst_ptr_;
+</span></span><span style="display:flex;"><span>std<span style="color:#ff7b72;font-weight:bold">::</span>mutex singleton<span style="color:#ff7b72;font-weight:bold">::</span>mutex_;
+</span></span></code></pre></div><p>是线程安全的。我觉得 1, 3 可以改为 memory_order_relaxed。因为 3 依赖 4, 指令重排后, 4 是保证先序于 3 的, 且没有其他各个线程共享的内存需要修改, 所以就不需要用 release-acquire 同步修改。同时 mutex/sem 之类的同步原语会使用内存屏障同步的修改。See <a href="https://en.wikipedia.org/wiki/Memory_barrier#Multithreaded_programming_and_memory_visibility"  class="external-link" target="_blank" rel="noopener">ref</a>。</p>
+<h2 id="references">
+  References
+  <a class="heading-link" href="#references">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/2576022/how-do-you-implement-a-singleton-efficiently-and-thread-safely"  class="external-link" target="_blank" rel="noopener">How do you implement a singleton efficiently and thread-safely?</a></li>
+<li><a href="https://stackoverflow.com/questions/1008019/how-do-you-implement-the-singleton-design-pattern"  class="external-link" target="_blank" rel="noopener">How do you implement the Singleton design pattern?</a></li>
+<li>Effective C++</li>
+<li><a href="http://www.modernescpp.com/index.php/thread-safe-initialization-of-data/"  class="external-link" target="_blank" rel="noopener">Thread-Safe Initialization of Data</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1606879"  class="external-link" target="_blank" rel="noopener">C++多线程如何获取真正安全的单例</a></li>
+</ul>
+<p>上述不正确之处, 欢迎指出。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2024
+     Johan Chane 
+    ·
+    
+     <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

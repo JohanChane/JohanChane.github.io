@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cpp on JohanChane</title>
+    <link>http://localhost:1313/tags/cpp/</link>
+    <description>Recent content in Cpp on JohanChane</description>
+    <generator>Hugo</generator>
+    <language>us</language>
+    <lastBuildDate>Fri, 08 Mar 2024 20:50:23 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/cpp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cpp 初始化风格</title>
+      <link>http://localhost:1313/posts/cpp%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A3%8E%E6%A0%BC/</link>
+      <pubDate>Fri, 08 Mar 2024 20:50:23 +0800</pubDate>
+      <guid>http://localhost:1313/posts/cpp%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A3%8E%E6%A0%BC/</guid>
+      <description>Cpp 的初始化风格 Link to heading cpp 的初始化风格 Link to heading 兼容 C 的初始化风格:&#xA;int i = 10; int a[] = {1, 2, 3}; struct Foo { char c; int i; }; union Bar { char c; int i; }; Foo foo = {.c = &amp;#39;A&amp;#39;, .i = 42}; Bar bar = {.c = &amp;#39;A&amp;#39;}; 但是 Cpp 引入了类, 这样会导致一个问题:&#xA;#include &amp;lt;iostream&amp;gt; struct Foo { }; struct Bar { Bar(const Foo&amp;amp; foo) { std::cout &amp;lt;&amp;lt; &amp;#34;Bar::Bar&amp;#34; &amp;lt;&amp;lt; std::endl; } }; int main() { //Bar bar(Foo()); // 只是一个函数声明 //Bar bar((Foo())); // 解决方案 1 Bar bar{Foo()}; // 解决方案 2 return 0; } Cpp 的花括号初始化:</description>
+    </item>
+    <item>
+      <title>内存模型和原子操作的总结</title>
+      <link>http://localhost:1313/posts/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Thu, 07 Mar 2024 18:02:25 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E6%80%BB%E7%BB%93/</guid>
+      <description>内存模型和原子操作的总结 Link to heading 内存模型和原子操作的设计目的 Link to heading 通过底层的设计可以让操作系统或 cpu 给用户提供一种操控颗粒度更小的各个线程之间的内存访问同步的功能。&#xA;原子操作和互斥量的应用场景 Link to heading 如果仅需要对少量的简单数据进行原子操作，原子锁可能比互斥量更高效。但在涉及到复杂数据结构或需要独占资源访问的情况下，互斥量提供了更强的同步能力，但通常会涉及线程的切换和上下文切换，因此可能会引入一定的性能开销。&#xA;内存模型同步模式 Link to heading 原子变量主要用于同步线程之间的共享内存访问。通常，一个线程创建数据，然后存储到原子中。其他线程从此原子读取数据，当看到预期值时，其他线程正在创建的数据将在该线程中完整且可见 (内存可见性)。不同的内存模型模式用于指示线程之间的数据共享联系有多强。&#xA;有 3 种模式或模型允许程序员指定线程间同步的类型:&#xA;Sequentially Consistent (序列一致) Relaxed (宽松) Release-Acquire (释放-获取) Release-Consume (释放-消费) (是获取-释放内存模型中的进一步微妙改进) 内存可见性 Link to heading &amp;ldquo;内存可见性&amp;quot;是指在多线程或多进程环境中，确保对内存的读写操作能够被其他线程或进程正确地感知和同步。&#xA;Memory Order 提供四种方式操控可见性:&#xA;memory_order_relaxed: 内存不可见性 memory_order_release-memory_order_require: release 之前的内存访问, 在 require 之后是内存可见的。 memory_order_release-memory_order_consume: release 之前对 release 的原子变量有依赖的内存访问, 在 require 之后内存可见的。 memory_order_seq_cst: 有此内存定序的加载操作进行获得操作，存储操作进行释放操作，而读修改写操作进行获得操作和释放操作，再加上存在一个单独全序，其中所有线程以同一顺序观测到所有修改。 cpu 的工作量从低到高:&#xA;relaxed release-consume release-acquire seq_cst 指令重排 Link to heading 内存的顺序描述了计算机CPU获取内存的顺序，内存的排序可能静态也可能动态的发生：</description>
+    </item>
+    <item>
+      <title>Cpp 单例模式的线程安全的探讨</title>
+      <link>http://localhost:1313/posts/cpp%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%8E%A2%E8%AE%A8/</link>
+      <pubDate>Sun, 03 Mar 2024 00:44:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/cpp%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%8E%A2%E8%AE%A8/</guid>
+      <description>Cpp 单例模式的线程安全的探讨 Link to heading 预备知识 Link to heading 静态变量的构造和析构顺序 Link to heading See Destruction order of static objects in C++&#xA;静态变量之间的构造顺序是不确定的。但是可以通过 global-static 的方式手动的控制它们的构造顺序:&#xA;for example:&#xA;file_system.cc:&#xA;#include &amp;lt;iostream&amp;gt; class FileSystem { public: FileSystem() { std::cout &amp;lt;&amp;lt; &amp;#34;FileSystem()&amp;#34; &amp;lt;&amp;lt; std::endl; } ~FileSystem() { std::cout &amp;lt;&amp;lt; &amp;#34;~FileSystem()&amp;#34; &amp;lt;&amp;lt; std::endl; } }; FileSystem&amp;amp; tfs() { static FileSystem fs; return fs; } directory.cc:&#xA;#include &amp;lt;iostream&amp;gt; class Directory { public: Directory() { std::cout &amp;lt;&amp;lt; &amp;#34;Directory()&amp;#34; &amp;lt;&amp;lt; std::endl; } ~Directory() { std::cout &amp;lt;&amp;lt; &amp;#34;~Directory()&amp;#34; &amp;lt;&amp;lt; std::endl; } }; Directory&amp;amp; tdir() { static Directory dir; return dir; } main.</description>
+    </item>
+  </channel>
+</rss>

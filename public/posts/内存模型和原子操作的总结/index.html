@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  内存模型和原子操作的总结 · JohanChane
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Johan Chane">
+<meta name="description" content="cpp 的内存模型和原子操作的总结">
+<meta name="keywords" content="blog,developer,personal">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="内存模型和原子操作的总结">
+  <meta name="twitter:description" content="cpp 的内存模型和原子操作的总结">
+
+<meta property="og:url" content="http://localhost:1313/posts/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E6%80%BB%E7%BB%93/">
+  <meta property="og:site_name" content="JohanChane">
+  <meta property="og:title" content="内存模型和原子操作的总结">
+  <meta property="og:description" content="cpp 的内存模型和原子操作的总结">
+  <meta property="og:locale" content="us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-03-07T18:02:25+08:00">
+    <meta property="article:modified_time" content="2024-03-07T18:02:25+08:00">
+    <meta property="article:tag" content="Cpp">
+    <meta property="article:tag" content="内存模型">
+    <meta property="article:tag" content="原子操作">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E6%80%BB%E7%BB%93/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      JohanChane
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E6%80%BB%E7%BB%93/">
+              内存模型和原子操作的总结
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-03-07T18:02:25&#43;08:00">
+                March 7, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          <div class="authors">
+  <i class="fa-solid fa-user" aria-hidden="true"></i>
+    <a href="/authors/johanchane/">Johanchane</a></div>
+
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">内存模型</a>
+      <span class="separator">•</span>
+    <a href="/categories/%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C/">原子操作</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/cpp/">Cpp</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">内存模型</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C/">原子操作</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="内存模型和原子操作的总结">
+  内存模型和原子操作的总结
+  <a class="heading-link" href="#%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b%e5%92%8c%e5%8e%9f%e5%ad%90%e6%93%8d%e4%bd%9c%e7%9a%84%e6%80%bb%e7%bb%93">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<h2 id="内存模型和原子操作的设计目的">
+  内存模型和原子操作的设计目的
+  <a class="heading-link" href="#%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b%e5%92%8c%e5%8e%9f%e5%ad%90%e6%93%8d%e4%bd%9c%e7%9a%84%e8%ae%be%e8%ae%a1%e7%9b%ae%e7%9a%84">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>通过底层的设计可以让操作系统或 cpu 给用户提供一种操控颗粒度更小的各个线程之间的内存访问同步的功能。</p>
+<h2 id="原子操作和互斥量的应用场景">
+  原子操作和互斥量的应用场景
+  <a class="heading-link" href="#%e5%8e%9f%e5%ad%90%e6%93%8d%e4%bd%9c%e5%92%8c%e4%ba%92%e6%96%a5%e9%87%8f%e7%9a%84%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>如果仅需要对少量的简单数据进行原子操作，原子锁可能比互斥量更高效。但在涉及到复杂数据结构或需要独占资源访问的情况下，互斥量提供了更强的同步能力，但通常会涉及线程的切换和上下文切换，因此可能会引入一定的性能开销。</p>
+<h2 id="内存模型同步模式">
+  内存模型同步模式
+  <a class="heading-link" href="#%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b%e5%90%8c%e6%ad%a5%e6%a8%a1%e5%bc%8f">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>原子变量主要用于同步线程之间的共享内存访问。通常，一个线程创建数据，然后存储到原子中。其他线程从此原子读取数据，当看到预期值时，其他线程正在创建的数据将在该线程中完整且可见 (内存可见性)。不同的内存模型模式用于指示线程之间的数据共享联系有多强。</p>
+<p>有 3 种模式或模型允许程序员指定线程间同步的类型:</p>
+<ul>
+<li>Sequentially Consistent (序列一致)</li>
+<li>Relaxed (宽松)</li>
+<li>Release-Acquire (释放-获取)</li>
+<li>Release-Consume (释放-消费) (是获取-释放内存模型中的进一步微妙改进)</li>
+</ul>
+<h2 id="内存可见性">
+  内存可见性
+  <a class="heading-link" href="#%e5%86%85%e5%ad%98%e5%8f%af%e8%a7%81%e6%80%a7">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>&ldquo;内存可见性&quot;是指在多线程或多进程环境中，确保对内存的读写操作能够被其他线程或进程正确地感知和同步。</p>
+<p>Memory Order 提供四种方式操控可见性:</p>
+<ul>
+<li>memory_order_relaxed: 内存不可见性</li>
+<li>memory_order_release-memory_order_require: release 之前的内存访问, 在 require 之后是内存可见的。</li>
+<li>memory_order_release-memory_order_consume: release 之前对 release 的原子变量有依赖的内存访问, 在 require 之后内存可见的。</li>
+<li>memory_order_seq_cst: 有此内存定序的加载操作进行获得操作，存储操作进行释放操作，而读修改写操作进行获得操作和释放操作，再加上存在一个单独全序，其中所有线程以同一顺序观测到所有修改。</li>
+</ul>
+<p>cpu 的工作量从低到高:</p>
+<ul>
+<li>relaxed</li>
+<li>release-consume</li>
+<li>release-acquire</li>
+<li>seq_cst</li>
+</ul>
+<h2 id="指令重排">
+  指令重排
+  <a class="heading-link" href="#%e6%8c%87%e4%bb%a4%e9%87%8d%e6%8e%92">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>内存的顺序描述了计算机CPU获取内存的顺序，内存的排序可能静态也可能动态的发生：</p>
+<ul>
+<li>静态内存排序：编译器期间，编译器对内存重排。静态内存排序是为了提高代码的利用率和性能，编译器对代码进行了重新排序。</li>
+<li>动态内存排序：运行期间，CPU乱序执行。为了优化性能CPU也会进行对指令进行重新排序、延缓执行、各种缓存等等，以便达到更好的执行效果。</li>
+</ul>
+<p>总之，程序不会完全按照你原始代码的顺序来执行。</p>
+<p>See <a href="https://zhuanlan.zhihu.com/p/420751938"  class="external-link" target="_blank" rel="noopener">ref</a>.</p>
+<h2 id="memory-order">
+  Memory Order
+  <a class="heading-link" href="#memory-order">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>memory_order_relaxed:</p>
+<ul>
+<li>不限制指令重排 (单个线程的同一原子操作顺序不变)</li>
+<li>没有内存可见性 (即不会同步其他数据)</li>
+</ul>
+<p>memory_order_release-memory_order_require:</p>
+<ul>
+<li>限制指令重排, 不能重排到 release 之后, require 之前。</li>
+<li>release 之前的内存访问, 在 require 之后是内存可见的。</li>
+</ul>
+<p>memory_order_release-memory_order_consume:</p>
+<ul>
+<li>限制指令重排, 不能重排在 release 之后, 依赖于 consume 的值的访问不能重排到 consume 之前。</li>
+<li>对 release 的原子变量有依赖的内存访问, 在 consume 之后是内存可见的。</li>
+<li>std::kill_dependency 可以调整依赖。</li>
+</ul>
+<p>memory_order_acq_cst:</p>
+<ul>
+<li>限制指令重排。</li>
+<li>加载操作进行获得操作，存储操作进行释放操作，而读修改写操作进行获得操作和释放操作，再加上存在一个单独全序，其中所有线程以同一顺序观测到所有修改。</li>
+</ul>
+<h3 id="宽松同步模式">
+  宽松同步模式
+  <a class="heading-link" href="#%e5%ae%bd%e6%9d%be%e5%90%8c%e6%ad%a5%e6%a8%a1%e5%bc%8f">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>假设 &lsquo;x&rsquo; 和 &lsquo;y&rsquo; 最初为 0:</p>
+<pre tabindex="0"><code>-Thread 1-
+y.store (20, memory_order_relaxed)
+x.store (10, memory_order_relaxed)
+
+-Thread 2-
+if (x.load (memory_order_relaxed) == 10) {
+    assert (y.load(memory_order_relaxed) == 20) /* assert A */
+    y.store (10, memory_order_relaxed)
+}
+
+-Thread 3-
+if (y.load (memory_order_relaxed) == 10)
+    assert (x.load(memory_order_relaxed) == 10) /* assert B */
+</code></pre><p>上面的例子中, 任一断言实际上都可能失败。虽然根据原子性, 原子操作不能同时发生, 且 store 发生于 load 之前, 则 load 能获得 store 的值。但是因为 x, y, 是不同的原子变量, 且是 Relaxed 同步模式, 所以 x, y 的存储指令重排后顺序是不确定的。同时, Relaxed 同步模式是内存不可见的, 它不会同步其他共享内存数据。</p>
+<p>唯一强加的顺序是，一旦在线程 2 中观察到线程 1 中变量的值，线程 2 就无法看到线程 1 中该变量的“较早”值。即，假设“x”最初为 0:</p>
+<pre tabindex="0"><code>-Thread 1-
+x.store (1, memory_order_relaxed)
+x.store (2, memory_order_relaxed)
+
+-Thread 2-
+y = x.load (memory_order_relaxed)
+z = x.load (memory_order_relaxed)
+assert (y &lt;= z)
+</code></pre><p>上面的例子中, 断言不可能失败。一旦线程 2 看到 2 的存储，它就无法再看到值 1。因为线程 1 的指令是操作同一原子变量, 所以指令重排后顺序是不变的。且宽松同步模式, 一旦看到某个原子变量的内存的新值, 就不会再看到它的旧值。单个线程的同一原子操作, 指令重排后顺序不变, 也可以证明这一点。</p>
+<p>当程序员只是希望变量本质上是原子的而不是使用它来同步其他共享内存数据的线程时，最常使用宽松模式。</p>
+<h3 id="释放-获取同步模式">
+  释放-获取同步模式
+  <a class="heading-link" href="#%e9%87%8a%e6%94%be-%e8%8e%b7%e5%8f%96%e5%90%8c%e6%ad%a5%e6%a8%a1%e5%bc%8f">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<pre tabindex="0"><code>-Thread 1-
+y = 20;
+x.store (10, memory_order_release);
+
+-Thread 2-
+if (x.load(memory_order_acquire) == 10)
+   assert (y == 20);
+</code></pre><p>上面的例子中, 断言不会失败。线程 1 中, Release 会限制 <code>y = 20</code> 重排在 Release 之前, 且根据释放-获取的同步模式的内存可见性, Release 之前的内存操作, 对 Acquire 之后是可见的。</p>
+<h3 id="释放-消费同步模式">
+  释放-消费同步模式
+  <a class="heading-link" href="#%e9%87%8a%e6%94%be-%e6%b6%88%e8%b4%b9%e5%90%8c%e6%ad%a5%e6%a8%a1%e5%bc%8f">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<pre tabindex="0"><code> -Thread 1-
+ n = 1
+ m = 1
+ p.store (&amp;n, memory_order_release)
+
+ -Thread 2-
+ t = p.load (memory_order_acquire);
+ assert( *t == 1 &amp;&amp; m == 1 );
+
+ -Thread 3-
+ t = p.load (memory_order_consume);
+ assert( *t == 1 &amp;&amp; m == 1 );
+</code></pre><p>线程 2 中的断言将通过, 但是线程 3 中的断言可能会失败。因为到 p 的存储和到 m 的存储之间不再存在依赖关系，因此不需要同步这些值。</p>
+<h3 id="序列一致同步模式">
+  序列一致同步模式
+  <a class="heading-link" href="#%e5%ba%8f%e5%88%97%e4%b8%80%e8%87%b4%e5%90%8c%e6%ad%a5%e6%a8%a1%e5%bc%8f">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<pre tabindex="0"><code>-Thread 1-       -Thread 2-
+y = 1            if (x.load() == 2)
+x.store (2);        assert (y == 1)
+</code></pre><p>上面的例子中, 断言不会失败。因为限制指令重排, 对“y”的存储发生在线程 1 中对 x 的存储之前。如果线程 2 中“x”的加载获取了线程 1 中发生的存储结果，则它必须全部看到在存储之前发生的所有操作在线程 1 中，即使是不相关的线程。这意味着优化器无法自由地对线程 1 中的两个存储重新排序，因为线程 2 也必须看到 Y 的存储。</p>
+<p>此模式还提供所有线程之间的一致性。此示例中的断言都不会失败（x 和 y 最初均为 0）:</p>
+<pre tabindex="0"><code>-Thread 1-       -Thread 2-                   -Thread 3-
+y.store (20);    if (x.load() == 10) {        if (y.load() == 10)
+x.store (10);      assert (y.load() == 20)      assert (x.load() == 10)
+                   y.store (10)
+                 }
+</code></pre><h2 id="内存屏障">
+  内存屏障
+  <a class="heading-link" href="#%e5%86%85%e5%ad%98%e5%b1%8f%e9%9a%9c">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<pre tabindex="0"><code>atom v
+
+thread A {
+  F (rel Fence)     // release memory fence
+  X (store v)       // store atomic variable `v`
+}
+thread B {
+  Y (acq v)         // acquire atomic variable `v`
+}
+</code></pre><p>F 之前的内存访问对 Y 之后是内存可见的。</p>
+<pre tabindex="0"><code>atom v
+
+thread A {
+  X (rel v)
+}
+thread B {
+  Y (load v)
+  F (acq Fence)
+}
+</code></pre><p>X 之前的内存访问对 F 之后是内存可见的。</p>
+<pre tabindex="0"><code>thread A {
+  FA (rel Fence)
+}
+thread B {
+  FB (acq Fence)
+}
+</code></pre><p>FA 之前的内存访问对 FB 之后的内存是可见的。</p>
+<h2 id="应用">
+  应用
+  <a class="heading-link" href="#%e5%ba%94%e7%94%a8">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Relaxed 同步模式常用于计数:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;vector&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;thread&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;atomic&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span> 
+</span></span><span style="display:flex;"><span>std<span style="color:#ff7b72;font-weight:bold">::</span>atomic<span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">int</span><span style="color:#ff7b72;font-weight:bold">&gt;</span> cnt <span style="color:#ff7b72;font-weight:bold">=</span> {<span style="color:#a5d6ff">0</span>};
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">f</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">int</span> n <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; n <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">1000</span>; <span style="color:#ff7b72;font-weight:bold">++</span>n)
+</span></span><span style="display:flex;"><span>        cnt.fetch_add(<span style="color:#a5d6ff">1</span>, std<span style="color:#ff7b72;font-weight:bold">::</span>memory_order_relaxed);        <span style="color:#8b949e;font-style:italic">// 运算是读-修改-写的原子操作。只要求原子性，不要求定序或同步。
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>}
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span>std<span style="color:#ff7b72;font-weight:bold">::</span><span style="color:#ff7b72">thread</span><span style="color:#ff7b72;font-weight:bold">&gt;</span> v;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">int</span> n <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>; n <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#a5d6ff">10</span>; <span style="color:#ff7b72;font-weight:bold">++</span>n)
+</span></span><span style="display:flex;"><span>        v.emplace_back(f);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> (<span style="color:#ff7b72">auto</span><span style="color:#ff7b72;font-weight:bold">&amp;</span> <span style="color:#79c0ff;font-weight:bold">t</span> : v)
+</span></span><span style="display:flex;"><span>        t.join();
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;最终计数器值为 &#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> cnt <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#39;\n&#39;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><a href="https://rigtorp.se/spinlock/"  class="external-link" target="_blank" rel="noopener">SpinLock</a>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> <span style="color:#f0883e;font-weight:bold">spinlock</span> {
+</span></span><span style="display:flex;"><span>  std<span style="color:#ff7b72;font-weight:bold">::</span>atomic<span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">bool</span><span style="color:#ff7b72;font-weight:bold">&gt;</span> lock_ <span style="color:#ff7b72;font-weight:bold">=</span> {<span style="color:#a5d6ff">0</span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">lock</span>() <span style="color:#ff7b72">noexcept</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> (;;) {
+</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// Optimistically assume the lock is free on the first try
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      <span style="color:#ff7b72">if</span> (<span style="color:#ff7b72;font-weight:bold">!</span>lock_.exchange(true, std<span style="color:#ff7b72;font-weight:bold">::</span>memory_order_acquire)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff7b72">return</span>;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// Wait for lock to be released without generating cache misses
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      <span style="color:#ff7b72">while</span> (lock_.load(std<span style="color:#ff7b72;font-weight:bold">::</span>memory_order_relaxed)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic">// Issue X86 PAUSE or ARM YIELD instruction to reduce contention between
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        <span style="color:#8b949e;font-style:italic">// hyper-threads
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>        __builtin_ia32_pause();
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">bool</span> <span style="color:#d2a8ff;font-weight:bold">try_lock</span>() <span style="color:#ff7b72">noexcept</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic">// First do a relaxed load to check if lock is free in order to prevent
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    <span style="color:#8b949e;font-style:italic">// unnecessary cache misses if someone does while(!try_lock())
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>    <span style="color:#ff7b72">return</span> <span style="color:#ff7b72;font-weight:bold">!</span>lock_.load(std<span style="color:#ff7b72;font-weight:bold">::</span>memory_order_relaxed) <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#ff7b72;font-weight:bold">!</span>lock_.exchange(true, std<span style="color:#ff7b72;font-weight:bold">::</span>memory_order_acquire);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">void</span> <span style="color:#d2a8ff;font-weight:bold">unlock</span>() <span style="color:#ff7b72">noexcept</span> {
+</span></span><span style="display:flex;"><span>    lock_.store(false, std<span style="color:#ff7b72;font-weight:bold">::</span>memory_order_release);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p><a href="https://github.com/alibaba/async_simple/blob/main/async_simple/coro/SpinLock.h"  class="external-link" target="_blank" rel="noopener">有尝试加锁次数的 SpinLock</a>:</p>
+<ul>
+<li>没有 while acquire, 减少了 cpu 同步的流量。</li>
+</ul>
+<h2 id="拓展">
+  拓展
+  <a class="heading-link" href="#%e6%8b%93%e5%b1%95">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>mutex/sem 之类的同步原语会使用内存屏障同步的修改。See <a href="https://en.wikipedia.org/wiki/Memory_barrier#Multithreaded_programming_and_memory_visibility"  class="external-link" target="_blank" rel="noopener">ref</a>。</p>
+<h2 id="references">
+  References
+  <a class="heading-link" href="#references">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li><a href="https://gcc.gnu.org/wiki/Atomic/GCCMM/AtomicSync"  class="external-link" target="_blank" rel="noopener">Memory model synchronization modes</a></li>
+<li><a href="https://zh.cppreference.com/w/cpp/atomic/memory_order"  class="external-link" target="_blank" rel="noopener">std::memory_order</a></li>
+<li><a href="https://zh.cppreference.com/w/cpp/atomic/atomic_thread_fence"  class="external-link" target="_blank" rel="noopener">std::atomic_thread_fence</a></li>
+<li>《C++并发编程实战》</li>
+<li><a href="https://zhuanlan.zhihu.com/p/420751938"  class="external-link" target="_blank" rel="noopener">C++内存模型和原子类型操作</a></li>
+</ul>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2024
+     Johan Chane 
+    ·
+    
+     <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

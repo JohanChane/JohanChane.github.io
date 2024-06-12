@@ -1,0 +1,64 @@
+baseurl = "http://www.example.com"
+title = "JohanChane"
+theme = "coder"
+languagecode = "us"
+defaultcontentlanguage = "us"
+
+paginate = 20
+
+[services]
+[services.disqus]
+disqusShortname = "johanchane.disqus.com"
+
+[markup.highlight]
+style = "github-dark"
+
+[params]
+  author = "Johan Chane"
+  info = "Linux C++ 后端开发工程师"
+  description = "Johan Chane's personal website"
+  keywords = "blog,developer,personal"
+  avatarurl = "images/avatar.jpg"
+  #gravatar = "john.doe@example.com"
+
+  faviconSVG = "/img/favicon.svg"
+  favicon_32 = "/img/favicon-32x32.png"
+  favicon_16 = "/img/favicon-16x16.png"
+
+  since = 2019
+
+  enableTwemoji = true
+
+  colorScheme = "auto"
+  hidecolorschemetoggle = false
+
+  # customCSS = ["css/custom.css"]
+  # customSCSS = ["scss/custom.scss"]
+  # customJS = ["js/custom.js"]
+
+[taxonomies]
+  category = "categories"
+  series = "series"
+  tag = "tags"
+  author = "authors"
+
+# Social links
+[[params.social]]
+  name = "Github"
+  icon = "fa-brands fa-github fa-2x"
+  weight = 1
+  url = "https://github.com/johanchane"
+
+# Menu links
+[[menu.main]]
+  name = "Blog"
+  weight = 1
+  url  = "posts/"
+[[menu.main]]
+  name = "Projects"
+  weight = 2
+  url  = "projects/"
+[[menu.main]]
+  name = "About"
+  weight = 3
+  url = "about/"

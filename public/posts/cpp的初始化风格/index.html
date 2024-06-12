@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Cpp 初始化风格 · JohanChane
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Johan Chane">
+<meta name="description" content="Cpp 的初始化风格 Link to heading cpp 的初始化风格 Link to heading 兼容 C 的初始化风格:
+int i = 10; int a[] = {1, 2, 3}; struct Foo { char c; int i; }; union Bar { char c; int i; }; Foo foo = {.c = &#39;A&#39;, .i = 42}; Bar bar = {.c = &#39;A&#39;}; 但是 Cpp 引入了类, 这样会导致一个问题:
+#include &lt;iostream&gt; struct Foo { }; struct Bar { Bar(const Foo&amp; foo) { std::cout &lt;&lt; &#34;Bar::Bar&#34; &lt;&lt; std::endl; } }; int main() { //Bar bar(Foo()); // 只是一个函数声明 //Bar bar((Foo())); // 解决方案 1 Bar bar{Foo()}; // 解决方案 2 return 0; } Cpp 的花括号初始化:">
+<meta name="keywords" content="blog,developer,personal">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Cpp 初始化风格">
+  <meta name="twitter:description" content="Cpp 的初始化风格 Link to heading cpp 的初始化风格 Link to heading 兼容 C 的初始化风格:
+int i = 10; int a[] = {1, 2, 3}; struct Foo { char c; int i; }; union Bar { char c; int i; }; Foo foo = {.c = &#39;A&#39;, .i = 42}; Bar bar = {.c = &#39;A&#39;}; 但是 Cpp 引入了类, 这样会导致一个问题:
+#include &lt;iostream&gt; struct Foo { }; struct Bar { Bar(const Foo&amp; foo) { std::cout &lt;&lt; &#34;Bar::Bar&#34; &lt;&lt; std::endl; } }; int main() { //Bar bar(Foo()); // 只是一个函数声明 //Bar bar((Foo())); // 解决方案 1 Bar bar{Foo()}; // 解决方案 2 return 0; } Cpp 的花括号初始化:">
+
+<meta property="og:url" content="http://localhost:1313/posts/cpp%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A3%8E%E6%A0%BC/">
+  <meta property="og:site_name" content="JohanChane">
+  <meta property="og:title" content="Cpp 初始化风格">
+  <meta property="og:description" content="Cpp 的初始化风格 Link to heading cpp 的初始化风格 Link to heading 兼容 C 的初始化风格:
+int i = 10; int a[] = {1, 2, 3}; struct Foo { char c; int i; }; union Bar { char c; int i; }; Foo foo = {.c = &#39;A&#39;, .i = 42}; Bar bar = {.c = &#39;A&#39;}; 但是 Cpp 引入了类, 这样会导致一个问题:
+#include &lt;iostream&gt; struct Foo { }; struct Bar { Bar(const Foo&amp; foo) { std::cout &lt;&lt; &#34;Bar::Bar&#34; &lt;&lt; std::endl; } }; int main() { //Bar bar(Foo()); // 只是一个函数声明 //Bar bar((Foo())); // 解决方案 1 Bar bar{Foo()}; // 解决方案 2 return 0; } Cpp 的花括号初始化:">
+  <meta property="og:locale" content="us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-03-08T20:50:23+08:00">
+    <meta property="article:modified_time" content="2024-03-08T20:50:23+08:00">
+    <meta property="article:tag" content="C">
+    <meta property="article:tag" content="Cpp">
+    <meta property="article:tag" content="初始化">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/cpp%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A3%8E%E6%A0%BC/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      JohanChane
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/projects/">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/cpp%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A3%8E%E6%A0%BC/">
+              Cpp 初始化风格
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2024-03-08T20:50:23&#43;08:00">
+                March 8, 2024
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          <div class="authors">
+  <i class="fa-solid fa-user" aria-hidden="true"></i>
+    <a href="/authors/johanchane/">Johanchane</a></div>
+
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/c/cpp%E7%9A%84%E8%AF%AD%E8%A8%80%E9%A3%8E%E6%A0%BC/">C/Cpp的语言风格</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/c/">C</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/cpp/">Cpp</a>
+    </span>
+      <span class="separator">•</span>
+    <span class="tag">
+      <a href="/tags/%E5%88%9D%E5%A7%8B%E5%8C%96/">初始化</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="cpp-的初始化风格">
+  Cpp 的初始化风格
+  <a class="heading-link" href="#cpp-%e7%9a%84%e5%88%9d%e5%a7%8b%e5%8c%96%e9%a3%8e%e6%a0%bc">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<h2 id="cpp-的初始化风格-1">
+  cpp 的初始化风格
+  <a class="heading-link" href="#cpp-%e7%9a%84%e5%88%9d%e5%a7%8b%e5%8c%96%e9%a3%8e%e6%a0%bc-1">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>兼容 C 的初始化风格:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">10</span>;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> a[] <span style="color:#ff7b72;font-weight:bold">=</span> {<span style="color:#a5d6ff">1</span>, <span style="color:#a5d6ff">2</span>, <span style="color:#a5d6ff">3</span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> <span style="color:#f0883e;font-weight:bold">Foo</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">char</span> c;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">int</span> i;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">union</span> <span style="color:#f0883e;font-weight:bold">Bar</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">char</span> c;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">int</span> i;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Foo foo <span style="color:#ff7b72;font-weight:bold">=</span> {.c <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;A&#39;</span>, .i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">42</span>};
+</span></span><span style="display:flex;"><span>Bar bar <span style="color:#ff7b72;font-weight:bold">=</span> {.c <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;A&#39;</span>};
+</span></span></code></pre></div><p>但是 Cpp 引入了类, 这样会导致一个问题:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#include</span> <span style="color:#8b949e;font-weight:bold;font-style:italic">&lt;iostream&gt;</span><span style="color:#8b949e;font-weight:bold;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> <span style="color:#f0883e;font-weight:bold">Foo</span> {
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">struct</span> <span style="color:#f0883e;font-weight:bold">Bar</span> {
+</span></span><span style="display:flex;"><span>  Bar(<span style="color:#ff7b72">const</span> Foo<span style="color:#ff7b72;font-weight:bold">&amp;</span> foo) {
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff7b72;font-weight:bold">::</span>cout <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> <span style="color:#a5d6ff">&#34;Bar::Bar&#34;</span> <span style="color:#ff7b72;font-weight:bold">&lt;&lt;</span> std<span style="color:#ff7b72;font-weight:bold">::</span>endl;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">int</span> <span style="color:#d2a8ff;font-weight:bold">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">//Bar bar(Foo());     // 只是一个函数声明
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  <span style="color:#8b949e;font-style:italic">//Bar bar((Foo()));     // 解决方案 1
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  Bar bar{Foo()};     <span style="color:#8b949e;font-style:italic">// 解决方案 2
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">return</span> <span style="color:#a5d6ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Cpp 的花括号初始化:</p>
+<ul>
+<li>好处是, 初始化更加安全。</li>
+<li>坏处是, 如果类型有 initializer_list 初始化方式, 则优先使用 std::initializer_list 构造函数。如果你想为一个类型添加 initializer_list 初始化方式, 你需要找到它的对象原来用花括号初始化改为用圆括号初始化。而且用户用花括号初始化时, 需要知道该类型有没有 initializer_list 的初始化方式。</li>
+</ul>
+<p>for example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">int</span><span style="color:#ff7b72;font-weight:bold">&gt;</span> v{<span style="color:#a5d6ff">5</span>};        <span style="color:#8b949e;font-style:italic">// 使用 initializer_list 的方式初始化
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">int</span><span style="color:#ff7b72;font-weight:bold">&gt;</span> v <span style="color:#ff7b72;font-weight:bold">=</span> {<span style="color:#a5d6ff">5</span>};     <span style="color:#8b949e;font-style:italic">// 使用 initializer_list 的方式初始化
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>vector<span style="color:#ff7b72;font-weight:bold">&lt;</span><span style="color:#ff7b72">int</span><span style="color:#ff7b72;font-weight:bold">&gt;</span> v(<span style="color:#a5d6ff">5</span>);
+</span></span></code></pre></div><p>个人觉得 cpp 的花括号初始化和数组初始化有点混淆。如果不用兼容 C, 可以像 rust 一样使用 <code>[]</code> 初始化数组, <code>{}</code> 初始化结构体。但是 C 已经使用 <code>{}</code> 来初始化数组了, 如果 C++ 改用 <code>[]</code> 来初始化数组则不统一了。</p>
+<h2 id="-的初始化风格">
+  <code>=</code> 的初始化风格
+  <a class="heading-link" href="#-%e7%9a%84%e5%88%9d%e5%a7%8b%e5%8c%96%e9%a3%8e%e6%a0%bc">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>我更加喜欢类似于 rust, python, java 等语言的初始化方式, 使用 <code>=</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">10</span>;         <span style="color:#8b949e;font-style:italic">// 原始类型使用原来的风格。
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">auto</span> mt <span style="color:#ff7b72;font-weight:bold">=</span> MyType(param1, param2);       <span style="color:#8b949e;font-style:italic">// 非原始类型使用此风格。
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                                        <span style="color:#8b949e;font-style:italic">// 虽然不能声明多个同类型的对象, 但是不建议一行声明多个对象。See [ref](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#es10-declare-one-name-only-per-declaration).
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                                        <span style="color:#8b949e;font-style:italic">// 不会有多余的操作, 因为有[复制消除](https://zh.cppreference.com/w/cpp/language/copy_elision)。
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>                                        <span style="color:#8b949e;font-style:italic">// 同时它一定不是一个函数声明, 所以避免了函数声明和对象定义的混淆。
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">auto</span> mt <span style="color:#ff7b72;font-weight:bold">=</span> MyType{param1, param2};       <span style="color:#8b949e;font-style:italic">// 使用花括号初始化, 但是要注意不要混淆 initializer_list 的初始化方式, 且该类型以后最好不用添加 initializer_list 的初始化方式。
+</span></span></span></code></pre></div><p>对于 C 的数据类型初始化风格:</p>
+<div class="highlight"><pre tabindex="0" style="color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#ff7b72">int</span> i <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">int</span>();          <span style="color:#8b949e;font-style:italic">// 使用 `=` 号赋值能保证内存会被初始化
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// 指针类型
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">int</span><span style="color:#ff7b72;font-weight:bold">*</span> iptr1 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">nullptr</span>;   <span style="color:#8b949e;font-style:italic">// 如果我想定义一个指针变量。
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#ff7b72">auto</span> iptr2 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>i;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">// cpp 的类型
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>Foo<span style="color:#ff7b72;font-weight:bold">*</span> foo_ptr1 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">nullptr</span>;
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">auto</span> foo <span style="color:#ff7b72;font-weight:bold">=</span> Foo();
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">auto</span> foo_ptr2 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72;font-weight:bold">&amp;</span>foo;
+</span></span></code></pre></div><p>综上, 使用 <code>=</code> 初始化会保证变量会被初始化。这样会更加安全。所以优先使用 <code>=</code> 初始化, 如果变量不需要初始化时, 再使用非 <code>=</code> 的初始化风格, 是一个不错的选择。</p>
+<h2 id="references">
+  References
+  <a class="heading-link" href="#references">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li><a href="https://abseil.io/tips/88"  class="external-link" target="_blank" rel="noopener">Tip of the Week #88: Initialization: =, (), and {}</a></li>
+</ul>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2024
+     Johan Chane 
+    ·
+    
+     <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/" target="_blank" rel="noopener">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+  
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
