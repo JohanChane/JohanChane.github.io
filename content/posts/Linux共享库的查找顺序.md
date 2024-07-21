@@ -1,5 +1,5 @@
 +++ 
-draft = true
+draft = false
 date = 2024-06-11T20:50:23+08:00
 title = "Linux 共享库的查找顺序"
 description = ""
@@ -38,7 +38,7 @@ series = []
 它们的应用场景:
 -   标准库目录: 为所有程序设置共享库的查找位置
 -   LD_LIBRARY_PATH: 为某个可执行文件设置共享库的位置
--   run path: 也是为某个可执行文件设置共享库的位置, 但是它放在可执行文件中的。
+-   run path: 也是为某个可执行文件设置共享库的位置, 但是它放在可执行文件中的 (可用 readelf/objdump 查看)。
 
 添加 run path 的方式:
 -   gcc 使用 `-rpath`
@@ -57,11 +57,34 @@ series = []
 -   `<libname>.so.<主要版本号>.<次要版本号>`。
 -   主要和次要版本标识符可以是任意字符串。按照惯例, 主要版本号是一个数字。次要版本号是一个数字或是两个由点分隔的数字, 其中第一个数字标识出了次要版本，第二个数字表示该次要版本中的补丁号或修订号。
 
-soname 是共享库的别名, 不是真实名称。`DT_SONAME`
+soname 是共享库的别名, 不是真实名称。`DT_SONAME`。可执行文件中有记录 `SONAME`。
 
-### 例子
+for example: soname
 
-## 例子
+```sh
+# 创建共享库，其真实名称为 libdemo.so.1.0.1，soname 为 libdemo.so.1。
+gcc -g -c -fPIC -Wall mod1.c mod2.c mod3.c
+gcc -g -shared -Wl,-soname,libdemo.so.1 -o libdemo.so.1.0.1 mod1.o mod2.o mod3.o
+
+# 接着为 soname 和链接器名称创建恰当的符号链接。
+ln -s libdemo.so.1.0.1 libdemo.so.1
+ln -s libdemo.so.1 libdemo.so
+
+# 使用链接器名称来构建可执行文件, 并运行。
+gcc -Wall -o prg prg.c -L. -ldemo
+LD_LIBRARY_PATH=. ./prg
+```
+
+for example: 安装共享库
+
+```sh
+mv libdemo.so.1.0.1 /usr/lib
+cd /usr/lib
+# ldconfig 创建一个与 soname 同名的软链接, 该链接链接到真实的库。e.g. `ln -s libdemo.so.1.0.1 libdemo.so.1`
+# 当更高版本的库 (e.g. 1.0.1, soname 为 libdemo.1) 时, ldconfig 会使 soname 的软链接到主要版本是 1 的更高版本的真实库。
+ldconfig
+ln -s libdemo.so.1 libdemo.so           # 这个一般是用户手动链接的, 这样用户就能选择 libdemo.so 的主要版本了。
+```
 
 ## References
 

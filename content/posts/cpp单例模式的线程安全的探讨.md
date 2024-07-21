@@ -212,7 +212,7 @@ Linux/Unix 系统: 进程 exit 的过程, 个人猜测应该会保证所有线�
 
 ## 各种实现版本
 
-Scott Meyers 优雅的单例模式:
+Scott Meyers 优雅的单例模式 (懒汉模式):
 
 <a name="scott_meyers_singleton"></a>
 ```cpp
@@ -222,7 +222,7 @@ Foo& getInst() {
 }
 ```
 
-懒汉模式:
+unique_ptr 版本:
 
 <a name="unique_ptr_singleton"></a>
 ```cpp
@@ -289,7 +289,7 @@ int main() {
 }
 ```
 
-为了解决这个问题, 返回 shared_ptr 即可: [ref](https://stackoverflow.com/a/40337728/10498412):
+Directory 对象先构造, 然后是 FileSystem 对象。main 函数结束后, FileSystem 对象先析构，然后是 Diretory 对象。但是 Directory 的析构函数调用 close_files, close_files 调用 `FileSystem::get_instance()`, 但是这时 main 已经结束了, 系统开始回收进程的资源, 这时再在静态区创建对象, 会出现问题。为了解决这个问题, 返回 shared_ptr 即可: [ref](https://stackoverflow.com/a/40337728/10498412):
 
 <a name="shared_ptr_singleton"></a>
 ```cpp
@@ -409,8 +409,8 @@ int main() {
 
 如果是静态变量的初始化是线程安全的编译标准, 该选择哪个实现版本? 最安全不一定是最适合的, 我要依据自己的情况来选择合适的版本:
 -   Scott Meyers 优雅的单例模式是可以解决大多数情况的。如果该静态变量不关联其他静态变量, 选择该版本即可。同时 `get_instance` 是比较频繁的, 返回指针效率是比较高的。[link](#scott_meyers_singleton)
--   如果想要懒汉模式, 如果该单例不关联其他静态变量, 选择 unique_ptr 版本即可。[link](#unique_ptr_singleton)
--   如果想要懒汉模式, 如果该单例关联其他静态变量, 选择 sharded_ptr 版本即可。[link](#shared_ptr_singleton)
+-   如果该单例不关联其他静态变量, 选择 unique_ptr 版本即可。[link](#unique_ptr_singleton)
+-   如果该单例关联其他静态变量, 选择 sharded_ptr 版本即可。[link](#shared_ptr_singleton)
 -   如果想要用 call_once, 选择 call_once 版本即可。[link](#call_once_singleton)
 
 原子操作的版本:
