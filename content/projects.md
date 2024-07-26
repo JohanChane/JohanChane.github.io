@@ -7,3 +7,4 @@ draft = false
 # Projects
 
 -   [TheAlgorithms](https://github.com/JohanChane/TheAlgorithms): 自己练习算法实现的例子。
+-   [cpp-design-patterns](https://github.com/JohanChane/cpp-design-patterns)
