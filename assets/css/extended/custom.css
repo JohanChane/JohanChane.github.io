@@ -1,0 +1,32 @@
+/* Custom styles added to demo */
+
+.twitter-tweet {
+    margin: auto;
+}
+
+iframe {
+    border-radius: var(--radius) !important;
+}
+
+.home-info ul {
+    padding-inline-start: 20px;
+}
+
+.entry-cover img {
+    border: 1px solid var(--border);
+}
+
+/*ref: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma*/
+.chroma {
+  background-color: unset;
+}
+
+/*ref: https://github.com/adityatelange/hugo-PaperMod/discussions/721*/
+:root {
+  --code-block-bg: #eaeef2;
+}
+
+.dark {
+  /*--code-block-bg: #0d1117;*/
+  --code-block-bg: #1e2228;
+}
