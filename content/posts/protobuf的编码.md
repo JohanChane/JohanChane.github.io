@@ -1,12 +1,12 @@
 +++ 
 draft = false
 date = 2024-08-13T09:33:25+08:00
-title = ""
-description = ""
+title = "protobuf 的编码"
+description = "protobuf 的 variant 和 zigzag 编码"
 slug = ""
-authors = []
-tags = []
-categories = []
+authors = ["Johan Chane"]
+tags = ["protobuf", "variant", "zigzag"]
+categories = ["code"]
 externalLink = ""
 series = []
 +++
